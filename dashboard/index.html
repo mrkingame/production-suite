@@ -460,9 +460,10 @@ svg text{font-family:'Barlow Condensed',sans-serif}
               <option value="">TODOS LOS TIPOS</option>
             </select>
             <select id="ev-filter-detiene" onchange="renderEventosTable()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-family:var(--mono);font-size:.78rem;outline:none">
-              <option value="">DETIENE: TODOS</option>
-              <option value="si">SÍ DETIENE</option>
+              <option value="">IMPACTO: TODOS</option>
+              <option value="si">DETIENE</option>
               <option value="no">EN PARALELO</option>
+              <option value="proc">DEL PROCESO</option>
             </select>
           </div>
           <div style="overflow-x:auto">
@@ -933,7 +934,7 @@ function renderResumen() {
   evEl.innerHTML=evs.map(e=>`
     <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(30,45,69,.5)">
       <span style="font-family:var(--mono);font-size:.7rem;color:var(--muted);flex-shrink:0">${e._fecha}</span>
-      <span class="badge ${e.detiene===true?'badge-danger':e.detiene===false?'badge-ok':'badge-muted'}" style="flex-shrink:0">${e.tipo?.split(' ')[0]||'—'}</span>
+      <span class="badge ${(e.detiene_categoria==='detiene'||e.detiene===true)?'badge-danger':(e.detiene_categoria==='proceso')?'badge-info':(e.detiene_categoria==='paralelo'||e.detiene===false)?'badge-ok':'badge-muted'}" style="flex-shrink:0">${e.tipo?.split(' ')[0]||'—'}</span>
       <span style="font-size:.78rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.obs||e.tipo||'—'}</span>
       ${e.duracion_min?`<span style="font-family:var(--mono);font-size:.7rem;color:var(--muted);flex-shrink:0">${e.duracion_min}m</span>`:''}
     </div>`).join('');
@@ -1123,7 +1124,7 @@ function renderEficiencia() {
 function renderEventos() {
   if(!filtered.length){clearView('eventos');return;}
   const evs=getEventosAll();
-  const paros=evs.filter(e=>e.detiene===true);
+  const paros=evs.filter(e=>e.detiene===true || e.detiene_categoria==='detiene').filter(e=>e.detiene_categoria!=='proceso');
   const tiempoPar=sum(paros,e=>e.duracion_min||0);
   const tiposEv=[...new Set(evs.map(e=>e.tipo).filter(Boolean))].sort();
 
@@ -1159,19 +1160,20 @@ function renderEventosTable() {
   const fDet=document.getElementById('ev-filter-detiene').value;
   const shown=evs.filter(e=>{
     if(fTipo && e.tipo!==fTipo) return false;
-    if(fDet==='si' && e.detiene!==true) return false;
-    if(fDet==='no' && e.detiene!==false) return false;
+    if(fDet==='si' && e.detiene!==true && e.detiene_categoria!=='detiene') return false;
+    if(fDet==='no' && e.detiene!==false && e.detiene_categoria!=='paralelo') return false;
+    if(fDet==='proc' && e.detiene_categoria!=='proceso') return false;
     return true;
   }).sort((a,b)=>(b._fecha||'').localeCompare(a._fecha||''));
 
   document.getElementById('table-eventos').innerHTML=`
-    <tr><th>Fecha</th><th>Tipo</th><th>Inicio</th><th>Duración</th><th>Detiene</th><th>Descripción</th></tr>
+    <tr><th>Fecha</th><th>Tipo</th><th>Inicio</th><th>Duración</th><th>Impacto</th><th>Descripción</th></tr>
     ${shown.slice(0,100).map(e=>`<tr>
       <td class="amber">${e._fecha||'—'}</td>
       <td style="font-weight:600">${e.tipo||'—'}</td>
       <td>${e.inicio||'—'}</td>
       <td>${e.duracion_min?e.duracion_min+' min':'—'}</td>
-      <td><span class="badge ${e.detiene===true?'badge-danger':e.detiene===false?'badge-ok':'badge-muted'}">${e.detiene===true?'SÍ DETIENE':e.detiene===false?'EN PARALELO':'—'}</span></td>
+      <td><span class="badge ${(e.detiene_categoria==='detiene'||e.detiene===true)?'badge-danger':(e.detiene_categoria==='proceso')?'badge-info':(e.detiene_categoria==='paralelo'||e.detiene===false)?'badge-ok':'badge-muted'}">${(e.detiene_categoria==='detiene'||e.detiene===true)?'DETIENE':(e.detiene_categoria==='proceso')?'DEL PROCESO':(e.detiene_categoria==='paralelo'||e.detiene===false)?'EN PARALELO':'—'}</span></td>
       <td style="color:var(--text2);font-size:.75rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.obs||'—'}</td>
     </tr>`).join('')}
     ${shown.length>100?`<tr><td colspan="6" style="text-align:center;color:var(--muted);font-size:.75rem">Mostrando 100 de ${shown.length} eventos</td></tr>`:''}`;
