@@ -1,54 +1,61 @@
-# ZALINEL Operation Suite
+# ZALINEL Production Suite
 
-Herramientas web de registro, control y análisis para la producción de mangas en arena de moldeo.
+Suite de herramientas web para trazabilidad operativa, control de proceso y análisis de producción en fabricación de mangas de fundición por disparo de arena.
 
-**Cliente:** Quipasur Ltda · San Bernardo, Chile  
-**Máquina:** ZH780L-40 (sand shooting machine)  
-**Desarrollado por:** ZALINEL SpA
+## Propósito
 
----
+Este repositorio reúne las herramientas de trabajo usadas en computador para registrar el proceso productivo y analizar sus resultados de forma estructurada.
 
-## Herramientas
+La suite está pensada para acompañar la operación real de planta y transformar la información del turno en datos útiles para control, seguimiento y toma de decisiones.
 
-### ⚙️ Operation Suite `v3.5`
-Registro de turno para tablet. Captura:
-- Segmentos por tipo de manga (260–460 mm)
-- Lotes con KG base, KG resinas y KG mezcla calculado
-- Pesos individuales por manga + scrap en grilla
-- Panel de eventos con cronómetro en tiempo real (3 categorías: Detiene / En paralelo / Del proceso)
-- Historial en localStorage con indicador de uso
-- Exporta informes `PROD_fecha_T1_tipo.html` con JSON embebido para el Dashboard
+## Componentes
 
-### 📊 Dashboard Producción `v1.1`
-Análisis gerencial multi-turno. Carga los informes HTML exportados desde el Operation Suite:
-- Resumen ejecutivo con KPIs acumulados
-- Producción, Calidad & Pesos, Eficiencia & Merma, Eventos & Paros
-- Gráficos de tendencia, distribución y balance de masa
-- Filtros por fecha, tipo de manga y turno
+### Operation Suite
+Herramienta principal de captura estructurada del proceso productivo.
 
----
+Uso principal:
+- Registro de turno
+- Captura de lotes
+- Registro de producción por manga
+- Control de scrap
+- Registro de eventos con tiempo
+- Control de merma
+- Registro de pallets
+- Generación de informe HTML del turno
 
-## Flujo de uso
+Ubicación:
+`/apps/operation-suite/`
 
-```
-[Tablet en planta]          [PC Gerencia]
-Operation Suite   →  HTML  →  Dashboard
-  (por turno)    export     (multi-turno)
-```
+### Dashboard
+Herramienta de análisis y visualización de resultados.
 
-1. El operador registra el turno en el **Operation Suite** (tablet)
-2. Al cerrar el turno descarga el informe HTML
-3. El informe se arrastra al **Dashboard** para análisis acumulado
+Uso principal:
+- Lectura de informes exportados desde Operation Suite
+- Consolidación de registros
+- Visualización de KPIs
+- Balance de masa
+- Análisis de scrap, merma y eficiencia
+- Revisión de tendencias y oportunidades de mejora
 
----
+Ubicación:
+`/apps/dashboard/`
 
-## URL de acceso
+## Flujo de trabajo
 
-`https://mrkingame.github.io/bitacora-zalinel/`
+1. El turno se registra en `Operation Suite`.
+2. Se genera un informe HTML del turno.
+3. El informe se carga en `Dashboard`.
+4. Se analizan resultados, tendencias y oportunidades de mejora.
 
-- Operation Suite: `/operation-suite/`
-- Dashboard: `/dashboard/`
+## Estructura del repositorio
 
----
-
-*ZALINEL SpA · Servicios de Ingeniería de Mantenimiento Industrial*
+```text
+apps/
+  operation-suite/
+    index.html
+  dashboard/
+    index.html
+docs/
+  historial-de-cambios.md
+index.html
+README.md

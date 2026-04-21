@@ -1,217 +1,135 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZALINEL Operation Suite · Quipasur Ltda</title>
-<link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0e1117;--surface:#161b24;--surface2:#1e2533;--border:#2a3345;
-  --amber:#f0a500;--amber2:#ffbe33;--danger:#e03b3b;--ok:#3bbf7a;
-  --info:#3b8bbf;--warn:#e07040;--teal:#3bbfaa;
-  --muted:#5a6a80;--text:#d0dbe8;--text2:#8899aa;
-  --mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--cond:'Barlow Condensed',sans-serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:15px;scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;display:flex;flex-direction:column}
-
-/* ── TOPBAR ── */
-.topbar{
-  background:var(--surface);border-bottom:2px solid var(--amber);
-  padding:14px 32px;display:flex;align-items:center;gap:16px;
-  position:sticky;top:0;z-index:100;
-}
-.topbar-logo{width:42px;height:42px;flex-shrink:0}
-.topbar-titles{flex:1}
-.topbar-title{font-family:var(--cond);font-size:1.2rem;font-weight:800;letter-spacing:.1em;color:var(--amber);text-transform:uppercase}
-.topbar-sub{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.06em;margin-top:2px}
-.topbar-badge{font-family:var(--mono);font-size:.65rem;color:var(--ok);background:rgba(59,191,122,.1);border:1px solid rgba(59,191,122,.25);border-radius:5px;padding:3px 10px}
-
-/* ── HERO ── */
-.hero{
-  padding:60px 32px 48px;text-align:center;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(240,165,0,.06) 0%, transparent 70%);
-  border-bottom:1px solid var(--border);
-}
-.hero-gear{margin:0 auto 24px;display:block}
-.hero-title{font-family:var(--cond);font-size:2.4rem;font-weight:800;letter-spacing:.06em;color:var(--text);margin-bottom:8px}
-.hero-title span{color:var(--amber)}
-.hero-sub{font-size:.95rem;color:var(--text2);line-height:1.7;max-width:520px;margin:0 auto 32px}
-.hero-meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
-.hero-meta-item{font-family:var(--mono);font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:6px}
-.hero-meta-dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
-
-/* ── TOOLS GRID ── */
-.tools-section{padding:48px 32px;max-width:1000px;margin:0 auto;width:100%}
-.section-label{font-family:var(--cond);font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:20px}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
-
-.tool-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  overflow:hidden;text-decoration:none;color:inherit;
-  transition:border-color .2s, transform .15s, box-shadow .2s;
-  display:flex;flex-direction:column;
-}
-.tool-card:hover{
-  border-color:var(--amber);
-  transform:translateY(-2px);
-  box-shadow:0 8px 32px rgba(240,165,0,.08);
-}
-.tool-card-accent{height:3px;background:var(--amber)}
-.tool-card-accent.teal{background:var(--teal)}
-.tool-card-accent.info{background:var(--info)}
-
-.tool-card-body{padding:24px;flex:1}
-.tool-icon{font-size:2rem;margin-bottom:14px}
-.tool-name{font-family:var(--cond);font-size:1.15rem;font-weight:800;letter-spacing:.06em;color:var(--text);margin-bottom:6px}
-.tool-version{font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-bottom:12px}
-.tool-desc{font-size:.88rem;color:var(--text2);line-height:1.65}
-
-.tool-card-footer{
-  padding:14px 24px;background:var(--surface2);border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.tool-tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-family:var(--mono);font-size:.63rem;padding:2px 7px;border-radius:4px;background:rgba(240,165,0,.08);color:var(--amber);border:1px solid rgba(240,165,0,.2)}
-.tag.ok{background:rgba(59,191,122,.08);color:var(--ok);border-color:rgba(59,191,122,.2)}
-.tag.info{background:rgba(59,139,191,.08);color:var(--info);border-color:rgba(59,139,191,.2)}
-.tag.teal{background:rgba(59,191,170,.08);color:var(--teal);border-color:rgba(59,191,170,.2)}
-.open-btn{font-family:var(--cond);font-size:.8rem;font-weight:700;letter-spacing:.05em;color:var(--amber);display:flex;align-items:center;gap:5px;white-space:nowrap}
-.open-btn::after{content:'→';transition:transform .15s}
-.tool-card:hover .open-btn::after{transform:translateX(4px)}
-
-/* ── INFO BAR ── */
-.info-bar{
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:20px 32px;margin-top:auto;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-}
-.info-bar-text{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.7}
-.info-bar-text strong{color:var(--text2)}
-.info-bar-logo{font-family:var(--cond);font-size:.8rem;font-weight:800;letter-spacing:.1em;color:var(--amber)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:600px){
-  .topbar{padding:12px 16px}
-  .hero{padding:40px 16px 32px}
-  .hero-title{font-size:1.8rem}
-  .tools-section{padding:32px 16px}
-  .tools-grid{grid-template-columns:1fr}
-  .info-bar{padding:16px}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZALINEL Production Suite</title>
+  <style>
+    :root{
+      --bg:#0f1722;
+      --surface:#182131;
+      --surface-2:#223049;
+      --border:#31425f;
+      --text:#d9e4f2;
+      --muted:#8ea2bb;
+      --accent:#e7a61a;
+      --accent-2:#ffbf3c;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Segoe UI,Arial,sans-serif;
+      background:linear-gradient(160deg,#0c121b 0%,#121c29 55%,#1a2636 100%);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .wrap{
+      width:min(960px,100%);
+      background:rgba(24,33,49,.92);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:32px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:2.2rem;
+      color:var(--accent);
+    }
+    .sub{
+      margin:0 0 28px;
+      color:var(--muted);
+      line-height:1.6;
+      max-width:700px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
+      margin-top:22px;
+    }
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:22px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:1.3rem;
+    }
+    .card p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+    .tag{
+      display:inline-block;
+      margin-bottom:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(231,166,26,.12);
+      color:var(--accent-2);
+      font-size:.8rem;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .btn{
+      display:inline-block;
+      text-decoration:none;
+      background:var(--accent);
+      color:#111;
+      font-weight:700;
+      padding:12px 16px;
+      border-radius:10px;
+    }
+    .btn:hover{
+      background:var(--accent-2);
+    }
+    .footer{
+      margin-top:28px;
+      padding-top:20px;
+      border-top:1px solid var(--border);
+      color:var(--muted);
+      font-size:.95rem;
+    }
+  </style>
 </head>
 <body>
+  <main class="wrap">
+    <h1>ZALINEL Production Suite</h1>
+    <p class="sub">
+      Sistema de herramientas para trazabilidad operativa, captura estructurada del proceso y análisis de producción en fabricación de mangas de fundición por disparo de arena.
+    </p>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <svg class="topbar-logo" viewBox="0 0 60 60" fill="none">
-    <rect width="60" height="60" rx="10" fill="#1a2030"/>
-    <circle cx="30" cy="28" r="13" fill="none" stroke="#f0a500" stroke-width="3"/>
-    <circle cx="30" cy="28" r="6" fill="none" stroke="#f0a500" stroke-width="2.5"/>
-    <rect x="27.5" y="12" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="27.5" y="39" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="12" y="25.5" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="43" y="25.5" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="17.2" y="16.2" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(45 19.7 18.7)"/>
-    <rect x="37.8" y="36.8" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(45 40.3 39.3)"/>
-    <rect x="37.8" y="16.2" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(-45 40.3 18.7)"/>
-    <rect x="17.2" y="36.8" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(-45 19.7 39.3)"/>
-    <text x="30" y="52" text-anchor="middle" font-family="'Barlow Condensed'" font-size="7" font-weight="800" fill="#f0a500" letter-spacing="1">ZALINEL</text>
-  </svg>
-  <div class="topbar-titles">
-    <div class="topbar-title">ZALINEL Operation Suite</div>
-    <div class="topbar-sub">ZH780L-40 · Quipasur Ltda · San Bernardo</div>
-  </div>
-  <span class="topbar-badge">● EN LÍNEA</span>
-</div>
+    <section class="grid">
+      <article class="card">
+        <div class="tag">Operación</div>
+        <h2>Operation Suite</h2>
+        <p>
+          Registro estructurado del turno, eventos, scrap, lotes, merma y pallets. Herramienta principal para el PC de operaciones.
+        </p>
+        <a class="btn" href="./apps/operation-suite/">Abrir herramienta</a>
+      </article>
 
-<!-- HERO -->
-<div class="hero">
-  <svg class="hero-gear" width="64" height="64" viewBox="0 0 60 60" fill="none">
-    <rect width="60" height="60" rx="14" fill="#161b24"/>
-    <circle cx="30" cy="28" r="13" fill="none" stroke="#f0a500" stroke-width="3"/>
-    <circle cx="30" cy="28" r="6" fill="none" stroke="#f0a500" stroke-width="2.5"/>
-    <rect x="27.5" y="12" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="27.5" y="39" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="12" y="25.5" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="43" y="25.5" width="5" height="5" rx="1" fill="#f0a500"/>
-    <rect x="17.2" y="16.2" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(45 19.7 18.7)"/>
-    <rect x="37.8" y="36.8" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(45 40.3 39.3)"/>
-    <rect x="37.8" y="16.2" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(-45 40.3 18.7)"/>
-    <rect x="17.2" y="36.8" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(-45 19.7 39.3)"/>
-  </svg>
-  <h1 class="hero-title">ZALINEL <span>Operation Suite</span></h1>
-  <p class="hero-sub">Herramientas de registro, control y análisis para la producción de mangas en arena de moldeo. Máquina ZH780L-40 · Quipasur Ltda.</p>
-  <div class="hero-meta">
-    <span class="hero-meta-item"><span class="hero-meta-dot"></span>Sin conexión a servidor</span>
-    <span class="hero-meta-item"><span class="hero-meta-dot"></span>Compatible Chrome / Edge</span>
-    <span class="hero-meta-item"><span class="hero-meta-dot"></span>Desarrollado por ZALINEL SpA</span>
-  </div>
-</div>
+      <article class="card">
+        <div class="tag">Análisis</div>
+        <h2>Dashboard</h2>
+        <p>
+          Visualización de tendencias, KPIs, balances y oportunidades de mejora para revisión interna y trabajo con cliente.
+        </p>
+        <a class="btn" href="./apps/dashboard/">Abrir dashboard</a>
+      </article>
+    </section>
 
-<!-- TOOLS -->
-<div class="tools-section">
-  <div class="section-label">Herramientas disponibles</div>
-  <div class="tools-grid">
-
-    <!-- OPERATION SUITE -->
-    <a class="tool-card" href="operation-suite/">
-      <div class="tool-card-accent"></div>
-      <div class="tool-card-body">
-        <div class="tool-icon">⚙️</div>
-        <div class="tool-name">Operation Suite</div>
-        <div class="tool-version">v3.5 · Registro de turno</div>
-        <div class="tool-desc">Registro de producción por turno en tablet. Captura mangas, lotes, pesos, scrap, eventos con cronómetro y merma en sacos. Genera informes HTML descargables para el dashboard.</div>
-      </div>
-      <div class="tool-card-footer">
-        <div class="tool-tags">
-          <span class="tag">Tablet</span>
-          <span class="tag ok">Offline</span>
-          <span class="tag">Exporta JSON</span>
-        </div>
-        <span class="open-btn">Abrir</span>
-      </div>
-    </a>
-
-    <!-- DASHBOARD -->
-    <a class="tool-card" href="dashboard/">
-      <div class="tool-card-accent teal"></div>
-      <div class="tool-card-body">
-        <div class="tool-icon">📊</div>
-        <div class="tool-name">Dashboard Producción</div>
-        <div class="tool-version">v1.1 · Análisis gerencial</div>
-        <div class="tool-desc">Carga los informes exportados desde el Operation Suite y genera análisis acumulado: producción, calidad, eficiencia, merma y eventos. Filtros por fecha, manga y turno.</div>
-      </div>
-      <div class="tool-card-footer">
-        <div class="tool-tags">
-          <span class="tag teal">Desktop</span>
-          <span class="tag ok">Multi-turno</span>
-          <span class="tag teal">Gráficos</span>
-        </div>
-        <span class="open-btn">Abrir</span>
-      </div>
-    </a>
-
-  </div>
-</div>
-
-<!-- INFO BAR -->
-<div class="info-bar">
-  <div class="info-bar-text">
-    <strong>Quipasur Ltda</strong> · Fundición · San Bernardo, Chile<br>
-    Máquina ZH780L-40 · Proceso de producción de mangas en arena de moldeo con resina
-  </div>
-  <div class="info-bar-logo">ZALINEL SpA</div>
-</div>
-
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/bitacora-zalinel/sw.js').catch(()=>{});
-}
-</script>
+    <div class="footer">
+      Desarrollado por ZALINEL SpA para soporte operativo, trazabilidad y mejora continua del proceso productivo.
+    </div>
+  </main>
 </body>
 </html>
