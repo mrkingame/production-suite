@@ -1249,7 +1249,7 @@ function addSaco(data=null){
   row.innerHTML=`<span style="font-family:var(--mono);font-size:.8rem;color:var(--amber)">SACO ${cnt}</span>
     <input type="number" placeholder="Kg saco" step="0.1" value="${data?.kg||''}">
     <select style="font-family:var(--cond);font-size:.72rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:5px;padding:3px 5px;cursor:pointer">
-      <option value="merma_tolva" ${tipo==='merma_tolva'?'selected':''}>Merma tolva</option>
+      <option value="merma_tolva" ${tipo==='merma_tolva'?'selected':''}>Merma campana</option>
       <option value="merma_suelo" ${tipo==='merma_suelo'?'selected':''}>Merma suelo</option>
       <option value="otro" ${tipo==='otro'?'selected':''}>Otro</option>
     </select>
@@ -1617,15 +1617,15 @@ function loadRecord(id){
 // ══════════════════════════════════════════
 //  CALC HELPERS
 // ══════════════════════════════════════════
-function countMangas(r){ return r.segments?.reduce((t,s)=>t+s.lotes?.reduce((tt,l)=>tt+l.mangas?.filter(m=>!m.scrap&&m.peso).length,0),0)||0; }
-function calcFabricado(r){ return r.segments?.reduce((t,s)=>t+s.lotes?.reduce((tt,l)=>tt+l.mangas?.filter(m=>!m.scrap&&m.peso).reduce((a,m)=>a+m.peso,0),0),0)||0; }
+function countMangas(r){ const fromSegs=r.segments?.reduce((t,s)=>t+s.lotes?.reduce((tt,l)=>tt+l.mangas?.filter(m=>!m.scrap&&m.peso).length,0),0)||0; return fromSegs||r._total_mangas||0; }
+function calcFabricado(r){ const fromSegs=r.segments?.reduce((t,s)=>t+s.lotes?.reduce((tt,l)=>tt+l.mangas?.filter(m=>!m.scrap&&m.peso).reduce((a,m)=>a+m.peso,0),0),0)||0; return fromSegs||r._kg_fabricado||0; }
 function calcScrap(r){
   let sc=0;
   r.segments?.forEach(seg=>{
     seg.lotes?.forEach(l=>l.mangas?.filter(m=>m.scrap&&m.peso).forEach(m=>sc+=m.peso));
     seg.scraps?.forEach(s=>{ if(s.kg) sc+=s.kg; });
   });
-  return sc;
+  return sc||r._kg_scrap||0;
 }
 function timeToMin(t){ const [h,m]=t.split(':').map(Number); return h*60+m; }
 
@@ -1720,7 +1720,7 @@ function generateReport(rec){
   const donutData=[
     {label:'Fabricado',val:totalFab,color:'#3bbf7a'},
     {label:'Scrap',val:totalSc,color:'#e03b3b'},
-    {label:'Merma tolva',val:totalAnu,color:'#e07040'},
+    {label:'Merma campana',val:totalAnu,color:'#e07040'},
     ...(totalMermaMez>0?[{label:'Merma mezclador',val:totalMermaMez,color:'#a855f7'}]:[]),
   ];
 
@@ -1793,7 +1793,7 @@ function generateReport(rec){
   let sacHtml='';
   if(rec.sacos?.length){
     const tot=rec.sacos.reduce((a,s)=>a+s.kg,0);
-    const TIPO_LABELS={'merma_tolva':'Merma tolva','merma_suelo':'Merma suelo','otro':'Otro'};
+    const TIPO_LABELS={'merma_tolva':'Merma campana','merma_suelo':'Merma suelo','otro':'Otro'};
     sacHtml=`<div class="report-section-title">MERMA EN SACOS</div>
       <table class="report-table"><tr><th>Saco</th><th>Tipo</th><th>Kg</th></tr>
       ${rec.sacos.map((s,i)=>`<tr><td>${i+1}</td><td style="color:var(--text2)">${TIPO_LABELS[s.tipo]||s.tipo||'—'}</td><td>${s.kg.toFixed(1)}</td></tr>`).join('')}

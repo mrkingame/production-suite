@@ -921,7 +921,7 @@ function renderResumen() {
   const donutItems=[
     {label:'Fabricado', val:totalFab, color:'var(--ok)'},
     {label:'Scrap', val:totalSc, color:'var(--danger)'},
-    {label:'Merma tolva', val:Math.max(0,totalPer), color:'var(--warn)'},
+    {label:'Merma campana', val:Math.max(0,totalPer), color:'var(--warn)'},
   ];
   if(totalMermaMez>0) donutItems.push({label:'Merma mezclador', val:totalMermaMez, color:'var(--purple)'});
   donutChart('chart-donut-resumen', donutItems, pctFab);
@@ -1089,7 +1089,7 @@ function renderEficiencia() {
     {label:'Eficiencia global', value:fmtPct(pctEfic), color:pctEfic>=90?'ok':'warn', variant:pctEfic>=90?'ok':'warn', bar:pctEfic, barColor:'var(--ok)'},
     {label:'Kg mezcla total', value:(totalMez/1000).toFixed(2), unit:'t', color:''},
     {label:'Kg fabricados', value:(totalFab/1000).toFixed(2), unit:'t', color:'ok'},
-    {label:'Merma tolva', value:totalPer.toFixed(1), unit:'kg', color:'warn', sub:`${fmtPct(pctPer)} del total`},
+    {label:'Merma campana', value:totalPer.toFixed(1), unit:'kg', color:'warn', sub:`${fmtPct(pctPer)} del total`},
     {label:'Merma mezclador', value:totalMermaMez2>0?totalMermaMez2.toFixed(1):'—', unit:totalMermaMez2>0?'kg':'', color:totalMermaMez2>0?'warn':'', sub:totalMermaMez2>0?`${fmtPct(pctMermaMez)} del total`:'Sin datos'},
     {label:'Kg scrap', value:totalSc.toFixed(1), unit:'kg', color:'danger'},
     {label:'Balance neto', value:((totalFab/(totalMez||1))*100).toFixed(1), unit:'%', color:'info', sub:'Mezcla → producto'},
@@ -1115,8 +1115,8 @@ function renderEficiencia() {
   if(hasMermaMez) balanceSeries.push({label:'Merma mezclador', color:'var(--purple)', data:dates.map(d=>({x:d,y:byDate[d].mmez}))});
   lineChart('chart-balance', balanceSeries, {h:220});
 
-  // Merma tolva + mezclador por turno
-  const mermaSeries=[{label:'Merma tolva', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].per}))}];
+  // Merma campana + mezclador por turno
+  const mermaSeries=[{label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].per}))}];
   if(hasMermaMez) mermaSeries.push({label:'Merma mezclador', color:'var(--purple)', data:dates.map(d=>({x:d,y:byDate[d].mmez}))});
   lineChart('chart-perdida', mermaSeries);
 
