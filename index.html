@@ -9,17 +9,23 @@
       --bg:#0f1722;
       --surface:#182131;
       --surface-2:#223049;
+      --surface-3:#111925;
       --border:#31425f;
       --text:#d9e4f2;
       --muted:#8ea2bb;
       --accent:#e7a61a;
       --accent-2:#ffbf3c;
+      --paper:#f4f6fa;
+      --paper-border:#d5ddea;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:Segoe UI,Arial,sans-serif;
-      background:linear-gradient(160deg,#0c121b 0%,#121c29 55%,#1a2636 100%);
+      font-family:"Segoe UI",Arial,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(231,166,26,.08), transparent 24%),
+        radial-gradient(circle at left center, rgba(84,111,148,.12), transparent 28%),
+        linear-gradient(160deg,#0c121b 0%,#121c29 55%,#1a2636 100%);
       color:var(--text);
       min-height:100vh;
       display:flex;
@@ -28,23 +34,111 @@
       padding:24px;
     }
     .wrap{
-      width:min(960px,100%);
+      width:min(1040px,100%);
       background:rgba(24,33,49,.92);
       border:1px solid var(--border);
-      border-radius:20px;
+      border-radius:24px;
       padding:32px;
       box-shadow:0 20px 60px rgba(0,0,0,.35);
+      backdrop-filter:blur(10px);
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(280px,370px) 1fr;
+      gap:28px;
+      align-items:center;
+      margin-bottom:22px;
+    }
+    .brand-panel{
+      position:relative;
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(238,243,249,.96));
+      border:1px solid rgba(213,221,234,.85);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:
+        0 18px 40px rgba(5,10,18,.28),
+        inset 0 1px 0 rgba(255,255,255,.8);
+      overflow:hidden;
+    }
+    .brand-panel::before{
+      content:"";
+      position:absolute;
+      top:-34px;
+      left:-28px;
+      width:180px;
+      height:180px;
+      background:radial-gradient(circle, rgba(231,166,26,.16), transparent 65%);
+      pointer-events:none;
+    }
+    .brand-panel::after{
+      content:"";
+      position:absolute;
+      right:-46px;
+      bottom:-54px;
+      width:180px;
+      height:180px;
+      background:radial-gradient(circle, rgba(36,56,85,.12), transparent 70%);
+      pointer-events:none;
+    }
+    .brand-frame{
+      position:relative;
+      z-index:1;
+      background:var(--paper);
+      border:1px solid var(--paper-border);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .brand-frame img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+    .eyebrow{
+      display:inline-block;
+      margin-bottom:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(231,166,26,.12);
+      color:var(--accent-2);
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
     h1{
       margin:0 0 10px;
-      font-size:2.2rem;
-      color:var(--accent);
+      font-size:2.6rem;
+      line-height:1.03;
+      color:#f2f7fb;
+    }
+    .hero-copy{
+      padding-right:12px;
     }
     .sub{
-      margin:0 0 28px;
+      margin:0 0 22px;
       color:var(--muted);
-      line-height:1.6;
-      max-width:700px;
+      line-height:1.65;
+      max-width:680px;
+      font-size:1rem;
+    }
+    .sub strong{
+      color:#eef4fb;
+      font-weight:700;
+    }
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .meta-chip{
+      background:rgba(17,25,37,.7);
+      border:1px solid rgba(142,162,187,.18);
+      color:#b9c7d9;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:.84rem;
+      letter-spacing:.02em;
     }
     .grid{
       display:grid;
@@ -53,10 +147,11 @@
       margin-top:22px;
     }
     .card{
-      background:var(--surface);
+      background:linear-gradient(180deg, rgba(24,33,49,.98), rgba(17,25,37,.98));
       border:1px solid var(--border);
       border-radius:16px;
       padding:22px;
+      box-shadow:0 14px 30px rgba(0,0,0,.16);
     }
     .card h2{
       margin:0 0 10px;
@@ -87,9 +182,12 @@
       font-weight:700;
       padding:12px 16px;
       border-radius:10px;
+      transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
     }
     .btn:hover{
       background:var(--accent-2);
+      transform:translateY(-1px);
+      box-shadow:0 10px 24px rgba(231,166,26,.18);
     }
     .footer{
       margin-top:28px;
@@ -98,18 +196,47 @@
       color:var(--muted);
       font-size:.95rem;
     }
+    @media(max-width:780px){
+      .wrap{padding:24px}
+      .hero{
+        grid-template-columns:1fr;
+        gap:18px;
+      }
+      .hero-copy{
+        padding-right:0;
+      }
+      h1{
+        font-size:2rem;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>ZALINEL Production Suite</h1>
-    <p class="sub">
-      Sistema de herramientas para trazabilidad operativa, captura estructurada del proceso y análisis de producción en fabricación de mangas de fundición por disparo de arena.
-    </p>
+    <section class="hero">
+      <div class="brand-panel">
+        <div class="brand-frame">
+          <img src="./assets/brand/logo-con-slogan.png" alt="Logo ZALINEL con slogan" />
+        </div>
+      </div>
+
+      <div class="hero-copy">
+        <div class="eyebrow">Sistema Operacional</div>
+        <h1>ZALINEL Production Suite</h1>
+        <p class="sub">
+          Sistema de herramientas para <strong>trazabilidad operativa</strong>, captura estructurada del proceso y an&aacute;lisis de producci&oacute;n en fabricaci&oacute;n de mangas de fundici&oacute;n por disparo de arena.
+        </p>
+        <div class="meta">
+          <div class="meta-chip">Operation Suite para PC de operaciones</div>
+          <div class="meta-chip">Dashboard para revisi&oacute;n anal&iacute;tica</div>
+          <div class="meta-chip">Flujo pensado para trabajo real en planta</div>
+        </div>
+      </div>
+    </section>
 
     <section class="grid">
       <article class="card">
-        <div class="tag">Operación</div>
+        <div class="tag">Operaci&oacute;n</div>
         <h2>Operation Suite</h2>
         <p>
           Registro estructurado del turno, eventos, scrap, lotes, merma y pallets. Herramienta principal para el PC de operaciones.
@@ -118,10 +245,10 @@
       </article>
 
       <article class="card">
-        <div class="tag">Análisis</div>
+        <div class="tag">An&aacute;lisis</div>
         <h2>Dashboard</h2>
         <p>
-          Visualización de tendencias, KPIs, balances y oportunidades de mejora para revisión interna y trabajo con cliente.
+          Visualizaci&oacute;n de tendencias, KPIs, balances y oportunidades de mejora para revisi&oacute;n interna y trabajo con cliente.
         </p>
         <a class="btn" href="./apps/dashboard/">Abrir dashboard</a>
       </article>
