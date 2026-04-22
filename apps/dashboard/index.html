@@ -570,7 +570,7 @@ function extractData(html, filename) {
         total_mangas: 0, kg_fabricado: 0, kg_scrap: 0,
         kg_mezcla: 0, kg_perdida: 0, kg_merma_mezclador: 0,
         pct_eficiencia: 0, pct_scrap: 0,
-        eventos: [], tiempo_paros_min: 0,
+        eventos: [], tiempo_paros_min: 0, sacos: [],
       };
     }
     return null;
@@ -682,6 +682,15 @@ function renderCurrentView() {
 //  HELPERS CÁLCULO
 // ══════════════════════════════════════════════════
 function sum(arr, fn) { return arr.reduce((a,x)=>a+(fn?fn(x):x),0); }
+function getMermaCampana(rec) {
+  return sum(rec.sacos||[], s => s.tipo==='merma_tolva' ? (s.kg||0) : 0);
+}
+function getMermaMezclador(rec) {
+  return rec.kg_merma_mezclador||0;
+}
+function getResidualNoExplicado(rec) {
+  return Math.max(0, (rec.kg_perdida||0) - getMermaCampana(rec) - getMermaMezclador(rec));
+}
 
 function getTipoStats() {
   // Agrupa métricas por tipo de manga en los datos filtrados
@@ -893,6 +902,9 @@ function renderResumen() {
   const totalSc  = sum(filtered, r=>r.kg_scrap||0);
   const totalMez = sum(filtered, r=>r.kg_mezcla||0);
   const totalPer = sum(filtered, r=>r.kg_perdida||0);
+  const totalMermaCamp = sum(filtered, r=>getMermaCampana(r));
+  const totalMermaMez = sum(filtered, r=>getMermaMezclador(r));
+  const totalResidual = sum(filtered, r=>getResidualNoExplicado(r));
   const pctEfic  = totalMez>0?((totalFab/totalMez)*100):0;
   const pctSc    = totalFab+totalSc>0?((totalSc/(totalFab+totalSc))*100):0;
   const dias     = new Set(filtered.map(r=>r.fecha)).size;
@@ -915,15 +927,15 @@ function renderResumen() {
     {label:'Kg fabricados', color:'var(--ok)', data:dates.map(d=>({x:d,y:byDate[d].kg}))},
   ]);
 
-  // Donut — 4 componentes balance de masa real
-  const totalMermaMez = sum(filtered, r=>r.kg_merma_mezclador||0);
+  // Donut - balance de masa segun datos disponibles
   const pctFab=fmtPct(pctEfic);
   const donutItems=[
     {label:'Fabricado', val:totalFab, color:'var(--ok)'},
     {label:'Scrap', val:totalSc, color:'var(--danger)'},
-    {label:'Merma campana', val:Math.max(0,totalPer), color:'var(--warn)'},
   ];
+  if(totalMermaCamp>0) donutItems.push({label:'Merma campana', val:totalMermaCamp, color:'var(--warn)'});
   if(totalMermaMez>0) donutItems.push({label:'Merma mezclador', val:totalMermaMez, color:'var(--purple)'});
+  if(totalResidual>0) donutItems.push({label:'Residual no explicado', val:totalResidual, color:'var(--amber)'});
   donutChart('chart-donut-resumen', donutItems, pctFab);
 
   // Tipos bar
@@ -1080,44 +1092,53 @@ function renderEficiencia() {
   const totalSc  = sum(filtered, r=>r.kg_scrap||0);
   const totalMez = sum(filtered, r=>r.kg_mezcla||0);
   const totalPer = sum(filtered, r=>r.kg_perdida||0);
-  const totalMermaMez2 = sum(filtered, r=>r.kg_merma_mezclador||0);
+  const totalMermaCamp = sum(filtered, r=>getMermaCampana(r));
+  const totalMermaMez2 = sum(filtered, r=>getMermaMezclador(r));
+  const totalResidual  = sum(filtered, r=>getResidualNoExplicado(r));
   const pctEfic  = totalMez>0?((totalFab/totalMez)*100):0;
-  const pctPer   = totalMez>0?((totalPer/totalMez)*100):0;
+  const pctCamp  = totalMez>0?((totalMermaCamp/totalMez)*100):0;
+  const pctResidual = totalMez>0?((totalResidual/totalMez)*100):0;
   const pctMermaMez = totalMez>0?((totalMermaMez2/totalMez)*100):0;
 
   buildKPIs('kpi-eficiencia',[
     {label:'Eficiencia global', value:fmtPct(pctEfic), color:pctEfic>=90?'ok':'warn', variant:pctEfic>=90?'ok':'warn', bar:pctEfic, barColor:'var(--ok)'},
     {label:'Kg mezcla total', value:(totalMez/1000).toFixed(2), unit:'t', color:''},
     {label:'Kg fabricados', value:(totalFab/1000).toFixed(2), unit:'t', color:'ok'},
-    {label:'Merma campana', value:totalPer.toFixed(1), unit:'kg', color:'warn', sub:`${fmtPct(pctPer)} del total`},
-    {label:'Merma mezclador', value:totalMermaMez2>0?totalMermaMez2.toFixed(1):'—', unit:totalMermaMez2>0?'kg':'', color:totalMermaMez2>0?'warn':'', sub:totalMermaMez2>0?`${fmtPct(pctMermaMez)} del total`:'Sin datos'},
+    {label:'Merma campana', value:totalMermaCamp.toFixed(1), unit:'kg', color:'warn', sub:`${fmtPct(pctCamp)} del total`},
+    {label:'Merma mezclador', value:totalMermaMez2>0?totalMermaMez2.toFixed(1):'-', unit:totalMermaMez2>0?'kg':'', color:totalMermaMez2>0?'warn':'', sub:totalMermaMez2>0?`${fmtPct(pctMermaMez)} del total`:'Sin datos'},
+    {label:'Residual no explicado', value:totalResidual.toFixed(1), unit:'kg', color:'amber', sub:`${fmtPct(pctResidual)} del total`},
     {label:'Kg scrap', value:totalSc.toFixed(1), unit:'kg', color:'danger'},
-    {label:'Balance neto', value:((totalFab/(totalMez||1))*100).toFixed(1), unit:'%', color:'info', sub:'Mezcla → producto'},
+    {label:'Balance neto', value:((totalFab/(totalMez||1))*100).toFixed(1), unit:'%', color:'info', sub:'Mezcla -> producto'},
   ]);
 
   // Balance de masa: 4 componentes por fecha
   const byDate={};
   filtered.forEach(r=>{
-    if(!byDate[r.fecha]) byDate[r.fecha]={fab:0,sc:0,per:0,mez:0,mmez:0};
+    if(!byDate[r.fecha]) byDate[r.fecha]={fab:0,sc:0,camp:0,res:0,mez:0,mmez:0};
     byDate[r.fecha].fab+=r.kg_fabricado||0;
     byDate[r.fecha].sc+=r.kg_scrap||0;
-    byDate[r.fecha].per+=r.kg_perdida||0;
+    byDate[r.fecha].camp+=getMermaCampana(r);
+    byDate[r.fecha].res+=getResidualNoExplicado(r);
     byDate[r.fecha].mez+=r.kg_mezcla||0;
-    byDate[r.fecha].mmez+=r.kg_merma_mezclador||0;
+    byDate[r.fecha].mmez+=getMermaMezclador(r);
   });
   const dates=Object.keys(byDate).sort();
   const hasMermaMez=dates.some(d=>byDate[d].mmez>0);
+  const hasResidual=dates.some(d=>byDate[d].res>0);
   const balanceSeries=[
     {label:'Mezcla', color:'var(--info)', data:dates.map(d=>({x:d,y:byDate[d].mez}))},
     {label:'Fabricado', color:'var(--ok)', data:dates.map(d=>({x:d,y:byDate[d].fab}))},
     {label:'Scrap', color:'var(--danger)', data:dates.map(d=>({x:d,y:byDate[d].sc}))},
+    {label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].camp}))},
   ];
   if(hasMermaMez) balanceSeries.push({label:'Merma mezclador', color:'var(--purple)', data:dates.map(d=>({x:d,y:byDate[d].mmez}))});
+  if(hasResidual) balanceSeries.push({label:'Residual no explicado', color:'var(--amber)', data:dates.map(d=>({x:d,y:byDate[d].res}))});
   lineChart('chart-balance', balanceSeries, {h:220});
 
-  // Merma campana + mezclador por turno
-  const mermaSeries=[{label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].per}))}];
+  // Perdidas por turno
+  const mermaSeries=[{label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].camp}))}];
   if(hasMermaMez) mermaSeries.push({label:'Merma mezclador', color:'var(--purple)', data:dates.map(d=>({x:d,y:byDate[d].mmez}))});
+  if(hasResidual) mermaSeries.push({label:'Residual no explicado', color:'var(--amber)', data:dates.map(d=>({x:d,y:byDate[d].res}))});
   lineChart('chart-perdida', mermaSeries);
 
   // Eficiencia por tipo
