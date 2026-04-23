@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DASHBOARD PRODUCCIÓN v2.0 · QUIPASUR LTDA</title>
+<title>DASHBOARD PRODUCCIÓN v2.1 · QUIPASUR LTDA</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -192,7 +192,7 @@ svg text{font-family:'Barlow Condensed',sans-serif}
 .prog-fill{height:100%;border-radius:3px;transition:width .4s ease}
 
 /* ── TIPO MANGA COLOR MAP ── */
-.manga-280{color:#3b8bbf}.manga-300{color:#3bbfaa}.manga-320{color:#a855f7}
+.manga-220{color:#6aa6ff}.manga-240{color:#58c7d6}.manga-260{color:#4fa3d8}.manga-280{color:#3b8bbf}.manga-300{color:#3bbfaa}.manga-320{color:#a855f7}
 .manga-340{color:#e07040}.manga-360{color:#f0a500}.manga-380{color:#3bbf7a}
 .manga-400{color:#ffbe33}.manga-430{color:#e05599}.manga-460{color:#e03b3b}
 
@@ -311,7 +311,7 @@ svg text{font-family:'Barlow Condensed',sans-serif}
       <label>MANGA</label>
       <select id="f-manga" onchange="applyFilters()">
         <option value="">TODAS</option>
-        <option>280</option><option>300</option><option>320</option><option>340</option>
+        <option>220</option><option>240</option><option>260</option><option>280</option><option>300</option><option>320</option><option>340</option>
         <option>360</option><option>380</option><option>400</option><option>430</option><option>460</option>
       </select>
     </div>
@@ -413,6 +413,13 @@ svg text{font-family:'Barlow Condensed',sans-serif}
         </div>
       </div>
       <div class="card">
+        <div class="card-head"><span class="card-title">Referencia cliente: mangas y rangos</span></div>
+        <div class="card-body">
+          <table class="dash-table" id="table-rangos-manga"></table>
+        </div>
+      </div>
+
+      <div class="card">
         <div class="card-head"><span class="card-title">🔴 Registros con mayor scrap</span></div>
         <div class="card-body">
           <table class="dash-table" id="table-mayor-scrap"></table>
@@ -501,6 +508,21 @@ let allData = [];        // todos los registros cargados
 let filtered = [];       // registros tras aplicar filtros
 let currentView = 'resumen';
 let chartMode = 'mangas'; // 'mangas' | 'kg'
+
+const MANGA_MASTER = {
+  '220':{codigo:'CFQTPND220',nom:4.8,min:4.5,max:5.0},
+  '240':{codigo:'CFQTPND240',nom:7.0,min:6.7,max:7.7},
+  '260':{codigo:'CFQTPND260',nom:9.2,min:8.7,max:9.6},
+  '280':{codigo:'CFQTPND280',nom:11.4,min:10.8,max:12.0},
+  '300':{codigo:'CFQTPND300',nom:15.2,min:14.4,max:16.0},
+  '320':{codigo:'CFQTP32H23',nom:15.1,min:14.4,max:15.9},
+  '340':{codigo:'CFQTP34H19',nom:17.9,min:17.0,max:18.8},
+  '360':{codigo:'CFQTP36H24',nom:19.0,min:18.1,max:20.0},
+  '380':{codigo:'CFQTP38H22',nom:21.4,min:20.3,max:22.4},
+  '400':{codigo:'CFQTP40H16',nom:23.5,min:22.3,max:24.7},
+  '430':{codigo:'CFQTP43H13',nom:28.3,min:26.8,max:29.7},
+  '460':{codigo:'CFQTPND460',nom:28.2,min:26.7,max:29.6},
+};
 
 // ══════════════════════════════════════════════════
 //  CARGAR ARCHIVOS (File System Access API)
@@ -737,7 +759,7 @@ function fmtMin(min) {
 function fmtMinUnit(min) { return (min||0)>=60 ? 'h' : 'min'; }
 
 function tipoColor(tipo) {
-  const map = {'280':'#3b8bbf','300':'#3bbfaa','320':'#a855f7','340':'#e07040',
+  const map = {'220':'#6aa6ff','240':'#58c7d6','260':'#4fa3d8','280':'#3b8bbf','300':'#3bbfaa','320':'#a855f7','340':'#e07040',
                '360':'#f0a500','380':'#3bbf7a','400':'#ffbe33','430':'#e05599','460':'#e03b3b'};
   return map[tipo] || '#5a6a80';
 }
@@ -1094,6 +1116,20 @@ function renderCalidad() {
 
   // Mayor scrap
   const conScrap=[...filtered].filter(r=>r.kg_scrap>0).sort((a,b)=>b.pct_scrap-a.pct_scrap).slice(0,10);
+  const tiposVisibles = tipoStats.length ? tipoStats.map(t=>t.tipo) : Object.keys(MANGA_MASTER);
+  document.getElementById('table-rangos-manga').innerHTML=`
+    <tr><th>Tipo</th><th>Código</th><th>Nominal</th><th>Mínimo</th><th>Máximo</th></tr>
+    ${tiposVisibles.map(tipo=>{
+      const ref=MANGA_MASTER[tipo]||{};
+      return `<tr>
+        <td><span class="badge badge-muted" style="color:${tipoColor(tipo)};border-color:${tipoColor(tipo)}40">${tipo}</span></td>
+        <td class="amber">${ref.codigo||'—'}</td>
+        <td>${ref.nom!=null?ref.nom.toFixed(1):'—'} kg</td>
+        <td>${ref.min!=null?ref.min.toFixed(1):'—'} kg</td>
+        <td>${ref.max!=null?ref.max.toFixed(1):'—'} kg</td>
+      </tr>`;
+    }).join('')}`;
+
   document.getElementById('table-mayor-scrap').innerHTML=`
     <tr><th>Fecha</th><th>T</th><th>Tipo</th><th>Kg scrap</th><th>% Scrap</th></tr>
     ${conScrap.map(r=>`<tr>
