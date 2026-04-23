@@ -1,0 +1,30 @@
+{
+  "version_contrato": "0.1",
+  "regla": "Todos los módulos deben conservar ids, fechas ISO y origen para permitir trazabilidad local.",
+  "id_formatos": {
+    "produccion": "prod_YYYY-MM-DD_TN_equipo",
+    "evento": "evt_YYYY-MM-DD_HHMMSS_origen",
+    "bitacora": "bit_YYYY-MM-DD_HHMMSS",
+    "procedimiento": "proc_nombre_vN"
+  },
+  "evento_minimo": {
+    "id": "string",
+    "timestamp": "datetime ISO",
+    "fecha": "YYYY-MM-DD",
+    "origen": "operation_suite | bitacora | proceditor | dashboard | rcm",
+    "tipo": "string",
+    "categoria": "produccion | seguridad | calidad | mantenimiento | procedimiento | sistema",
+    "descripcion": "string",
+    "criticidad": "baja | media | alta | opcional",
+    "rcm_id": "string opcional",
+    "procedimiento_id": "string opcional"
+  },
+  "procedimiento_minimo": {
+    "procedimiento_id": "string",
+    "version": "number",
+    "fecha_aplicacion": "YYYY-MM-DD",
+    "origen": "string",
+    "motivo": "string",
+    "evento_origen": "string opcional"
+  }
+}

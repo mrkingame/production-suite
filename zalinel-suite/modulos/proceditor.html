@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<title>ZAL-TOOL-PROCEDITOR-V4.2 · Editor de Procedimientos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap');
+
+:root {
+  --bg:        #0e1117;
+  --surface:   #161b24;
+  --surface2:  #1d2535;
+  --border:    #2a3347;
+  --text:      #d4dce8;
+  --text-head: #ffffff;
+  --text-dim:  #7a8ba0;
+  --text-faint:#4a5a70;
+  --accent:    #f0a500;
+  --accent-lo: rgba(240,165,0,0.12);
+  --danger:    #e03b3b;
+  --danger-lo: rgba(224,59,59,0.12);
+  --ok:        #3bbf7a;
+  --ok-lo:     rgba(59,191,122,0.10);
+  --warn:      #f07020;
+  --warn-lo:   rgba(240,112,32,0.12);
+  --info:      #3b8bbf;
+  --mono:      'Share Tech Mono', monospace;
+  --sans:      'Barlow', sans-serif;
+  --cond:      'Barlow Condensed', sans-serif;
+  --r:         8px;
+  --touch:     52px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{background:var(--bg);height:100%;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.5;min-height:100vh;overscroll-behavior:none;padding-bottom:env(safe-area-inset-bottom);}
+
+/* ── HEADER ── */
+#hdr{background:var(--surface);border-bottom:2px solid var(--accent);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-left{display:flex;align-items:center;gap:10px;}
+.hdr-logo{width:30px;height:30px;flex-shrink:0;}
+.hdr-info{display:flex;flex-direction:column;}
+.hdr-title{font-family:var(--cond);font-size:14px;font-weight:700;color:var(--text-head);text-transform:uppercase;letter-spacing:.06em;line-height:1;}
+.hdr-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.06em;margin-top:2px;}
+.hdr-right{display:flex;gap:6px;align-items:center;}
+
+/* ── TABS ── */
+#tabs{background:var(--surface2);border-bottom:1px solid var(--border);display:flex;padding:0 14px;gap:4px;}
+.tab{font-family:var(--cond);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── INPUTS GENERALES ── */
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.field-label{font-family:var(--cond);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);}
+.field-input{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--sans);font-size:14px;padding:9px 11px;outline:none;width:100%;transition:border-color .15s;}
+.field-input:focus{border-color:var(--accent);}
+.field-input::placeholder{color:var(--text-faint);}
+textarea.field-input{resize:none;line-height:1.5;min-height:70px;}
+select.field-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8ba0' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+
+/* ── SECCIÓN ENCABEZADO ── */
+#tab-encabezado{padding:14px 14px 120px;}
+.section-title{font-family:var(--cond);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+/* EPP icons */
+
+
+/* ── SECCIÓN PASOS ── */
+#tab-pasos{padding:14px;}
+
+.btn-add-fase{width:100%;background:var(--surface2);border:1.5px dashed var(--border);border-radius:var(--r);color:var(--text-dim);font-family:var(--cond);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px;cursor:pointer;transition:all .12s;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-add-fase:active{border-color:var(--accent);color:var(--accent);}
+
+/* FASE */
+.fase-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
+.fase-header{background:var(--surface2);padding:10px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.fase-num{font-family:var(--mono);font-size:10px;color:var(--text-faint);}
+.fase-nombre-input{flex:1;background:transparent;border:none;outline:none;color:var(--text-head);font-family:var(--cond);font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.fase-nombre-input::placeholder{color:var(--text-faint);}
+.fase-actions{display:flex;gap:4px;}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:4px;color:var(--text-dim);font-size:12px;padding:4px 8px;cursor:pointer;font-family:var(--mono);transition:all .12s;white-space:nowrap;}
+.icon-btn:active{border-color:var(--accent);color:var(--accent);}
+.icon-btn.del:active{border-color:var(--danger);color:var(--danger);}
+
+.fase-body{padding:10px 12px;}
+
+/* PASO */
+.paso-block{background:var(--surface2);border:1px solid var(--border);border-radius:6px;margin-bottom:8px;overflow:hidden;}
+.paso-header{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);}
+.paso-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);min-width:24px;}
+.paso-actions{display:flex;gap:4px;margin-left:auto;}
+.paso-body{padding:8px 10px;}
+.paso-texto{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:14px;resize:none;min-height:50px;line-height:1.5;}
+.paso-texto::placeholder{color:var(--text-faint);}
+
+/* Advertencias del paso */
+.adv-row{display:flex;gap:6px;margin-top:6px;align-items:flex-start;}
+.adv-tipo-sel{font-family:var(--mono);font-size:10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-dim);padding:4px 6px;outline:none;cursor:pointer;flex-shrink:0;}
+.adv-tipo-sel option{background:var(--surface);}
+.adv-texto{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:13px;padding:5px 8px;outline:none;resize:none;min-height:36px;line-height:1.4;}
+.adv-texto::placeholder{color:var(--text-faint);}
+.adv-texto:focus{border-color:var(--accent);}
+.adv-del{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0;}
+
+/* Fotos del paso */
+.paso-fotos{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.foto-thumb-wrap{position:relative;display:inline-block;}
+.foto-thumb{width:64px;height:48px;object-fit:cover;border-radius:4px;border:1px solid var(--border);}
+.foto-del-btn{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1;}
+.btn-add-foto{font-family:var(--mono);font-size:10px;color:var(--text-faint);background:var(--surface);border:1px dashed var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;transition:all .12s;white-space:nowrap;}
+.btn-add-foto:active{border-color:var(--accent);color:var(--accent);}
+
+.btn-add-paso{width:100%;background:transparent;border:1px dashed var(--border);border-radius:5px;color:var(--text-faint);font-family:var(--mono);font-size:11px;padding:7px;cursor:pointer;transition:all .12s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-add-paso:active{border-color:var(--ok);color:var(--ok);}
+
+/* ── PANEL EXPORTAR ── */
+#tab-exportar{padding:14px;}
+.export-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;}
+.export-card-title{font-family:var(--cond);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-head);margin-bottom:6px;}
+.export-card-desc{font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:12px;}
+.btn-export{width:100%;border:none;border-radius:var(--r);padding:0 16px;cursor:pointer;min-height:var(--touch);display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--cond);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:background .15s;}
+.btn-export-proc{background:var(--accent);color:#000;}
+.btn-export-proc:active{background:#d49200;}
+.btn-export-check{background:var(--info);color:#fff;}
+.btn-export-check:active{background:#2a6a9f;}
+.btn-export-save{background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);}
+.btn-export-save:active{border-color:var(--accent);color:var(--accent);}
+
+.preview-stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;}
+.preview-stat{font-family:var(--mono);font-size:10px;color:var(--text-faint);}
+.preview-stat strong{color:var(--text);}
+
+/* ── BARRA INFERIOR ── */
+#bottom-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:8px 14px calc(8px + env(safe-area-inset-bottom));display:flex;gap:8px;z-index:90;}
+.bottom-btn{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text-dim);font-family:var(--cond);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .12s;}
+.bottom-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);}
+.bottom-btn:active{border-color:var(--accent);color:var(--accent);}
+.bottom-btn.primary:active{background:#d49200;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--surface2);border:1px solid var(--accent);color:var(--accent);font-family:var(--cond);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 20px;border-radius:30px;opacity:0;transition:all .2s;z-index:999;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Padding bottom para barra fija */
+.tab-content{padding-bottom:140px;}
+
+/* ── LISTAS DINÁMICAS (insumos / herramientas) ── */
+.lista-items{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
+.lista-item{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px;}
+.lista-item-cant{width:52px;background:transparent;border:none;border-right:1px solid var(--border);outline:none;color:var(--text);font-family:var(--mono);font-size:12px;padding-right:6px;text-align:right;}
+.lista-item-cant::placeholder{color:var(--text-faint);}
+.lista-item-desc{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:13px;}
+.lista-item-desc::placeholder{color:var(--text-faint);}
+.lista-item-del{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:0 2px;line-height:1;flex-shrink:0;}
+.lista-item-del:active{color:var(--danger);}
+.btn-add-lista{width:100%;background:transparent;border:1px dashed var(--border);border-radius:var(--r);color:var(--text-dim);font-family:var(--cond);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:7px;cursor:pointer;transition:all .12s;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-add-lista:active{border-color:var(--ok);color:var(--ok);}
+
+/* ── FOTO CAPTION ── */
+.foto-caption-input{width:100%;background:transparent;border:none;border-top:1px solid var(--border);outline:none;color:var(--text-dim);font-family:var(--sans);font-size:11px;padding:4px 6px;margin-top:4px;}
+.foto-caption-input::placeholder{color:var(--text-faint);}
+.foto-caption-input:focus{color:var(--text);}
+
+/* ── CRITERIOS ── */
+.criterio-block{background:#f0fff4;border-left:3px solid #68d391;border-radius:0 6px 6px 0;padding:8px 12px;margin-top:6px;}
+.criterio-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.criterio-tipo{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;width:80px;flex-shrink:0;}
+.criterio-tipo.ok{color:#276749;}
+.criterio-tipo.nok{color:var(--danger);}
+.criterio-input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--border);outline:none;color:var(--text);font-family:var(--sans);font-size:12px;padding:2px 4px;}
+.criterio-input::placeholder{color:var(--text-faint);}
+.criterio-fotos{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+
+/* ── DECISIONES ── */
+.decision-block{background:#f0f4ff;border-left:3px solid #7f9cf5;border-radius:0 6px 6px 0;padding:8px 12px;margin-top:6px;}
+.decision-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.decision-if-label{font-family:var(--mono);font-size:10px;color:#434190;font-weight:700;flex-shrink:0;width:22px;}
+.decision-cond{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;outline:none;color:var(--text);font-family:var(--sans);font-size:12px;padding:4px 8px;}
+.decision-cond::placeholder{color:var(--text-faint);}
+.decision-then-label{font-family:var(--mono);font-size:10px;color:#434190;font-weight:700;flex-shrink:0;}
+.decision-action-type{background:var(--surface);border:1px solid var(--border);border-radius:4px;outline:none;color:var(--text);font-family:var(--mono);font-size:10px;padding:4px 6px;cursor:pointer;}
+.decision-action-target{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;outline:none;color:var(--text);font-family:var(--sans);font-size:12px;padding:4px 8px;}
+.decision-action-target::placeholder{color:var(--text-faint);}
+.decision-del{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:14px;padding:0 2px;}
+.decision-del:active{color:var(--danger);}
+
+/* ── CONTEXTO OPERATIVO ── */
+.impacto-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+.impacto-pill{font-family:var(--mono);font-size:10px;color:var(--text-dim);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;cursor:pointer;transition:all .12s;user-select:none;}
+.impacto-pill.sel{background:var(--accent-lo);border-color:var(--accent);color:var(--accent);}
+
+.estado-toggle{display:flex;gap:0;margin-top:4px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.estado-btn{flex:1;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:7px 4px;cursor:pointer;background:var(--surface2);border:none;color:var(--text-dim);transition:all .12s;text-align:center;}
+.estado-btn.sel-borrador{background:var(--surface2);color:var(--text-dim);border-right:1px solid var(--border);}
+.estado-btn.sel-validado{background:rgba(59,130,246,0.15);color:var(--accent);border-right:1px solid var(--border);}
+.estado-btn.sel-estandar{background:rgba(59,191,122,0.15);color:var(--ok);}
+
+/* Borde verde en header cuando estado=Estándar */
+#hdr.es-estandar{border-bottom-color:var(--ok);}
+
+/* ── CONDICIÓN BANNER (tab pasos) ── */
+.condicion-banner{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 14px;margin-bottom:14px;}
+.condicion-banner-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.condicion-textarea{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:13px;resize:none;line-height:1.5;min-height:36px;}
+.condicion-textarea::placeholder{color:var(--text-faint);}
+
+/* Botón desde condición en decisiones */
+.btn-desde-condicion{font-family:var(--mono);font-size:9px;color:var(--accent);background:transparent;border:1px solid var(--border);border-radius:4px;padding:2px 7px;cursor:pointer;margin-left:4px;white-space:nowrap;}
+.btn-desde-condicion:active{border-color:var(--accent);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="hdr">
+  <div class="hdr-left">
+<svg class="hdr-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" rx="14" fill="#1a1f2b" stroke="#f0a500" stroke-width="5"/>
+      <g transform="translate(100,88)">
+        <circle r="19" fill="none" stroke="#f0a500" stroke-width="5.5"/>
+        <circle r="10" fill="none" stroke="#f0a500" stroke-width="3.5"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(0)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(45)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(90)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(135)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(180)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(225)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(270)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(315)"/>
+      </g>
+      <text x="100" y="148" text-anchor="middle" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-size="26" font-weight="700" fill="#f0a500" letter-spacing="6">ZALINEL</text>
+      <text x="100" y="165" text-anchor="middle" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-size="13" fill="#7a8ba0" letter-spacing="4">S P A</text>
+    </svg>
+    <div class="hdr-info">
+      <div class="hdr-title">Editor · Procedimientos</div>
+      <div class="hdr-sub" id="hdr-codigo">V4.2</div>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div id="tabs">
+  <div class="tab active" onclick="showTab('encabezado',this)">① Encabezado</div>
+  <div class="tab" onclick="showTab('pasos',this)">② Pasos</div>
+  <div class="tab" onclick="showTab('exportar',this)">③ Exportar</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB ENCABEZADO
+══════════════════════════════════════ -->
+<div id="tab-encabezado" class="tab-content">
+
+  <p class="section-title" style="margin:14px 14px 0;padding-bottom:6px;border-bottom:1px solid var(--border);">Identificación</p>
+  <div style="padding:0 14px 0;">
+    <div style="height:10px;"></div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Código</label>
+        <input class="field-input" id="h-codigo" placeholder="PROC-LIM-001" oninput="updateHdrCodigo()">
+      </div>
+      <div class="field">
+        <label class="field-label">Revisión</label>
+        <input class="field-input" id="h-revision" placeholder="Rev. 0">
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Título del procedimiento</label>
+      <input class="field-input" id="h-titulo" placeholder="ej. Limpieza de mezclador ZH780L-40">
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Equipo / Área</label>
+        <input class="field-input" id="h-equipo" placeholder="ej. ZH780L-40">
+      </div>
+      <div class="field">
+        <label class="field-label">Frecuencia</label>
+        <select class="field-input" id="h-frecuencia">
+          <option value="">— Seleccionar —</option>
+          <option>Por evento</option>
+          <option>Diario</option>
+          <option>Semanal</option>
+          <option>Quincenal</option>
+          <option>Mensual</option>
+          <option>Según programa</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Responsable</label>
+        <input class="field-input" id="h-responsable" placeholder="ej. Operador de turno">
+      </div>
+      <div class="field">
+        <label class="field-label">Tiempo estimado</label>
+        <input class="field-input" id="h-tiempo" placeholder="ej. 45 min">
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Fecha</label>
+      <input class="field-input" id="h-fecha" type="date">
+    </div>
+  </div>
+
+  <p class="section-title" style="margin:10px 14px 0;padding-bottom:6px;border-bottom:1px solid var(--border);">Contexto operativo</p>
+  <div style="padding:10px 14px 0;">
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Origen</label>
+        <input class="field-input" id="h-origen" placeholder="Evento de bitácora / desviación detectada">
+      </div>
+      <div class="field">
+        <label class="field-label">Relacionado con</label>
+        <input class="field-input" id="h-relacionado" placeholder="Sistema / subsistema / componente">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Impacto</label>
+      <div class="impacto-pills" id="impacto-pills">
+        <span class="impacto-pill" data-val="Producción"  onclick="togPill(this)">Producción</span>
+        <span class="impacto-pill" data-val="Calidad"     onclick="togPill(this)">Calidad</span>
+        <span class="impacto-pill" data-val="Seguridad"   onclick="togPill(this)">Seguridad</span>
+        <span class="impacto-pill" data-val="Costo"       onclick="togPill(this)">Costo</span>
+      </div>
+      <div id="impacto-hint" style="font-family:var(--mono);font-size:9px;color:var(--text-faint);letter-spacing:.06em;margin-top:3px;">¿Qué afecta este procedimiento?</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Estado</label>
+      <div class="estado-toggle">
+        <button class="estado-btn sel-borrador" id="estado-borrador" onclick="setEstado('borrador')">Borrador</button>
+        <button class="estado-btn" id="estado-validado"  onclick="setEstado('validado')">Validado</button>
+        <button class="estado-btn" id="estado-estandar"  onclick="setEstado('estandar')">Estándar</button>
+      </div>
+    </div>
+  </div>
+
+    <p class="section-title" style="margin:10px 14px 0;padding-bottom:6px;border-bottom:1px solid var(--border);">EPP Requerido</p>
+  <div style="padding:10px 14px 0;">
+    <div class="epp-lista" id="epp-lista"></div>
+    <button class="btn-add-lista" onclick="addEPPItem()">＋ Agregar EPP</button>
+  </div>
+
+  <p class="section-title" style="margin:10px 14px 0;padding-bottom:6px;border-bottom:1px solid var(--border);">Alcance y objetivo</p>
+  <div style="padding:10px 14px 0;">
+    <div class="field">
+      <label class="field-label">Objetivo</label>
+      <textarea class="field-input" id="h-objetivo" placeholder="Describir el objetivo del procedimiento..." rows="2"></textarea>
+    </div>
+  </div>
+
+  <p class="section-title" style="margin:10px 14px 0;padding-bottom:6px;border-bottom:1px solid var(--border);">Insumos y materiales</p>
+  <div style="padding:10px 14px 0;">
+    <div class="lista-items" id="lista-insumos"></div>
+    <button class="btn-add-lista" onclick="addItemLista('lista-insumos', true)">＋ Agregar insumo o material</button>
+  </div>
+
+  <p class="section-title" style="margin:10px 14px 0;padding-bottom:6px;border-bottom:1px solid var(--border);">Herramientas requeridas</p>
+  <div style="padding:10px 14px 0;">
+    <div class="lista-items" id="lista-herramientas"></div>
+    <button class="btn-add-lista" onclick="addItemLista('lista-herramientas', true)">＋ Agregar herramienta</button>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB PASOS
+══════════════════════════════════════ -->
+<div id="tab-pasos" class="tab-content" style="display:none;padding:14px 14px 140px;">
+
+  <div class="condicion-banner">
+    <div class="condicion-banner-label">Condición de aplicación</div>
+    <textarea class="condicion-textarea" id="h-condicion" placeholder="Define cuándo usar este procedimiento…" rows="2" oninput="autoResize(this);updateCondicionHint();autoguardar()"></textarea>
+    <div id="condicion-hint" style="font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:.06em;margin-top:3px;display:none;">⚠ Define cuándo usar este procedimiento</div>
+  </div>
+
+  <div id="fases-container"></div>
+
+  <button class="btn-add-fase" onclick="addFase()">＋ Agregar fase</button>
+
+  <div id="hint-pasos" style="text-align:center;padding:30px 20px;font-family:var(--mono);font-size:11px;color:var(--text-faint);letter-spacing:.06em;">
+    Agrega una fase para comenzar
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB EXPORTAR
+══════════════════════════════════════ -->
+<div id="tab-exportar" class="tab-content" style="display:none;padding:14px 14px 140px;">
+
+  <div class="export-card">
+    <div class="export-card-title">📄 Procedimiento formal</div>
+    <div class="export-card-desc">Documento completo con encabezado institucional, pasos numerados, advertencias y fotos. Apto para impresión y archivo.</div>
+    <div class="preview-stats" id="stats-proc" style="margin-bottom:12px;"></div>
+    <button class="btn-export btn-export-proc" onclick="exportarProcedimiento()">⬇ Generar procedimiento</button>
+  </div>
+
+  <div class="export-card">
+    <div class="export-card-title">☑ Checklist operacional</div>
+    <div class="export-card-desc">Hoja de verificación derivada del procedimiento. Una línea por paso, con casilla de cumplimiento y espacio para firma y fecha.</div>
+    <button class="btn-export btn-export-check" onclick="exportarChecklist()">⬇ Generar checklist</button>
+  </div>
+
+  <div class="export-card">
+    <div class="export-card-title">💾 Guardar borrador (.json)</div>
+    <div class="export-card-desc">Guarda el contenido del editor como archivo JSON. Este es el archivo fuente — ábrelo aquí para continuar editando en cualquier momento.</div>
+    <button class="btn-export btn-export-save" onclick="guardarBorrador()">⬇ Guardar .json</button>
+  </div>
+
+  <div class="export-card">
+    <div class="export-card-title">📂 Abrir borrador (.json)</div>
+    <div class="export-card-desc">Carga un borrador guardado previamente. Reemplaza el contenido actual del editor — guarda primero si tienes cambios sin guardar.</div>
+    <button class="btn-export btn-export-save" style="border-color:var(--accent);color:var(--accent);" onclick="document.getElementById('json-input-hidden').click()">📂 Abrir .json</button>
+  </div>
+
+  <div class="export-card" style="border-color:var(--danger-lo);">
+    <div class="export-card-title" style="color:var(--danger);">🗑 Nuevo procedimiento</div>
+    <div class="export-card-desc">Borra todo el contenido actual y reinicia el editor desde cero. Guarda el borrador antes si no quieres perder el trabajo actual.</div>
+    <button class="btn-export btn-export-save" style="border-color:var(--danger);color:var(--danger);" onclick="confirmarReset()">🗑 Borrar todo y reiniciar</button>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div id="bottom-bar">
+  <button class="bottom-btn" onclick="showTab('encabezado', document.querySelector('.tab'))">① Encabezado</button>
+  <button class="bottom-btn" onclick="showTab('pasos', document.querySelectorAll('.tab')[1])">② Pasos</button>
+  <button class="bottom-btn primary" onclick="showTab('exportar', document.querySelectorAll('.tab')[2])">③ Exportar</button>
+</div>
+
+<!-- Hidden file input para fotos -->
+<input type="file" id="foto-input-hidden" accept="image/*" capture="environment" multiple style="display:none">
+<!-- Hidden file input para JSON -->
+<input type="file" id="json-input-hidden" accept=".json" style="display:none" onchange="abrirBorradorJSON(this)">
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+// ESTADO
+// ════════════════════════════════════════
+const STORAGE_KEY = 'zalinel_proc_editor_v1';
+let fotoInputCallback = null;
+let faseIdCounter = 0;
+let pasoIdCounter = 0;
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Fecha de hoy por defecto
+  document.getElementById('h-fecha').value = new Date().toISOString().split('T')[0];
+  setEstado('borrador', true); updateCondicionHint(); updateImpactoHint(); updateEstadoEstandarGuard();
+  cargarBorrador();
+  updateStats();
+
+  // File input handler
+  document.getElementById('foto-input-hidden').addEventListener('change', e => {
+    if (fotoInputCallback) fotoInputCallback(e);
+    e.target.value = '';
+  });
+});
+
+// ════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${name}`).style.display = 'block';
+  // Activar tab correcto
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(name.substring(0,4))) t.classList.add('active');
+  });
+  if (name === 'exportar') updateStats();
+  autoguardar();
+}
+
+function updateHdrCodigo() {
+  const v = document.getElementById('h-codigo').value.trim();
+  document.getElementById('hdr-codigo').textContent = v || 'V4.2';
+}
+
+// ════════════════════════════════════════
+// EPP
+// ════════════════════════════════════════
+const EPP_ICONS = ['😷','🥽','🧤','👂','🥾','🦺','⛑️','🛡️','🔗'];
+const EPP_DEFAULTS = {
+  '😷': 'Máscara medio rostro con filtro químico',
+  '🥽': 'Lentes de seguridad',
+  '🧤': 'Guantes de nitrilo',
+  '👂': 'Tapones auditivos',
+  '🥾': 'Calzado de seguridad',
+  '🦺': 'Ropa de trabajo / overol',
+  '⛑️': 'Casco de seguridad',
+  '🛡️': 'Careta facial',
+  '🔗': 'Arnés de seguridad',
+};
+
+function addEPPItem(emoji='😷', label='') {
+  const lista = document.getElementById('epp-lista');
+  const div = document.createElement('div');
+  div.className = 'epp-item';
+  const opts = EPP_ICONS.map(e => `<option value="${e}" ${e===emoji?'selected':''}>${e}</option>`).join('');
+  const defaultLabel = label || EPP_DEFAULTS[emoji] || '';
+  div.innerHTML = `
+    <select class="epp-item-sel" onchange="onEPPIconChange(this)" title="Seleccionar ícono">${opts}</select>
+    <input class="epp-item-text" value="${esc2(defaultLabel)}" placeholder="Descripción del EPP..." oninput="autoguardar()">
+    <button class="epp-item-del" onclick="this.closest('.epp-item').remove();autoguardar()">✕</button>`;
+  lista.appendChild(div);
+  if (!label) div.querySelector('.epp-item-text').focus();
+  autoguardar();
+}
+
+function onEPPIconChange(sel) {
+  const input = sel.nextElementSibling;
+  const currentText = input.value.trim();
+  const oldDefaults = Object.values(EPP_DEFAULTS);
+  if (!currentText || oldDefaults.includes(currentText)) {
+    input.value = EPP_DEFAULTS[sel.value] || '';
+  }
+  autoguardar();
+}
+
+function getEPP() {
+  return Array.from(document.querySelectorAll('.epp-item')).map(item => ({
+    emoji: item.querySelector('.epp-item-sel').value,
+    label: item.querySelector('.epp-item-text').value.trim()
+  })).filter(e => e.label);
+}
+
+function getEPPSel() {
+  return getEPP();
+}
+
+// ════════════════════════════════════════
+// FASES Y PASOS
+// ════════════════════════════════════════
+function addFase(nombre='') {
+  document.getElementById('hint-pasos').style.display = 'none';
+  const id = ++faseIdCounter;
+  const div = document.createElement('div');
+  div.className = 'fase-block';
+  div.dataset.faseId = id;
+  div.innerHTML = `
+    <div class="fase-header">
+      <span class="fase-num">FASE</span>
+      <input class="fase-nombre-input" placeholder="Nombre de la fase…" value="${esc(nombre)}">
+      <div class="fase-actions">
+        <button class="icon-btn del" onclick="eliminarFase(${id})">✕</button>
+      </div>
+    </div>
+    <div class="fase-body" id="fase-body-${id}">
+      <div class="pasos-list" id="pasos-${id}"></div>
+      <button class="btn-add-paso" onclick="addPaso(${id})">＋ agregar paso</button>
+    </div>`;
+  document.getElementById('fases-container').appendChild(div);
+  addPaso(id);
+  autoguardar();
+  updateEstadoEstandarGuard();
+}
+
+function eliminarFase(faseId) {
+  if (!confirm('¿Eliminar esta fase y todos sus pasos?')) return;
+  document.querySelector(`[data-fase-id="${faseId}"]`).remove();
+  renumerarTodo();
+  autoguardar();
+  updateEstadoEstandarGuard();
+}
+
+function addPaso(faseId, texto='', advertencias=[], fotos=[], criterio=null, decisiones=[]) {
+  const id = ++pasoIdCounter;
+  const lista = document.getElementById(`pasos-${faseId}`);
+  if (!lista) return;
+  const div = document.createElement('div');
+  div.className = 'paso-block';
+  div.dataset.pasoId = id;
+  div.dataset.fasePadre = faseId;
+  div.innerHTML = `
+    <div class="paso-header">
+      <span class="paso-num" id="paso-num-${id}">—</span>
+      <div class="paso-actions">
+        <button class="icon-btn" onclick="addAdvertencia(${id})" title="Advertencia/Nota">⚠</button>
+        <button class="icon-btn" onclick="triggerFoto(${id})" title="Foto">📷</button>
+        <button class="icon-btn" onclick="addCriterio(${id})" title="Criterio aceptación/rechazo" style="color:#276749;">✓✗</button>
+        <button class="icon-btn" onclick="addDecision(${id})" title="Decisión ramificada" style="color:#434190;">⤷</button>
+        <button class="icon-btn del" onclick="eliminarPaso(${id})">✕</button>
+      </div>
+    </div>
+    <div class="paso-body">
+      <textarea class="paso-texto" id="paso-texto-${id}" placeholder="Describir la acción…" oninput="autoResize(this);autoguardar()">${esc(texto)}</textarea>
+      <div class="paso-advs"     id="paso-advs-${id}"></div>
+      <div class="paso-fotos"    id="paso-fotos-${id}"></div>
+      <div class="paso-criterio" id="paso-criterio-${id}"></div>
+      <div class="paso-decisiones" id="paso-decisiones-${id}"></div>
+    </div>`;
+  lista.appendChild(div);
+
+  advertencias.forEach(a => addAdvertencia(id, a.tipo, a.texto));
+  fotos.forEach(f => agregarFotoAlPaso(id, typeof f === 'string' ? f : f.src, typeof f === 'string' ? '' : f.caption));
+  if (criterio) restaurarCriterio(id, criterio);
+  decisiones.forEach(d => addDecision(id, d));
+
+  const ta = div.querySelector('.paso-texto');
+  setTimeout(() => { autoResize(ta); }, 50);
+  renumerarTodo();
+  autoguardar();
+}
+
+function eliminarPaso(pasoId) {
+  document.querySelector(`[data-paso-id="${pasoId}"]`).remove();
+  renumerarTodo();
+  autoguardar();
+}
+
+function renumerarTodo() {
+  let n = 1;
+  document.querySelectorAll('.paso-block').forEach(p => {
+    const numEl = document.getElementById(`paso-num-${p.dataset.pasoId}`);
+    if (numEl) numEl.textContent = String(n).padStart(2,'0');
+    n++;
+  });
+}
+
+// ════════════════════════════════════════
+// ADVERTENCIAS
+// ════════════════════════════════════════
+function addAdvertencia(pasoId, tipo='NOTA', texto='') {
+  const cont = document.getElementById(`paso-advs-${pasoId}`);
+  if (!cont) return;
+  const div = document.createElement('div');
+  div.className = 'adv-row';
+  div.innerHTML = `
+    <select class="adv-tipo-sel" onchange="autoguardar()">
+      <option${tipo==='ADVERTENCIA'?' selected':''}>ADVERTENCIA</option>
+      <option${tipo==='PRECAUCIÓN'?' selected':''}>PRECAUCIÓN</option>
+      <option${tipo==='NOTA'?' selected':''}>NOTA</option>
+    </select>
+    <textarea class="adv-texto" placeholder="Texto de la advertencia o nota…" rows="1" oninput="autoResize(this);autoguardar()">${esc(texto)}</textarea>
+    <button class="adv-del" onclick="this.closest('.adv-row').remove();autoguardar()">✕</button>`;
+  cont.appendChild(div);
+  setTimeout(() => { const ta = div.querySelector('.adv-texto'); autoResize(ta); }, 50);
+  autoguardar();
+}
+
+// ════════════════════════════════════════
+// FOTOS
+// ════════════════════════════════════════
+function triggerFoto(pasoId) {
+  fotoInputCallback = (e) => handleFotoPaso(e, pasoId);
+  document.getElementById('foto-input-hidden').click();
+}
+
+function handleFotoPaso(e, pasoId) {
+  Array.from(e.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      compressImage(ev.target.result, 1200, 0.82, compressed => {
+        agregarFotoAlPaso(pasoId, compressed);
+        autoguardar();
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function agregarFotoAlPaso(pasoId, src, caption='') {
+  const cont = document.getElementById(`paso-fotos-${pasoId}`);
+  if (!cont) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'foto-thumb-wrap';
+  wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;';
+  wrap.innerHTML = `
+    <div style="position:relative;display:inline-block;">
+      <img class="foto-thumb" src="${src}">
+      <button class="foto-del-btn" onclick="this.closest('.foto-thumb-wrap').remove();autoguardar()">✕</button>
+    </div>
+    <input class="foto-caption-input" placeholder="Descripción de la foto..." value="${esc2(caption)}" oninput="autoguardar()" style="width:${64}px;">`;
+  cont.appendChild(wrap);
+}
+
+function esc2(s) { return (s||'').replace(/"/g,'&quot;'); }
+
+function compressImage(dataUrl, maxW, quality, cb) {
+  const img = new Image();
+  img.onload = () => {
+    let w = img.width, h = img.height;
+    if (w > maxW) { h = h * maxW / w; w = maxW; }
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    cb(canvas.toDataURL('image/jpeg', quality));
+  };
+  img.src = dataUrl;
+}
+
+// ════════════════════════════════════════
+// RECOLECTAR DATOS
+// ════════════════════════════════════════
+function getEncabezado() {
+  return {
+    codigo:      document.getElementById('h-codigo').value.trim(),
+    titulo:      document.getElementById('h-titulo').value.trim(),
+    equipo:      document.getElementById('h-equipo').value.trim(),
+    frecuencia:  document.getElementById('h-frecuencia').value,
+    responsable: document.getElementById('h-responsable').value.trim(),
+    tiempo:      document.getElementById('h-tiempo').value.trim(),
+    fecha:       document.getElementById('h-fecha').value,
+    revision:    document.getElementById('h-revision').value.trim(),
+    objetivo:    document.getElementById('h-objetivo').value.trim(),
+    origen:      document.getElementById('h-origen')?.value.trim()     || '',
+    relacionado: document.getElementById('h-relacionado')?.value.trim() || '',
+    condicion:   getCondicion(),
+    impacto:     getImpacto(),
+    estado:      estadoActual,
+    epp:         getEPP().map(e => `${e.emoji} ${e.label}`),
+  };
+}
+
+function getFases() {
+  const fases = [];
+  document.querySelectorAll('.fase-block').forEach(faseEl => {
+    const faseId   = faseEl.dataset.faseId;
+    const nombreEl = faseEl.querySelector('.fase-nombre-input');
+    const nombre   = nombreEl ? nombreEl.value.trim() : '';
+    const pasos    = [];
+    faseEl.querySelectorAll('.paso-block').forEach(pasoEl => {
+      const pasoId  = pasoEl.dataset.pasoId;
+      const texto   = document.getElementById(`paso-texto-${pasoId}`)?.value.trim() || '';
+      const advs    = [];
+      pasoEl.querySelectorAll('.adv-row').forEach(row => {
+        advs.push({
+          tipo:  row.querySelector('.adv-tipo-sel')?.value || 'NOTA',
+          texto: row.querySelector('.adv-texto')?.value.trim() || '',
+        });
+      });
+      const fotos = Array.from(pasoEl.querySelectorAll('.foto-thumb-wrap')).map(wrap => ({
+        src:     wrap.querySelector('.foto-thumb').src,
+        caption: wrap.querySelector('.foto-caption-input')?.value.trim() || ''
+      }));
+      const pasoId2 = pasoEl.dataset.pasoId;
+      const criterio  = getCriterio(pasoId2);
+      const decisiones = getDecisiones(pasoId2);
+      pasos.push({ texto, advs, fotos, criterio, decisiones });
+    });
+    fases.push({ nombre, pasos });
+  });
+  return fases;
+}
+
+function updateStats() {
+  const fases = getFases();
+  const totalPasos = fases.reduce((s,f) => s + f.pasos.length, 0);
+  const totalFotos = fases.reduce((s,f) => s + f.pasos.reduce((ss,p) => ss + p.fotos.length, 0), 0);
+  const totalAdvs  = fases.reduce((s,f) => s + f.pasos.reduce((ss,p) => ss + p.advs.length, 0), 0);
+  document.getElementById('stats-proc').innerHTML = `
+    <span class="preview-stat"><strong>${fases.length}</strong> fase${fases.length!==1?'s':''}</span>
+    <span class="preview-stat"><strong>${totalPasos}</strong> paso${totalPasos!==1?'s':''}</span>
+    <span class="preview-stat"><strong>${totalFotos}</strong> foto${totalFotos!==1?'s':''}</span>
+    <span class="preview-stat"><strong>${totalAdvs}</strong> advertencia${totalAdvs!==1?'s':''}</span>`;
+}
+
+
+// ════════════════════════════════════════
+// CRITERIOS DE ACEPTACIÓN / RECHAZO
+// ════════════════════════════════════════
+function addCriterio(pasoId, data=null) {
+  const cont = document.getElementById(`paso-criterio-${pasoId}`);
+  if (!cont) return;
+  if (cont.querySelector('.criterio-block')) return; // solo uno por paso
+  const ok  = data?.ok  || '';
+  const nok = data?.nok || '';
+  const fotoSrc = data?.foto?.src || '';
+  const fotoCap = data?.foto?.caption || '';
+  cont.innerHTML = `
+    <div class="criterio-block">
+      <div class="criterio-row">
+        <span class="criterio-tipo ok">✓ Aceptar si:</span>
+        <input class="criterio-input" id="crit-ok-${pasoId}" value="${esc2(ok)}" placeholder="condición de aceptación..." oninput="autoguardar()">
+      </div>
+      <div class="criterio-row">
+        <span class="criterio-tipo nok">✗ Rechazar si:</span>
+        <input class="criterio-input" id="crit-nok-${pasoId}" value="${esc2(nok)}" placeholder="condición de rechazo..." oninput="autoguardar()">
+      </div>
+      <div class="criterio-fotos" id="crit-fotos-${pasoId}"></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+        <button class="btn-add-foto" onclick="triggerCriterioFoto(${pasoId})">📷 Foto de referencia</button>
+        <button class="icon-btn del" onclick="document.getElementById('paso-criterio-${pasoId}').innerHTML='';autoguardar()" style="margin-left:auto;">✕ Quitar criterio</button>
+      </div>
+    </div>`;
+  if (fotoSrc) agregarFotoCriterio(pasoId, fotoSrc, fotoCap);
+  autoguardar();
+}
+
+function restaurarCriterio(pasoId, data) {
+  if (data) addCriterio(pasoId, data);
+}
+
+function triggerCriterioFoto(pasoId) {
+  fotoInputCallback = (e) => {
+    Array.from(e.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        compressImage(ev.target.result, 1200, 0.82, compressed => {
+          agregarFotoCriterio(pasoId, compressed, '');
+          autoguardar();
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  document.getElementById('foto-input-hidden').click();
+}
+
+function agregarFotoCriterio(pasoId, src, caption='') {
+  const cont = document.getElementById(`crit-fotos-${pasoId}`);
+  if (!cont) return;
+  cont.innerHTML = ''; // solo una foto de referencia
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;';
+  wrap.innerHTML = `
+    <div style="position:relative;display:inline-block;">
+      <img class="foto-thumb" src="${src}">
+      <button class="foto-del-btn" onclick="this.closest('div').parentElement.remove();autoguardar()">✕</button>
+    </div>
+    <input class="foto-caption-input" placeholder="Descripción de la foto de referencia..." value="${esc2(caption)}" oninput="autoguardar()" style="width:64px;">`;
+  cont.appendChild(wrap);
+}
+
+function getCriterio(pasoId) {
+  const cont = document.getElementById(`paso-criterio-${pasoId}`);
+  if (!cont || !cont.querySelector('.criterio-block')) return null;
+  const okEl  = document.getElementById(`crit-ok-${pasoId}`);
+  const nokEl = document.getElementById(`crit-nok-${pasoId}`);
+  const fotoWrap = cont.querySelector('.foto-thumb-wrap, .foto-thumb')?.closest('div[style]');
+  const foto = fotoWrap ? {
+    src:     fotoWrap.querySelector('img')?.src || '',
+    caption: fotoWrap.querySelector('input')?.value || ''
+  } : null;
+  return {
+    ok:  okEl?.value.trim()  || '',
+    nok: nokEl?.value.trim() || '',
+    foto
+  };
+}
+
+// ════════════════════════════════════════
+// DECISIONES RAMIFICADAS
+// ════════════════════════════════════════
+function addDecision(pasoId, data=null) {
+  const cont = document.getElementById(`paso-decisiones-${pasoId}`);
+  if (!cont) return;
+  const cond   = data?.cond   || '';
+  const type   = data?.type   || 'paso';
+  const target = data?.target || '';
+
+  const div = document.createElement('div');
+  div.className = 'decision-block';
+  div.style.marginBottom = '6px';
+
+  const typeOpts = [
+    {v:'paso',    l:'Ir al paso...'},
+    {v:'detener', l:'Detener proceso'},
+    {v:'texto',   l:'Texto libre'},
+  ].map(o => `<option value="${o.v}"${type===o.v?' selected':''}>${o.l}</option>`).join('');
+
+  div.innerHTML = `
+    <div class="decision-row">
+      <span class="decision-if-label">Si</span>
+      <input class="decision-cond" value="${esc2(cond)}" placeholder="condición..." oninput="autoguardar()">
+      <button class="decision-del" onclick="this.closest('.decision-block').remove();autoguardar()">✕</button>
+    </div>
+    <div class="decision-row">
+      <span class="decision-then-label">→</span>
+      <select class="decision-action-type" onchange="onDecisionTypeChange(this)" oninput="autoguardar()">${typeOpts}</select>
+      <input class="decision-action-target" value="${esc2(target)}" placeholder="${type==='paso'?'número de paso':'descripción...'}" oninput="autoguardar()">
+      ${type!=='paso'?`<button class="btn-desde-condicion" onclick="usarCondicionEnDecision(this.previousElementSibling)" title="Usar condición de aplicación">← condición</button>`:''}
+    </div>`;
+  cont.appendChild(div);
+
+  // Set initial target placeholder
+  const sel = div.querySelector('.decision-action-type');
+  onDecisionTypeChange(sel, false);
+  if (target) div.querySelector('.decision-action-target').value = target;
+  autoguardar();
+}
+
+function onDecisionTypeChange(sel, clearTarget=true) {
+  const targetInput = sel.nextElementSibling;
+  if (sel.value === 'paso') {
+    targetInput.placeholder = 'número de paso';
+    targetInput.type = 'number';
+    targetInput.min = '1';
+    if (clearTarget) targetInput.value = '';
+  } else if (sel.value === 'detener') {
+    targetInput.placeholder = 'descripción de la detención (opcional)';
+    targetInput.type = 'text';
+    if (clearTarget) targetInput.value = '';
+  } else {
+    targetInput.placeholder = 'descripción de la acción...';
+    targetInput.type = 'text';
+    if (clearTarget) targetInput.value = '';
+  }
+}
+
+function getDecisiones(pasoId) {
+  const cont = document.getElementById(`paso-decisiones-${pasoId}`);
+  if (!cont) return [];
+  return Array.from(cont.querySelectorAll('.decision-block')).map(div => ({
+    cond:   div.querySelector('.decision-cond').value.trim(),
+    type:   div.querySelector('.decision-action-type').value,
+    target: div.querySelector('.decision-action-target').value.trim(),
+  })).filter(d => d.cond);
+}
+
+// ════════════════════════════════════════
+// CONTEXTO OPERATIVO
+// ════════════════════════════════════════
+let estadoActual = 'borrador';
+
+function togPill(pill) {
+  pill.classList.toggle('sel');
+  updateImpactoHint();
+  autoguardar();
+}
+
+function getImpacto() {
+  return Array.from(document.querySelectorAll('.impacto-pill.sel')).map(p => p.dataset.val);
+}
+
+function setImpacto(vals) {
+  document.querySelectorAll('.impacto-pill').forEach(p => {
+    p.classList.toggle('sel', (vals||[]).includes(p.dataset.val));
+  });
+  updateImpactoHint();
+}
+
+function updateImpactoHint() {
+  const hint = document.getElementById('impacto-hint');
+  if (!hint) return;
+  const hasImpacto = document.querySelectorAll('.impacto-pill.sel').length > 0;
+  hint.style.display = hasImpacto ? 'none' : 'block';
+}
+
+function updateCondicionHint() {
+  const hint = document.getElementById('condicion-hint');
+  if (!hint) return;
+  const cond = getCondicion();
+  hint.style.display = cond ? 'none' : 'block';
+  // also update condicion banner border
+  const banner = document.querySelector('.condicion-banner');
+  if (banner) {
+    banner.style.borderLeftColor = cond ? 'var(--accent)' : 'var(--accent2)';
+  }
+  // recheck estandar availability
+  updateEstadoEstandarGuard();
+}
+
+function updateEstadoEstandarGuard() {
+  const btn = document.getElementById('estado-estandar');
+  if (!btn) return;
+  const cond = getCondicion();
+  const hasFases = document.querySelectorAll('.fase-block').length > 0;
+  const allowed = cond && hasFases;
+  btn.disabled = !allowed;
+  btn.style.opacity = allowed ? '1' : '0.35';
+  btn.title = allowed ? 'Estándar' : 'Requiere: condición definida + al menos 1 fase';
+  // If currently estandar but no longer allowed, drop to borrador
+  if (!allowed && estadoActual === 'estandar') {
+    setEstado('borrador', true);
+  }
+}
+
+function setEstado(val, silent=false) {
+  // Guard estandar
+  if (val === 'estandar') {
+    const cond = getCondicion();
+    const hasFases = document.querySelectorAll('.fase-block').length > 0;
+    if (!cond || !hasFases) return;
+  }
+  estadoActual = val;
+  ['borrador','validado','estandar'].forEach(e => {
+    const btn = document.getElementById('estado-' + e);
+    if (!btn) return;
+    btn.className = 'estado-btn' + (e === val ? ' sel-' + e : '');
+  });
+  const hdr = document.getElementById('hdr');
+  if (hdr) hdr.classList.toggle('es-estandar', val === 'estandar');
+  if (!silent) autoguardar();
+}
+
+function getCondicion() {
+  const el = document.getElementById('h-condicion');
+  return el ? el.value.trim() : '';
+}
+
+function usarCondicionEnDecision(targetInput) {
+  const cond = getCondicion();
+  if (cond && targetInput) {
+    targetInput.value = cond;
+    autoguardar();
+  }
+}
+
+// ════════════════════════════════════════
+// AUTOGUARDADO localStorage
+// ════════════════════════════════════════
+// ════════════════════════════════════════
+// LISTAS DINÁMICAS (insumos / herramientas)
+// ════════════════════════════════════════
+function addItemLista(containerId, focus=false) {
+  const cont = document.getElementById(containerId);
+  if (!cont) return;
+  const div = document.createElement('div');
+  div.className = 'lista-item';
+  div.innerHTML = `
+    <input class="lista-item-cant" placeholder="Cant." oninput="autoguardar()">
+    <input class="lista-item-desc" placeholder="Descripción..." oninput="autoguardar()">
+    <button class="lista-item-del" onclick="this.closest('.lista-item').remove();autoguardar()">✕</button>`;
+  cont.appendChild(div);
+  if (focus) div.querySelector('.lista-item-desc').focus();
+  autoguardar();
+}
+
+function getListaItems(containerId) {
+  const cont = document.getElementById(containerId);
+  if (!cont) return [];
+  return Array.from(cont.querySelectorAll('.lista-item')).map(item => ({
+    cant: item.querySelector('.lista-item-cant').value.trim(),
+    desc: item.querySelector('.lista-item-desc').value.trim()
+  })).filter(i => i.desc);
+}
+
+function setListaItems(containerId, items) {
+  const cont = document.getElementById(containerId);
+  if (!cont) return;
+  cont.innerHTML = '';
+  (items || []).forEach(item => {
+    addItemLista(containerId, false);
+    const last = cont.querySelector('.lista-item:last-child');
+    if (last) {
+      last.querySelector('.lista-item-cant').value = item.cant || '';
+      last.querySelector('.lista-item-desc').value = item.desc || '';
+    }
+  });
+}
+
+function autoguardar() {
+  try {
+    const data = {
+      enc:         getEncabezado(),
+      fases:       getFases(),
+      eppSel:      getEPPSel(),
+      insumos:     getListaItems('lista-insumos'),
+      herramientas:getListaItems('lista-herramientas')
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function cargarBorrador() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    const enc  = data.enc || {};
+    if (enc.codigo)      document.getElementById('h-codigo').value      = enc.codigo;
+    if (enc.titulo)      document.getElementById('h-titulo').value      = enc.titulo;
+    if (enc.equipo)      document.getElementById('h-equipo').value      = enc.equipo;
+    if (enc.frecuencia)  document.getElementById('h-frecuencia').value  = enc.frecuencia;
+    if (enc.responsable) document.getElementById('h-responsable').value = enc.responsable;
+    if (enc.tiempo)      document.getElementById('h-tiempo').value      = enc.tiempo;
+    if (enc.fecha)       document.getElementById('h-fecha').value       = enc.fecha;
+    if (enc.revision)    document.getElementById('h-revision').value    = enc.revision;
+    if (enc.objetivo)    document.getElementById('h-objetivo').value    = enc.objetivo;
+    if (enc.origen)      { const el=document.getElementById('h-origen');      if(el) el.value=enc.origen; }
+    if (enc.relacionado) { const el=document.getElementById('h-relacionado'); if(el) el.value=enc.relacionado; }
+    if (enc.condicion)   { const el=document.getElementById('h-condicion');   if(el) { el.value=enc.condicion; setTimeout(()=>autoResize(el),50); } }
+    if (enc.impacto)     setImpacto(enc.impacto);
+    if (enc.estado)      setEstado(enc.estado);
+  if (enc.origen)      { const el=document.getElementById('h-origen');      if(el) el.value=enc.origen; }
+  if (enc.relacionado) { const el=document.getElementById('h-relacionado'); if(el) el.value=enc.relacionado; }
+  if (enc.condicion)   { const el=document.getElementById('h-condicion');   if(el) { el.value=enc.condicion; setTimeout(()=>autoResize(el),50); } }
+  if (enc.impacto)     setImpacto(enc.impacto);
+  if (enc.estado)      setEstado(enc.estado);
+    // materiales now handled by lista-insumos
+    if (data.eppSel) {
+      document.getElementById('epp-lista').innerHTML = '';
+  const condEl = document.getElementById('h-condicion');
+  if (condEl) { condEl.value = ''; autoResize(condEl); }
+  setImpacto([]);
+  setEstado('borrador', true);
+  updateCondicionHint();
+  updateImpactoHint();
+  updateEstadoEstandarGuard();
+      data.eppSel.forEach(item => addEPPItem(item.emoji || '😷', item.label || ''));
+    }
+    updateHdrCodigo();
+    if (data.fases && data.fases.length > 0) {
+      document.getElementById('hint-pasos').style.display = 'none';
+      data.fases.forEach(f => {
+        addFase(f.nombre);
+        const faseEl  = document.querySelector('.fase-block:last-child');
+        const faseId  = faseEl.dataset.faseId;
+        const lista   = document.getElementById(`pasos-${faseId}`);
+        // Quitar el paso vacío que addFase() agrega automáticamente
+        lista.innerHTML = '';
+        pasoIdCounter--; // revertir el contador del paso automático
+        f.pasos.forEach(p => addPaso(faseId, p.texto, p.advs, p.fotos));
+      });
+    }
+  } catch(e) { console.warn('Error cargando borrador', e); }
+}
+
+// ════════════════════════════════════════
+// GUARDAR BORRADOR (archivo)
+// ════════════════════════════════════════
+function getVersionFromRevision() {
+  const rev = document.getElementById('h-revision')?.value.trim() || '';
+  const match = rev.match(/([\d]+(?:\.[\d]+)*)/);
+  return match ? match[1] : '1';
+}
+
+function getFilenameBase() {
+  const codigo = (document.getElementById('h-codigo')?.value.trim() || 'PROC').replace(/[^a-zA-Z0-9-]/g,'');
+  const ver = getVersionFromRevision();
+  return `${codigo}-V${ver}`;
+}
+
+function guardarBorrador() {
+  autoguardar();
+  const data    = {
+    enc:          getEncabezado(),
+    fases:        getFases(),
+    eppSel:       getEPPSel(),
+    insumos:      getListaItems('lista-insumos'),
+    herramientas: getListaItems('lista-herramientas')
+  };
+  const filename = `${getFilenameBase()}.json`;
+  download(filename, JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
+  toast(`Borrador guardado · ${filename}`);
+}
+
+// ════════════════════════════════════════
+// ABRIR BORRADOR JSON
+// ════════════════════════════════════════
+function abrirBorradorJSON(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      limpiarEditor();
+      cargarDesdeData(data);
+      toast(`Borrador cargado \u00b7 ${file.name}`);
+      showTab('encabezado', document.querySelector('.tab'));
+    } catch(err) {
+      toast('Error al leer el archivo JSON');
+      console.error(err);
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function confirmarReset() {
+  if (!confirm('¿Borrar todo el contenido y empezar un procedimiento nuevo?\nEsta acción no se puede deshacer.')) return;
+  limpiarEditor();
+  localStorage.removeItem(STORAGE_KEY);
+  showTab('encabezado', document.querySelector('.tab'));
+  toast('Editor reiniciado — listo para nuevo procedimiento');
+}
+
+function limpiarEditor() {
+  ['h-codigo','h-titulo','h-equipo','h-responsable','h-tiempo','h-revision','h-objetivo','h-origen','h-relacionado'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('h-frecuencia').value = '';
+  document.getElementById('h-fecha').value = new Date().toISOString().split('T')[0];
+  document.getElementById('epp-lista').innerHTML = '';
+  document.getElementById('fases-container').innerHTML = '';
+  document.getElementById('hint-pasos').style.display = 'block';
+  faseIdCounter = 0;
+  pasoIdCounter = 0;
+  document.getElementById('lista-insumos').innerHTML = '';
+  document.getElementById('lista-herramientas').innerHTML = '';
+  updateHdrCodigo();
+}
+
+function cargarDesdeData(data) {
+  const enc = data.enc || {};
+  if (enc.codigo)      document.getElementById('h-codigo').value      = enc.codigo;
+  if (enc.titulo)      document.getElementById('h-titulo').value      = enc.titulo;
+  if (enc.equipo)      document.getElementById('h-equipo').value      = enc.equipo;
+  if (enc.frecuencia)  document.getElementById('h-frecuencia').value  = enc.frecuencia;
+  if (enc.responsable) document.getElementById('h-responsable').value = enc.responsable;
+  if (enc.tiempo)      document.getElementById('h-tiempo').value      = enc.tiempo;
+  if (enc.fecha)       document.getElementById('h-fecha').value       = enc.fecha;
+  if (enc.revision)    document.getElementById('h-revision').value    = enc.revision;
+  if (enc.objetivo)    document.getElementById('h-objetivo').value    = enc.objetivo;
+  if (data.eppSel) {
+    document.getElementById('epp-lista').innerHTML = '';
+    data.eppSel.forEach(item => addEPPItem(item.emoji || '😷', item.label || ''));
+  }
+  updateHdrCodigo();
+
+  if (data.fases && data.fases.length > 0) {
+    document.getElementById('hint-pasos').style.display = 'none';
+    data.fases.forEach(f => {
+      addFase(f.nombre);
+      const faseEl = document.querySelector('.fase-block:last-child');
+      const faseId = faseEl.dataset.faseId;
+      const lista  = document.getElementById(`pasos-${faseId}`);
+      lista.innerHTML = '';
+      pasoIdCounter--;
+      f.pasos.forEach(p => addPaso(faseId, p.texto, p.advs, p.fotos));
+    });
+  }
+  if (data.insumos)      setListaItems('lista-insumos',      data.insumos);
+  if (data.herramientas) setListaItems('lista-herramientas', data.herramientas);
+  updateStats();
+}
+
+// ════════════════════════════════════════
+// EXPORTAR PROCEDIMIENTO
+// ════════════════════════════════════════
+function exportarProcedimiento() {
+  const enc         = getEncabezado();
+  const fases       = getFases();
+  const insumos     = getListaItems('lista-insumos');
+  const herramientas= getListaItems('lista-herramientas');
+  if (!enc.titulo) { toast('Agrega un título primero'); return; }
+
+  let pasoGlobal = 0;
+  let fasesHTML  = '';
+  const TOTAL_PASOS_REF = fases.reduce((s,f) => s + f.pasos.filter(p=>p.texto).length, 0);
+
+  fases.forEach((fase, fi) => {
+    const esPlana = fase.nombre === '__plana__' || !fase.nombre;
+
+    if (!esPlana) {
+      fasesHTML += `
+      <div class="fase-label">Fase ${fi+1} — ${esc(fase.nombre)}</div>`;
+    }
+
+    fase.pasos.forEach(paso => {
+      if (!paso.texto) return;
+      pasoGlobal++;
+
+      // Advertencias → step-warn / step-danger / step-ok / step-tip
+      const advHTML = paso.advs.filter(a=>a.texto).map(a => {
+        const tipo = a.tipo;
+        let cls = 'step-tip';
+        let icon = '💡';
+        if (tipo === 'ADVERTENCIA') { cls = 'step-danger'; icon = '⛔'; }
+        else if (tipo === 'PRECAUCIÓN') { cls = 'step-warn'; icon = '⚠️'; }
+        else if (tipo === 'NOTA') { cls = 'step-tip'; icon = '💡'; }
+        return `<div class="${cls}"><span>${icon}</span><span>${esc(a.texto)}</span></div>`;
+      }).join('');
+
+      // Fotos con lightbox
+      const fotosHTML = paso.fotos.length ? `
+        <div class="step-photos">
+          ${paso.fotos.map((f,fi2) => {
+            const src = typeof f === 'string' ? f : f.src;
+            const cap = typeof f === 'string' ? '' : (f.caption || '');
+            return `<div>
+              <img class="step-photo" src="${src}" onclick="openLbox(this.src)">
+              <div class="step-photo-caption">${cap ? esc(cap) : `Fig. ${pasoGlobal}.${fi2+1}`}</div>
+            </div>`;
+          }).join('')}
+        </div>` : '';
+
+      // Criterio HTML
+      let criterioHTML = '';
+      if (paso.criterio && (paso.criterio.ok || paso.criterio.nok)) {
+        const fotoRef = paso.criterio.foto?.src ? `
+          <div style="margin-top:8px;">
+            <img src="${paso.criterio.foto.src}" onclick="openLbox(this.src)" style="max-width:160px;max-height:120px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;cursor:zoom-in;">
+            ${paso.criterio.foto.caption ? `<div style="font-size:11px;color:var(--text-3);margin-top:3px;">${esc(paso.criterio.foto.caption)}</div>` : ''}
+          </div>` : '';
+        criterioHTML = `
+          <div style="background:#f0fff4;border-left:4px solid #68d391;border-radius:0 8px 8px 0;padding:10px 14px;margin:0 18px 14px;font-size:13px;">
+            ${paso.criterio.ok  ? `<div style="color:#276749;font-weight:600;margin-bottom:3px;">✓ Aceptar si: ${esc(paso.criterio.ok)}</div>`  : ''}
+            ${paso.criterio.nok ? `<div style="color:#c53030;font-weight:600;">✗ Rechazar si: ${esc(paso.criterio.nok)}</div>` : ''}
+            ${fotoRef}
+          </div>`;
+      }
+
+      // Decisiones HTML
+      let decisionesHTML = '';
+      if (paso.decisiones && paso.decisiones.length) {
+        const rows = paso.decisiones.map(d => {
+          let accion = '';
+          if (d.type === 'paso' && d.target) {
+            accion = `<a href="#s${d.target}" onclick="event.stopPropagation()" style="color:#2b6cb0;font-weight:700;text-decoration:none;">→ Ir al paso ${d.target}</a>`;
+          } else if (d.type === 'detener') {
+            accion = `<span style="color:#c53030;font-weight:700;">⏹ Detener proceso${d.target ? ': '+esc(d.target) : ''}</span>`;
+          } else {
+            accion = `<span style="color:#434190;font-weight:600;">${esc(d.target)}</span>`;
+          }
+          return `<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;font-size:12px;">
+            <span style="color:#718096;flex-shrink:0;">Si</span>
+            <span style="color:#2d3748;flex:1;">${esc(d.cond)}</span>
+            <span style="color:#718096;flex-shrink:0;">→</span>
+            ${accion}
+          </div>`;
+        }).join('');
+        decisionesHTML = `
+          <div style="background:#f0f4ff;border-left:4px solid #7f9cf5;border-radius:0 8px 8px 0;padding:10px 14px;margin:0 18px 14px;">
+            <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#434190;margin-bottom:6px;">Decisiones</div>
+            ${rows}
+          </div>`;
+      }
+
+      fasesHTML += `
+      <div class="step-card" id="s${pasoGlobal}" onclick="checkStep(${pasoGlobal})">
+        <div class="step-head">
+          <div class="step-num" id="n${pasoGlobal}">${pasoGlobal}</div>
+          <div class="step-content">
+            <div class="step-title" id="t${pasoGlobal}">${esc(paso.texto)}</div>
+          </div>
+          <button class="step-check-btn" id="b${pasoGlobal}" onclick="event.stopPropagation();checkStep(${pasoGlobal})">☐ Listo</button>
+        </div>
+        ${advHTML}
+        ${fotosHTML}
+        ${criterioHTML}
+        ${decisionesHTML}
+      </div>`;
+    });
+  });
+
+  // EPP
+  // EPP: enc.epp has strings like "😷 Máscara medio rostro..." — split emoji from label
+  const eppHTML = enc.epp.length
+    ? `<div class="epp-grid">${enc.epp.map(e => {
+        const parts = e.match(/^(\S+)\s+(.+)$/);
+        const emoji = parts ? parts[1] : '🦺';
+        const label = parts ? parts[2] : e;
+        return `<div class="epp-item"><span class="epp-icon">${emoji}</span>${esc(label)}</div>`;
+      }).join('')}</div>`
+    : '';
+
+  const fecha = enc.fecha ? new Date(enc.fecha+'T12:00:00').toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'}) : '—';
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(enc.codigo||'PROC')} — ${esc(enc.titulo)}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap');
+:root{
+  --bg:#f7f9fc;--white:#ffffff;--border:#e2e8f0;
+  --text:#2d3748;--text-2:#4a5568;--text-3:#718096;
+  --primary:#2b6cb0;--primary-bg:#ebf4ff;
+  --warn-bg:#fffbeb;--warn:#b7791f;--warn-border:#f6ad55;
+  --danger-bg:#fff5f5;--danger:#c53030;--danger-border:#fc8181;
+  --ok-bg:#f0fff4;--ok:#276749;--ok-border:#68d391;
+  --step-bg:#ebf4ff;--tip-bg:#f0f4ff;--tip-border:#7f9cf5;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+  --radius:12px;--radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.65;}
+
+/* HEADER */
+.doc-header{background:linear-gradient(135deg,#1a365d 0%,#2b6cb0 100%);color:white;padding:28px 24px 32px;position:relative;overflow:hidden;}
+.doc-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:20px;background:var(--bg);border-radius:20px 20px 0 0;}
+.doc-badge{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:20px;font-size:11px;font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 12px;margin-bottom:10px;}
+.doc-title{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;line-height:1.2;margin-bottom:6px;}
+.doc-subtitle{font-size:14px;opacity:.75;margin-bottom:16px;}
+.doc-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;opacity:.8;}
+
+/* PROGRESS */
+.progress-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.progress-track{flex:1;height:8px;background:var(--primary-bg);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#2b6cb0,#38a169);border-radius:99px;width:0%;transition:width .35s ease;}
+.progress-label{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--text-3);white-space:nowrap;}
+
+/* CONTAINER */
+.container{max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+
+/* SECTION */
+.section-title{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:2px;background:var(--primary-bg);border-radius:2px;}
+
+/* INFO BOX */
+.info-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;box-shadow:var(--shadow);}
+
+/* EPP */
+.epp-block{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;}
+.epp-title{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--warn);margin-bottom:10px;}
+.epp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.epp-item{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--warn);}
+.epp-icon{font-size:18px;flex-shrink:0;}
+
+/* FASE LABEL */
+.fase-label{font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#fff;background:var(--primary);border-radius:6px;padding:3px 10px;display:inline-block;margin-bottom:10px;margin-top:8px;}
+
+/* STEP CARD */
+.step-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .2s,opacity .2s;}
+.step-card.done{border-color:var(--ok-border);opacity:.72;}
+.step-head{display:flex;align-items:flex-start;gap:14px;padding:16px 18px 14px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.step-num{background:var(--step-bg);color:var(--primary);font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #bee3f8;transition:all .2s;}
+.step-card.done .step-num{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-border);font-size:20px;}
+.step-content{flex:1;}
+.step-title{font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;transition:all .2s;}
+.step-card.done .step-title{color:var(--ok);text-decoration:line-through;}
+.step-desc{font-size:14px;color:var(--text-2);line-height:1.6;}
+.step-check-btn{background:var(--primary-bg);border:1.5px solid #bee3f8;border-radius:8px;color:var(--primary);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:5px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;align-self:flex-start;margin-top:2px;}
+.step-card.done .step-check-btn{background:var(--ok-bg);border-color:var(--ok-border);color:var(--ok);}
+
+/* ALERTS */
+.step-warn,.step-danger,.step-ok,.step-tip{margin:0 18px 14px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:10px 14px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:flex-start;}
+.step-warn{background:var(--warn-bg);border-left:4px solid var(--warn-border);color:var(--warn);}
+.step-danger{background:var(--danger-bg);border-left:4px solid var(--danger-border);color:var(--danger);}
+.step-ok{background:var(--ok-bg);border-left:4px solid var(--ok-border);color:var(--ok);}
+.step-tip{background:var(--tip-bg);border-left:4px solid var(--tip-border);color:#434190;}
+
+/* PHOTOS */
+.step-photos{display:flex;gap:10px;flex-wrap:wrap;padding:0 18px 14px;}
+.step-photo{width:130px;height:100px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:zoom-in;transition:transform .15s,box-shadow .15s;}
+.step-photo:hover{transform:scale(1.03);box-shadow:var(--shadow-md);}
+.step-photo-caption{font-size:11px;color:var(--text-3);text-align:center;margin-top:-4px;width:130px;}
+
+/* LIGHTBOX */
+#lbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+#lbox.open{display:flex;}
+#lbox img{max-width:100%;max-height:90vh;border-radius:var(--radius);object-fit:contain;}
+#lbox-close{position:absolute;top:16px;right:16px;background:white;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* FOOTER */
+.doc-footer{text-align:center;font-size:11px;color:var(--text-3);margin-top:40px;padding:16px;border-top:1px solid var(--border);font-family:'Nunito',sans-serif;}
+
+@media(max-width:520px){.epp-grid{grid-template-columns:1fr;}.doc-title{font-size:20px;}.step-photo{width:110px;height:84px;}}
+@media print{#lbox{display:none!important;}.progress-wrap{display:none;}.step-check-btn{display:none;}body{background:white;}}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;flex-shrink:0;">
+      <rect width="200" height="200" rx="14" fill="#1a1f2b" stroke="#f0a500" stroke-width="5"/>
+      <g transform="translate(100,88)">
+        <circle r="19" fill="none" stroke="#f0a500" stroke-width="5.5"/>
+        <circle r="10" fill="none" stroke="#f0a500" stroke-width="3.5"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(0)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(45)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(90)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(135)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(180)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(225)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(270)"/>
+        <rect x="-2.8" y="-27" width="5.6" height="10" rx="2" fill="#f0a500" transform="rotate(315)"/>
+      </g>
+      <text x="100" y="148" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="26" font-weight="700" fill="#f0a500" letter-spacing="6">ZALINEL</text>
+      <text x="100" y="165" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="13" fill="#7a8ba0" letter-spacing="4">S P A</text>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <span style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.6;">Zalinel SpA · Quipasur Ltda.</span>
+      <span style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.5;">Procedimiento Operativo</span>
+    </div>
+  </div>
+  <div class="doc-badge">Procedimiento Operativo</div>
+  <div class="doc-title">${esc(enc.titulo)}</div>
+  ${enc.equipo ? `<div class="doc-subtitle">${esc(enc.equipo)} · Quipasur Ltda.</div>` : '<div class="doc-subtitle">Quipasur Ltda.</div>'}
+  <div class="doc-meta">
+    <span>📋 ${esc(enc.codigo||'—')}</span>
+    <span>🏭 ${esc(enc.equipo||'Área de Producción')}</span>
+    <span>📅 ${fecha}</span>
+    <span>✍ Zalinel SpA</span>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-label" id="plabel">0 / ${TOTAL_PASOS_REF}</span>
+</div>
+
+<div id="lbox" onclick="closeLbox()">
+  <button id="lbox-close" onclick="closeLbox()">✕</button>
+  <img id="lbox-img" src="" alt="">
+</div>
+
+<div class="container">
+
+  ${enc.objetivo ? `
+  <div class="section-title">¿Para qué es este procedimiento?</div>
+  <div class="info-box">
+    <p style="font-size:14px;color:var(--text-2);">${esc(enc.objetivo)}</p>
+    ${enc.tiempo ? `<p style="font-size:13px;color:var(--text-3);margin-top:8px;">⏱ Tiempo estimado: <strong>${esc(enc.tiempo)}</strong></p>` : ''}
+  </div>` : ''}
+
+  ${enc.condicion ? `
+  <div style="background:#ebf4ff;border-left:4px solid #2b6cb0;border-radius:0 8px 8px 0;padding:10px 16px;margin-bottom:16px;">
+    <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#2b6cb0;margin-bottom:3px;">Cuándo aplica</div>
+    <div style="font-size:14px;color:var(--text-2);font-weight:600;">${esc(enc.condicion)}</div>
+  </div>` : ''}
+
+  ${(enc.impacto&&enc.impacto.length)||(enc.origen||enc.relacionado) ? `
+  <div style="display:flex;flex-wrap:wrap;gap:8px;padding:0 0 12px;align-items:center;">
+    ${(enc.impacto||[]).map(i=>`<span style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#ebf4ff;color:#2b6cb0;border-radius:20px;padding:3px 10px;">${esc(i)}</span>`).join('')}
+    ${enc.origen ? `<span style="font-size:12px;color:var(--text-3);">Origen: <strong style="color:var(--text-2);">${esc(enc.origen)}</strong></span>` : ''}
+    ${enc.relacionado ? `<span style="font-size:12px;color:var(--text-3);">Sistema: <strong style="color:var(--text-2);">${esc(enc.relacionado)}</strong></span>` : ''}
+    ${enc.estado&&enc.estado!=='borrador' ? `<span style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:${enc.estado==='estandar'?'#f0fff4':'var(--primary-bg)'};color:${enc.estado==='estandar'?'#276749':'var(--primary)'};border-radius:20px;padding:3px 10px;">${enc.estado==='estandar'?'✓ Estándar':'Validado'}</span>` : ''}
+  </div>` : ''}
+
+  ${enc.epp.length ? `
+  <div class="section-title">EPP requerido</div>
+  <div class="epp-block">
+    <div class="epp-title">🦺 Equipo de Protección Personal — usar durante todo el procedimiento</div>
+    ${eppHTML}
+  </div>` : ''}
+
+  ${insumos.length ? `
+  <div class="section-title">Insumos y materiales</div>
+  <div class="info-box" style="padding:0;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead><tr>
+        <th style="background:var(--primary-bg);color:var(--primary);font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 14px;text-align:left;border-bottom:2px solid #bee3f8;">Cantidad</th>
+        <th style="background:var(--primary-bg);color:var(--primary);font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 14px;text-align:left;border-bottom:2px solid #bee3f8;">Insumo / Material</th>
+      </tr></thead>
+      <tbody>${insumos.map((it,i)=>`<tr style="${i%2===1?'background:#f8fafc':''}"><td style="padding:8px 14px;border-bottom:1px solid #e2e8f0;font-family:'Nunito',sans-serif;font-weight:800;color:var(--primary);">${esc(it.cant)}</td><td style="padding:8px 14px;border-bottom:1px solid #e2e8f0;">${esc(it.desc)}</td></tr>`).join('')}</tbody>
+    </table>
+  </div>` : ''}
+
+  ${herramientas.length ? `
+  <div class="section-title">Herramientas requeridas</div>
+  <div class="info-box" style="padding:0;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead><tr>
+        <th style="background:var(--primary-bg);color:var(--primary);font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 14px;text-align:left;border-bottom:2px solid #bee3f8;">Cantidad</th>
+        <th style="background:var(--primary-bg);color:var(--primary);font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 14px;text-align:left;border-bottom:2px solid #bee3f8;">Herramienta</th>
+      </tr></thead>
+      <tbody>${herramientas.map((it,i)=>`<tr style="${i%2===1?'background:#f8fafc':''}"><td style="padding:8px 14px;border-bottom:1px solid #e2e8f0;font-family:'Nunito',sans-serif;font-weight:800;color:var(--primary);">${esc(it.cant)}</td><td style="padding:8px 14px;border-bottom:1px solid #e2e8f0;">${esc(it.desc)}</td></tr>`).join('')}</tbody>
+    </table>
+  </div>` : ''}
+
+  <div class="section-title">Procedimiento paso a paso</div>
+
+  ${fasesHTML}
+
+</div>
+
+<div class="doc-footer">
+  ${esc(enc.codigo||'PROC')} · ${esc(enc.titulo)} · ${esc(enc.equipo||'')} · Quipasur Ltda.<br>
+  Elaborado por Zalinel SpA — Ignacio Salazar A. | ${esc(enc.revision||'Rev. 0')} · ${fecha}
+</div>
+
+<script>
+const TOTAL = ${TOTAL_PASOS_REF};
+const done  = new Set();
+function checkStep(n) {
+  const card = document.getElementById('s'+n);
+  const num  = document.getElementById('n'+n);
+  const btn  = document.getElementById('b'+n);
+  const ttl  = document.getElementById('t'+n);
+  if (!card) return;
+  if (done.has(n)) {
+    done.delete(n); card.classList.remove('done');
+    num.textContent = n; btn.textContent = '☐ Listo';
+  } else {
+    done.add(n); card.classList.add('done');
+    num.textContent = '✓'; btn.textContent = '✓ Hecho';
+  }
+  const pct = Math.round((done.size/TOTAL)*100);
+  document.getElementById('pfill').style.width = pct+'%';
+  document.getElementById('plabel').textContent = done.size+' / '+TOTAL;
+}
+function openLbox(src){document.getElementById('lbox-img').src=src;document.getElementById('lbox').classList.add('open');}
+function closeLbox(){document.getElementById('lbox').classList.remove('open');document.getElementById('lbox-img').src='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLbox();});
+<\/script>
+</body>
+</html>`;
+
+  download(`${getFilenameBase()}.html`, html, 'text/html;charset=utf-8');
+  toast(`Procedimiento generado · ${pasoGlobal} pasos`);
+}
+
+// ════════════════════════════════════════
+// EXPORTAR CHECKLIST
+// ════════════════════════════════════════
+function exportarChecklist() {
+  const enc   = getEncabezado();
+  const fases = getFases();
+  if (!enc.titulo) { toast('Agrega un título primero'); return; }
+
+  let pasoGlobal = 0;
+  let stepsHTML  = '';
+  const TOTAL = fases.reduce((s,f)=>s+f.pasos.filter(p=>p.texto).length,0);
+
+  fases.forEach((fase, fi) => {
+    const esPlana = fase.nombre === '__plana__' || !fase.nombre;
+    if (!esPlana && fase.pasos.some(p=>p.texto)) {
+      stepsHTML += `<div class="fase-label">Fase ${fi+1} — ${esc(fase.nombre)}</div>`;
+    }
+    fase.pasos.forEach(paso => {
+      if (!paso.texto) return;
+      pasoGlobal++;
+      stepsHTML += `
+      <div class="step-card" id="s${pasoGlobal}" onclick="check(${pasoGlobal})">
+        <div class="step-num" id="n${pasoGlobal}">${pasoGlobal}</div>
+        <div class="step-text" id="t${pasoGlobal}">${esc(paso.texto)}</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;">
+          <div class="step-icon" id="i${pasoGlobal}">☐</div>
+          <span id="ts${pasoGlobal}" style="font-size:9px;color:#718096;font-family:'Nunito',sans-serif;min-width:32px;text-align:center;"></span>
+        </div>
+      </div>`;
+    });
+  });
+
+  const fecha = enc.fecha ? new Date(enc.fecha+'T12:00:00').toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'}) : '—';
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checklist — ${esc(enc.codigo||'PROC')}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap');
+:root{--bg:#f7f9fc;--white:#fff;--border:#e2e8f0;--text:#2d3748;--text-3:#718096;--primary:#2b6cb0;--primary-bg:#ebf4ff;--ok-bg:#f0fff4;--ok:#276749;--ok-border:#68d391;--shadow:0 1px 3px rgba(0,0,0,0.07);--radius:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);font-size:16px;min-height:100vh;}
+.doc-header{background:linear-gradient(135deg,#1a365d 0%,#2b6cb0 100%);color:white;padding:28px 24px 32px;position:relative;overflow:hidden;}
+.doc-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:20px;background:var(--bg);border-radius:20px 20px 0 0;}
+.doc-badge{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:20px;font-size:11px;font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 12px;margin-bottom:10px;}
+.doc-title{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;margin-bottom:6px;}
+.doc-subtitle{font-size:14px;opacity:.70;margin-bottom:14px;}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;opacity:.75;}
+.progress-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.progress-track{flex:1;height:8px;background:var(--primary-bg);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#2b6cb0,#38a169);border-radius:99px;width:0%;transition:width .35s ease;}
+.progress-label{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--text-3);white-space:nowrap;}
+.container{max-width:600px;margin:0 auto;padding:24px 16px 60px;}
+.fase-label{font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#fff;background:var(--primary);border-radius:6px;padding:3px 10px;display:inline-block;margin-bottom:10px;margin-top:8px;}
+.step-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;padding:18px 20px;cursor:pointer;transition:border-color .2s,opacity .2s,transform .1s;user-select:none;-webkit-tap-highlight-color:transparent;}
+.step-card:active{transform:scale(0.98);}
+.step-card.done{border-color:var(--ok-border);background:var(--ok-bg);opacity:.72;}
+.step-num{background:var(--primary-bg);color:var(--primary);font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #bee3f8;transition:all .2s;}
+.step-card.done .step-num{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-border);}
+.step-text{flex:1;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.3;}
+.step-card.done .step-text{color:var(--ok);text-decoration:line-through;}
+.step-icon{font-size:20px;flex-shrink:0;}
+.all-done{display:none;text-align:center;padding:28px 20px;background:var(--ok-bg);border:2px solid var(--ok-border);border-radius:var(--radius);margin-top:8px;}
+.all-done.show{display:block;}
+.all-done-icon{font-size:48px;margin-bottom:8px;}
+.all-done-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:var(--ok);margin-bottom:4px;}
+.all-done-sub{font-size:14px;color:var(--text-3);}
+.btn-reset{display:block;width:100%;margin-top:14px;padding:12px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text-3);cursor:pointer;transition:all .15s;}
+.btn-reset:active{border-color:var(--primary);color:var(--primary);}
+.doc-footer{text-align:center;font-size:11px;color:var(--text-3);padding:16px;border-top:1px solid var(--border);font-family:'Nunito',sans-serif;}
+@media print{.progress-wrap{display:none;}.btn-reset{display:none;}body{background:white;}}
+</style>
+</head>
+<body>
+<div class="doc-header">
+  <div class="doc-badge">Checklist Operacional</div>
+  <div class="doc-title">${esc(enc.titulo)}</div>
+  ${enc.equipo ? `<div class="doc-subtitle">${esc(enc.equipo)} · Quipasur Ltda.</div>` : '<div class="doc-subtitle">Quipasur Ltda.</div>'}
+  <div class="doc-meta">
+    <span>📋 ${esc(enc.codigo||'—')}</span>
+    <span>📅 ${fecha}</span>
+    <span>✍ Zalinel SpA</span>
+  </div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+  <span class="progress-label" id="plabel">0 / ${TOTAL}</span>
+</div>
+
+<div style="background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 20px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+    <div>
+      <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aa0b0;margin-bottom:4px;">Ejecutado por</div>
+      <input id="reg-ejecutor" placeholder="Nombre del operador..." style="width:100%;border:none;border-bottom:1px solid #e2e8f0;font-family:'Nunito Sans',sans-serif;font-size:13px;padding:2px 0;outline:none;background:transparent;">
+    </div>
+    <div>
+      <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aa0b0;margin-bottom:4px;">Turno</div>
+      <select id="reg-turno" style="width:100%;border:none;border-bottom:1px solid #e2e8f0;font-family:'Nunito Sans',sans-serif;font-size:13px;padding:2px 0;outline:none;background:transparent;appearance:none;">
+        <option value="">— Seleccionar —</option>
+        <option>Mañana</option><option>Tarde</option><option>Noche</option>
+      </select>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+    <div>
+      <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aa0b0;margin-bottom:4px;">Fecha</div>
+      <input id="reg-fecha" type="date" style="width:100%;border:none;border-bottom:1px solid #e2e8f0;font-family:'Nunito Sans',sans-serif;font-size:13px;padding:2px 0;outline:none;background:transparent;">
+    </div>
+    <div>
+      <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aa0b0;margin-bottom:4px;">Hora inicio</div>
+      <input id="reg-inicio" type="time" style="width:100%;border:none;border-bottom:1px solid #e2e8f0;font-family:'Nunito Sans',sans-serif;font-size:13px;padding:2px 0;outline:none;background:transparent;">
+    </div>
+    <div>
+      <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aa0b0;margin-bottom:4px;">Hora fin</div>
+      <input id="reg-fin" type="time" style="width:100%;border:none;border-bottom:1px solid #e2e8f0;font-family:'Nunito Sans',sans-serif;font-size:13px;padding:2px 0;outline:none;background:transparent;">
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  ${stepsHTML}
+  <div class="all-done" id="all-done">
+    <div class="all-done-icon">✅</div>
+    <div class="all-done-title">Procedimiento completado</div>
+    <div class="all-done-sub">${esc(enc.titulo)} — todos los pasos verificados</div>
+  </div>
+  <button class="btn-reset" onclick="reset()">↺ Reiniciar checklist</button>
+</div>
+<div class="doc-footer">
+  ${esc(enc.codigo||'PROC')} · ${esc(enc.revision||'Rev. 0')} · ${fecha} · Zalinel SpA
+</div>
+<script>
+const TOTAL=${TOTAL};const done=new Set();
+function check(n){
+  const card=document.getElementById('s'+n);
+  const num=document.getElementById('n'+n);
+  const icon=document.getElementById('i'+n);
+  const ts=document.getElementById('ts'+n);
+  if(done.has(n)){
+    done.delete(n);card.classList.remove('done');
+    num.textContent=n;icon.textContent='☐';
+    if(ts) ts.textContent='';
+  } else {
+    done.add(n);card.classList.add('done');
+    num.textContent='✓';icon.textContent='✓';
+    if(ts){
+      const now=new Date();
+      ts.textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    }
+    // Auto-fill hora inicio on first check
+    const inicioEl=document.getElementById('reg-inicio');
+    if(inicioEl && !inicioEl.value && done.size===1){
+      const now=new Date();
+      inicioEl.value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    }
+  }
+  const pct=Math.round((done.size/TOTAL)*100);
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('plabel').textContent=done.size+' / '+TOTAL;
+  const allDone=done.size===TOTAL;
+  document.getElementById('all-done').classList.toggle('show',allDone);
+  // Auto-fill hora fin when all done
+  if(allDone){
+    const finEl=document.getElementById('reg-fin');
+    if(finEl && !finEl.value){
+      const now=new Date();
+      finEl.value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    }
+  }
+}
+function reset(){done.clear();for(let n=1;n<=TOTAL;n++){document.getElementById('s'+n).classList.remove('done');document.getElementById('n'+n).textContent=n;document.getElementById('i'+n).textContent='☐';}document.getElementById('pfill').style.width='0%';document.getElementById('plabel').textContent='0 / '+TOTAL;document.getElementById('all-done').classList.remove('show');}
+<\/script>
+</body>
+</html>`;
+
+  download(`${getFilenameBase()}-CHECKLIST.html`, html, 'text/html;charset=utf-8');
+  toast(`Checklist generado · ${pasoGlobal} pasos`);
+}
+
+
+// ════════════════════════════════════════
+// UTILIDADES
+// ════════════════════════════════════════
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 300) + 'px';
+}
+function download(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

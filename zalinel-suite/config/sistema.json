@@ -1,0 +1,23 @@
+{
+  "sistema_id": "zalinel_suite_local",
+  "nombre": "ZALINEL Suite",
+  "version": "0.1",
+  "modo": "local",
+  "cliente_base": "Quipasur Ltda",
+  "planta_base": "San Bernardo",
+  "equipo_base": "ZH780L-40",
+  "fecha_creacion": "2026-04-22",
+  "modulos": {
+    "operation_suite": "modulos/operation-suite.html",
+    "dashboard": "modulos/dashboard.html",
+    "bitacora": "modulos/bitacora.html",
+    "proceditor": "modulos/proceditor.html"
+  },
+  "data_paths": {
+    "produccion": "data/produccion",
+    "eventos": "data/eventos",
+    "bitacora": "data/bitacora",
+    "procedimientos": "data/procedimientos",
+    "rcm": "data/rcm"
+  }
+}
