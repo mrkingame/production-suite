@@ -91,6 +91,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 .manga-input{width:100%;text-align:center;font-size:.78rem;padding:5px 2px;border-radius:4px}
 .manga-input.scrap-input{background:rgba(224,59,59,.15)!important;border-color:var(--danger)!important;color:var(--danger)!important;font-weight:700}
 .manga-input.out-range{border-color:var(--warn)!important;color:var(--warn)!important}
+.scrap-note-input{width:100%;font-size:.58rem;padding:3px 4px;border-radius:4px;background:rgba(224,59,59,.08);border:1px solid rgba(224,59,59,.18);color:var(--text2);font-family:var(--sans)}
 .lote-add-row{padding:6px 8px;border-top:1px dashed var(--border);display:flex;gap:6px}
 
 
@@ -155,6 +156,8 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 .evento-item.AJUSTE{border-left-color:var(--purple)}
 .evento-item.COLACION{border-left-color:var(--ok)}
 .evento-item.OBSERVACION{border-left-color:var(--teal)}
+.evento-item.VENTANA{border-left-color:var(--ok);background:rgba(59,191,122,.04)}
+.tipo-VENTANA{color:var(--ok)}
 .evento-item.abierto{border-left-color:var(--warn);background:rgba(224,112,64,.04)}
 .ei-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
 .ei-left{flex:1;min-width:0}
@@ -179,7 +182,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 .tipo-OTRO{color:var(--muted)}
 
 /* SACOS */
-.saco-row{display:grid;grid-template-columns:60px 1fr auto;gap:6px;align-items:center;margin-bottom:6px}
+.saco-row{display:grid;grid-template-columns:60px 90px 120px minmax(0,1fr) auto;gap:6px;align-items:center;margin-bottom:6px}
 
 /* TOGGLE */
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -209,6 +212,21 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:8px;padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
 .bottom-nav .btn{flex:1}
+.productivo-group{flex:1;display:flex;gap:6px;min-width:0}
+.productivo-group .btn{flex:1}
+.productivo-group .btn-productive{flex:2}
+.btn-productive-stop{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+.btn-productive-stop:hover{background:var(--danger);color:#fff}.btn-productive{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.05;padding:8px 12px}
+.btn-productive .prod-main{font-size:.86rem}
+.btn-productive .prod-sub{font-family:var(--mono);font-size:.62rem;letter-spacing:.04em;opacity:.9}
+.btn-productive[data-state="standby"]{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-productive[data-state="standby"]:hover{border-color:var(--amber);color:var(--amber)}
+.btn-productive[data-state="active"]{background:var(--ok);color:#000}
+.btn-productive[data-state="active"]:hover{opacity:.9}
+.btn-productive[data-state="paused"]:hover{opacity:.9}
+.btn-productive[data-state="paused"]{background:var(--amber);color:#000}
+.btn-productive[data-state="stopped"]{background:var(--warn);color:#fff}
+.btn-productive[data-state="stopped"]:hover{opacity:.9}
 
 /* TOAST */
 #toast{position:fixed;top:70px;right:12px;z-index:999;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:8px;padding:10px 14px;font-family:var(--cond);font-size:.85rem;font-weight:600;color:var(--text);max-width:280px;opacity:0;transform:translateX(20px);transition:all .25s;pointer-events:none}
@@ -249,12 +267,15 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 .scatter-svg{display:block}
 
 /* HISTORIAL */
-.hist-item{border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hist-item{border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s;display:flex;flex-direction:column;align-items:stretch;gap:10px}
 .hist-item:hover{border-color:var(--amber)}
 .hist-date{font-family:var(--mono);font-size:.85rem;color:var(--amber);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hist-meta{font-family:var(--cond);font-size:.75rem;color:var(--text2);margin-top:2px}
 .hist-tip{font-family:var(--cond);font-size:.7rem;color:var(--muted);margin-top:4px}
+.hist-main{min-width:0}
+.hist-actions{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .hist-badges{display:flex;gap:6px;flex-wrap:wrap}
+.hist-delete{flex-shrink:0}
 .badge{font-family:var(--mono);font-size:.7rem;padding:3px 7px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);color:var(--text2)}
 .badge.amber{color:var(--amber);border-color:rgba(240,165,0,.4)}
 .badge.ok{color:var(--ok);border-color:rgba(59,191,122,.3)}
@@ -377,6 +398,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
         <div class="field"><label>Hora inicio</label><input type="time" id="h-inicio" onchange="updateProgress()"></div>
         <div class="field"><label>Hora término</label><input type="time" id="h-termino" onchange="updateProgress()"></div>
       </div>
+
     </div>
   </div>
 
@@ -419,20 +441,33 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 <!-- ══ EVENTOS ══ -->
 <div class="panel" id="tab-eventos">
   <div class="info-tip">
-    Presiona <strong style="color:var(--warn)">⚡</strong> para registrar un evento. El cronómetro arranca de inmediato al abrir el panel. Puedes dejar eventos abiertos mientras continúa la producción y cerrarlos cuando corresponda. Los eventos cerrados pueden editarse en cualquier momento.
+    Presiona el boton de evento para registrar un evento. El cronometro arranca de inmediato al abrir el panel. Puedes dejar eventos abiertos mientras continua la produccion y cerrarlos cuando corresponda. Los eventos cerrados pueden editarse en cualquier momento.
   </div>
   <div class="card">
     <div class="card-head">
-      <span class="card-title">⚡ EVENTOS DEL TURNO</span>
+      <span class="card-title">EVENTOS DEL TURNO</span>
       <span id="ev-count-label" style="font-family:var(--mono);font-size:.72rem;color:var(--muted)">0 eventos</span>
     </div>
     <div class="card-body" id="eventos-lista">
-      <div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Sin eventos registrados</div></div>
+      <div class="empty"><div class="empty-icon">-</div><div class="empty-text">Sin eventos registrados</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-title">LISTA DE EVENTOS</span></div>
+    <div class="card-body">
+      <div style="font-family:var(--sans);font-size:.8rem;color:var(--text2);line-height:1.45;margin-bottom:8px">
+        Un evento por linea. Lo que guardes aqui aparecera como sugerencia en el campo de tipo de evento.
+      </div>
+      <textarea id="event-types-editor" rows="8" placeholder="PARO PRODUCCION&#10;FALLA MECANICA&#10;LIMPIEZA BOQUILLAS"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-xs" onclick="resetEventTypes()">Restablecer</button>
+        <button class="btn btn-primary btn-xs" onclick="saveEventTypes()">Guardar lista</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══ HISTORIAL ══ -->
+<!-- â�?�â�?� HISTORIAL â�?�â�?� -->
 <div class="panel" id="tab-historial">
   <div class="info-tip">💾 El historial se guarda al presionar <strong>GUARDAR TURNO</strong>. Los datos se almacenan localmente en este navegador — no se envían a ningún servidor.</div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px">
@@ -533,20 +568,19 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 </div>
 
 <!-- BOTTOM NAV -->
+<input type="hidden" id="h-primer-disparo">
+<input type="hidden" id="h-productivo-fin">
+<input type="hidden" id="h-productivo-estado" value="standby">
+<input type="hidden" id="h-productivo-log" value="[]">
+
 <div class="bottom-nav">
-  <button class="btn btn-secondary" onclick="clearForm()" style="flex:0 0 auto;padding:9px 12px" title="Limpiar formulario">🗑</button>
-  <button class="btn btn-primary" onclick="saveRecord()">💾 GUARDAR TURNO</button>
-  <button class="btn btn-secondary" onclick="showPrint()">📄 INFORME</button>
+  <button class="btn btn-secondary" onclick="clearForm()" style="flex:0 0 auto;padding:9px 12px" title="Limpiar formulario">&#128465;</button>
+  <button class="btn btn-primary" onclick="saveRecord()">&#128190; GUARDAR TURNO</button>
+  <div class="productivo-group"><button class="btn btn-productive" id="btn-productivo" data-state="standby" onclick="toggleProductivo()"><span class="prod-main">INICIAR PRODUCTIVO</span><span class="prod-sub">En espera</span></button><button class="btn btn-productive-stop" id="btn-productivo-stop" onclick="detenerProductivo()" style="display:none">DETENER</button></div>
+  <button class="btn btn-secondary" onclick="showPrint()">&#128196; INFORME</button>
 </div>
 
-<datalist id="tipos-evento-list">
-  <option value="PARO PRODUCCIÓN"><option value="FALLA MECÁNICA"><option value="FALLA ELÉCTRICA">
-  <option value="FALLA COMPRESOR"><option value="LIMPIEZA MEZCLADOR"><option value="LIMPIEZA PENDORCHO">
-  <option value="LIMPIEZA BOQUILLAS"><option value="MEZCLA EN PROCESO"><option value="ESPERA BASE QTP">
-  <option value="ESPERA GRÚA HORQUILLA"><option value="CAMBIO DE FORMATO"><option value="AJUSTE PARÁMETROS">
-  <option value="MANGA PEGADA"><option value="BOQUILLAS TAPADAS"><option value="COLACIÓN">
-  <option value="ENTREGA MANGAS"><option value="ASEO SALA"><option value="OBSERVACIÓN">
-</datalist>
+<datalist id="tipos-evento-list"></datalist>
 
 <script>
 // ══════════════════════════════════════════
@@ -564,6 +598,12 @@ const TIPOS_MANGA={
   '430':{codigo:'CFQTPND430',nom:28.3,min:26.8,max:29.7},
   '460':{codigo:'CFQTPND460',nom:28.2,min:26.7,max:29.6},
 };
+const EVENT_TYPES_DEFAULT=[
+  'PARO PRODUCCION','FALLA MECANICA','FALLA ELECTRICA','FALLA COMPRESOR',
+  'LIMPIEZA MEZCLADOR','LIMPIEZA PENDORCHO','LIMPIEZA BOQUILLAS','MEZCLA EN PROCESO',
+  'ESPERA BASE QTP','ESPERA GRUA HORQUILLA','CAMBIO DE FORMATO','AJUSTE PARAMETROS',
+  'MANGA PEGADA','BOQUILLAS TAPADAS','COLACION','ENTREGA MANGAS','ASEO SALA','OBSERVACION'
+];
 
 // ══════════════════════════════════════════
 //  ESTADO
@@ -574,14 +614,52 @@ let timerIntervals={};
 let panelMode=null; // 'nuevo' | 'cerrar' | 'editar'
 let panelEvId=null;
 let detieneValue=null;
+let eventTypes=[];
 
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('h-fecha').value=new Date().toISOString().slice(0,10);
+  eventTypes=getEventTypes();
+  renderTiposEventoList();
+  renderEventTypesEditor();
   updateTopbar(); addSegment(); renderHistory(); renderFiltros();
+  renderProductivoBtn();
 });
+
+function getEventTypes(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('prod_event_types')||'null');
+    if(Array.isArray(saved)&&saved.length) return saved;
+  }catch{}
+  return [...EVENT_TYPES_DEFAULT];
+}
+function renderTiposEventoList(){
+  const list=document.getElementById('tipos-evento-list'); if(!list) return;
+  list.innerHTML=eventTypes.map(t=>`<option value="${t}">`).join('');
+}
+function renderEventTypesEditor(){
+  const ta=document.getElementById('event-types-editor'); if(!ta) return;
+  ta.value=eventTypes.join('\n');
+}
+function saveEventTypes(){
+  const ta=document.getElementById('event-types-editor'); if(!ta) return;
+  const next=[...new Set(ta.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean))];
+  if(!next.length){ toast('Ingresa al menos un evento','error'); return; }
+  eventTypes=next;
+  localStorage.setItem('prod_event_types',JSON.stringify(eventTypes));
+  renderTiposEventoList();
+  renderEventTypesEditor();
+  toast(`Lista de eventos actualizada (${eventTypes.length})`,'ok');
+}
+function resetEventTypes(){
+  eventTypes=[...EVENT_TYPES_DEFAULT];
+  localStorage.removeItem('prod_event_types');
+  renderTiposEventoList();
+  renderEventTypesEditor();
+  toast('Lista de eventos restablecida','ok');
+}
 
 function updateTopbar(){
   const d=document.getElementById('h-fecha').value;
@@ -592,7 +670,153 @@ function updateTopbar(){
 // ══════════════════════════════════════════
 //  TABS
 // ══════════════════════════════════════════
-function switchTab(id){
+  function getCurrentTimeHHMM(){
+    const now=new Date();
+    const hh=String(now.getHours()).padStart(2,'0');
+    const mm=String(now.getMinutes()).padStart(2,'0');
+    return `${hh}:${mm}`;
+  }
+
+  function getProductivoLog(){
+    try{ return JSON.parse(document.getElementById('h-productivo-log').value||'[]'); }
+    catch{ return []; }
+  }
+
+  function setProductivoLog(log){
+    document.getElementById('h-productivo-log').value=JSON.stringify(log||[]);
+  }
+
+  function addProductivoHito(tipo){
+    const log=getProductivoLog();
+    log.push({tipo,hora:getCurrentTimeHHMM(),ts:Date.now()});
+    setProductivoLog(log);
+    return log[log.length-1];
+  }
+
+  function minDiff(a,b){
+    if(!a||!b) return 0;
+    let x=timeToMin(a), y=timeToMin(b);
+    if(y<x) y+=1440;
+    return Math.max(0,y-x);
+  }
+
+  function calcVentanaOperativa(){
+    const log=getProductivoLog();
+    const inicio=log.find(x=>x.tipo==='inicio');
+    const fin=[...log].reverse().find(x=>x.tipo==='detiene');
+    if(!inicio) return null;
+    const finHora=fin?.hora||getCurrentTimeHHMM();
+    const bruto=minDiff(inicio.hora,finHora);
+    let pausas=0, pausaAbierta=null;
+    log.forEach(h=>{
+      if(h.tipo==='pausa') pausaAbierta=h.hora;
+      if(h.tipo==='reanuda'&&pausaAbierta){ pausas+=minDiff(pausaAbierta,h.hora); pausaAbierta=null; }
+      if(h.tipo==='detiene'&&pausaAbierta){ pausas+=minDiff(pausaAbierta,h.hora); pausaAbierta=null; }
+    });
+    const detenciones=eventosCerrados
+      .filter(e=>e.detiene==='detiene'||e.detiene===true)
+      .reduce((a,e)=>a+(parseInt(e.duracion_min)||0),0);
+    const neto=Math.max(0,bruto-pausas-detenciones);
+    return {inicio:inicio.hora,fin:finHora,bruto,pausas,detenciones,neto};
+  }
+
+  function renderProductivoBtn(){
+    const btn=document.getElementById('btn-productivo');
+    const stop=document.getElementById('btn-productivo-stop');
+    if(!btn) return;
+    const estado=document.getElementById('h-productivo-estado').value||'standby';
+    const calc=calcVentanaOperativa();
+    btn.dataset.state=estado;
+    if(stop) stop.style.display=(estado==='active'||estado==='paused')?'inline-flex':'none';
+    if(estado==='active'){
+      btn.innerHTML='<span class="prod-main">PAUSAR PRODUCTIVO</span><span class="prod-sub">Inicio '+(calc?.inicio||'--:--')+'</span>';
+    }else if(estado==='paused'){
+      btn.innerHTML='<span class="prod-main">REANUDAR PRODUCTIVO</span><span class="prod-sub">En pausa</span>';
+    }else if(estado==='stopped'){
+      btn.innerHTML='<span class="prod-main">VENTANA CERRADA</span><span class="prod-sub">'+(calc?.inicio||'--:--')+' -> '+(calc?.fin||'--:--')+'</span>';
+    }else{
+      btn.innerHTML='<span class="prod-main">INICIAR PRODUCTIVO</span><span class="prod-sub">En espera</span>';
+    }
+  }
+
+  function removeVentanaOperativa(){
+    eventosCerrados=eventosCerrados.filter(e=>e.sistema!=='ventana_operativa');
+  }
+
+  function crearVentanaOperativa(){
+    const calc=calcVentanaOperativa();
+    if(!calc) return;
+    removeVentanaOperativa();
+    const ev={
+      id:'ventana-operativa-'+Date.now(),
+      tipo:'VENTANA OPERATIVA',
+      inicio_str:calc.inicio,
+      fin_str:calc.fin,
+      inicio_ts:Date.now()-(calc.bruto*60000),
+      fin_ts:Date.now(),
+      duracion_min:calc.neto,
+      obs:`Ventana operativa registrada. Bruto ${calc.bruto} min; pausas ${calc.pausas} min; detenciones ${calc.detenciones} min; neto ${calc.neto} min.`,
+      obs_cierre:'Registro automatico del tiempo operativo del turno.',
+      detiene:'proceso',
+      etiquetas:['SISTEMA','OPERATIVO'],
+      abierto:false,
+      sistema:'ventana_operativa',
+      ventana_operativa:calc,
+      editLog:[]
+    };
+    eventosCerrados.push(ev);
+    renderEventosLista(); updateEventosBadge();
+  }
+
+  async function toggleProductivo(){
+    const estado=document.getElementById('h-productivo-estado').value||'standby';
+    if(estado==='standby'){
+      const h=addProductivoHito('inicio');
+      document.getElementById('h-primer-disparo').value=h.hora;
+      document.getElementById('h-productivo-fin').value='';
+      document.getElementById('h-productivo-estado').value='active';
+      removeVentanaOperativa();
+      renderProductivoBtn(); renderEventosLista(); updateEventosBadge();
+      toast('Ventana operativa iniciada','ok');
+      return;
+    }
+    if(estado==='active'){
+      addProductivoHito('pausa');
+      document.getElementById('h-productivo-estado').value='paused';
+      renderProductivoBtn();
+      toast('Ventana operativa en pausa','ok');
+      return;
+    }
+    if(estado==='paused'){
+      addProductivoHito('reanuda');
+      document.getElementById('h-productivo-estado').value='active';
+      renderProductivoBtn();
+      toast('Ventana operativa reanudada','ok');
+      return;
+    }
+    const ok = await modalConfirm('Reiniciar ventana operativa? Se borraran las horas registradas y el evento automatico.','Reiniciar','btn-warn');
+    if(!ok) return;
+    document.getElementById('h-primer-disparo').value='';
+    document.getElementById('h-productivo-fin').value='';
+    document.getElementById('h-productivo-estado').value='standby';
+    setProductivoLog([]);
+    removeVentanaOperativa();
+    renderProductivoBtn(); renderEventosLista(); updateEventosBadge();
+    toast('Ventana operativa reiniciada');
+  }
+
+  function detenerProductivo(){
+    const estado=document.getElementById('h-productivo-estado').value||'standby';
+    if(estado!=='active'&&estado!=='paused') return;
+    const h=addProductivoHito('detiene');
+    document.getElementById('h-productivo-fin').value=h.hora;
+    document.getElementById('h-productivo-estado').value='stopped';
+    crearVentanaOperativa();
+    renderProductivoBtn();
+    toast('Ventana operativa cerrada','ok');
+  }
+
+  function switchTab(id){
   const ids=['tab-registro','tab-eventos','tab-historial','tab-filtros'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -718,35 +942,58 @@ function addLote(segId,data=null){
     </div>`;
   container.appendChild(block);
   setTimeout(()=>recalcLoteMezcla(lid,segId),0);
-  if(data?.mangas?.length) data.mangas.forEach(m=>{ if(m.scrap) addMangaScrap(lid,segId,m.peso); else addManga(lid,segId,m.peso); });
+  if(data?.mangas?.length) data.mangas.forEach(m=>{ if(m.scrap) addMangaScrap(lid,segId,m.peso,m.causa||m.note||''); else addManga(lid,segId,m.peso); });
+}
+
+function renumberMangas(segId){
+  const seg=document.getElementById(segId); if(!seg) return;
+  let nOk=0,nScrap=0;
+  const scrapMark=String.fromCharCode(10005);
+  seg.querySelectorAll('.lote-block .manga-cell').forEach(cell=>{
+    const numEl=cell.querySelector('.manga-num'); if(!numEl) return;
+    const isScrap=!!cell.querySelector('.scrap-input');
+    if(isScrap){
+      nScrap++;
+      numEl.textContent=`${scrapMark}${nScrap}`;
+      numEl.style.color='var(--danger)';
+    } else {
+      nOk++;
+      numEl.textContent=`${nOk}`;
+      numEl.style.color='';
+    }
+  });
 }
 
 function addManga(lid,segId,valor=''){
   const grid=document.getElementById(`mg-${lid}`); if(!grid) return;
-  const n=grid.querySelectorAll('.manga-cell').length+1;
+  const seg=document.getElementById(segId);
+  const n=(seg?seg.querySelectorAll('.manga-input:not(.scrap-input)').length:0)+1;
   const cell=document.createElement('div'); cell.className='manga-cell';
   cell.innerHTML=`<span class="manga-num">${n}</span>
-    <input type="number" class="manga-input" placeholder="—" step="0.001" value="${valor||''}"
+    <input type="number" class="manga-input" placeholder="-" step="0.001" value="${valor||''}"
            oninput="onMangaInput(this,'${segId}')" onclick="this.select()">
-    <button class="manga-del" onclick="delMangaCell(this,'${segId}')" title="Quitar manga">✕</button>`;
+    <button class="manga-del" onclick="delMangaCell(this,'${segId}')" title="Quitar manga">&times;</button>`;
   grid.appendChild(cell);
+  renumberMangas(segId);
 }
 
-function addMangaScrap(lid,segId,pesoInicial=null){
+function addMangaScrap(lid,segId,pesoInicial=null,causa=''){
   const grid=document.getElementById(`mg-${lid}`); if(!grid) return;
-  const n=grid.querySelectorAll('.manga-cell').length+1;
+  const seg=document.getElementById(segId);
+  const n=(seg?seg.querySelectorAll('.manga-input.scrap-input').length:0)+1;
   const cell=document.createElement('div'); cell.className='manga-cell';
-  cell.innerHTML=`<span class="manga-num" style="color:var(--danger)">✕${n}</span>
+  cell.innerHTML=`<span class="manga-num" style="color:var(--danger)">&times;${n}</span>
     <input type="number" class="manga-input scrap-input" placeholder="kg" step="0.001"
            value="${pesoInicial||''}" title="Peso manga scrap"
            oninput="recalcResumen('${segId}')" onclick="this.select()">
-    <button class="manga-del" onclick="delMangaCell(this,'${segId}')" title="Quitar scrap">✕</button>`;
+    <input type="text" class="scrap-note-input" placeholder="causa" value="${causa||''}"
+           oninput="recalcResumen('${segId}')">
+    <button class="manga-del" onclick="delMangaCell(this,'${segId}')" title="Quitar scrap">&times;</button>`;
   grid.appendChild(cell);
+  renumberMangas(segId);
   recalcResumen(segId);
-  setTimeout(()=>cell.querySelector('input').focus(),50);
+  setTimeout(()=>cell.querySelector('.scrap-input').focus(),50);
 }
-
-
 function recalcLoteMezcla(lid,segId){
   const block=document.getElementById(lid); if(!block) return;
   const base=parseFloat(block.querySelector('.kg-base-input')?.value)||0;
@@ -774,14 +1021,8 @@ function recalcLoteMezcla(lid,segId){
 
 function delMangaCell(btn,segId){
   const cell=btn.closest('.manga-cell');
-  const grid=cell.parentElement;
   cell.remove();
-  // renumerar
-  grid.querySelectorAll('.manga-cell').forEach((c,i)=>{
-    const numEl=c.querySelector('.manga-num');
-    const isScrap=c.querySelector('.scrap-input');
-    numEl.textContent=isScrap?`✕${i+1}`:`${i+1}`;
-  });
+  renumberMangas(segId);
   recalcResumen(segId);
 }
 function onMangaInput(inp,segId){
@@ -803,9 +1044,10 @@ function renumberLotes(segId){ document.querySelectorAll(`#${segId} .lote-block`
 // ══════════════════════════════════════════
 function recalcResumen(segId){
   const seg=document.getElementById(segId); if(!seg) return;
-  let mezcla=0,fab=0,sc=0,cnt=0; const pesos=[];
+  let mezcla=0,mezclaReal=0,fab=0,sc=0,cnt=0; const pesos=[];
   seg.querySelectorAll('.lote-block').forEach(lb=>{
     mezcla+=parseFloat(lb.querySelector('.kg-input')?.value)||0;
+    mezclaReal+=parseFloat(lb.querySelector('.kg-real-input')?.value)||0;
     lb.querySelectorAll('.manga-input:not(.scrap-input)').forEach(inp=>{
       const v=parseFloat(inp.value); if(!isNaN(v)&&v>0){fab+=v;cnt++;pesos.push(v);}
     });
@@ -1241,19 +1483,28 @@ function toggleSacos(){
   document.getElementById('toggle-sacos').classList.toggle('on',sacos_visible);
   if(sacos_visible&&!document.querySelector('.saco-row')) addSaco();
 }
+function toggleSacoOtro(sel){
+  const row=sel.closest('.saco-row'); if(!row) return;
+  const extra=row.querySelector('.saco-otro-input'); if(!extra) return;
+  const show=sel.value==='otro';
+  extra.style.display=show?'block':'none';
+  if(!show) extra.value='';
+}
 function addSaco(data=null){
   const n=sacoCount++; const sc=document.getElementById('sacos-container');
   const cnt=sc.querySelectorAll('.saco-row').length+1;
   const tipo=data?.tipo||'merma_tolva';
+  const detalle=data?.detalle||'';
   const row=document.createElement('div'); row.className='saco-row'; row.id=`saco-${n}`;
   row.innerHTML=`<span style="font-family:var(--mono);font-size:.8rem;color:var(--amber)">SACO ${cnt}</span>
     <input type="number" placeholder="Kg saco" step="0.1" value="${data?.kg||''}">
-    <select style="font-family:var(--cond);font-size:.72rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:5px;padding:3px 5px;cursor:pointer">
+    <select onchange="toggleSacoOtro(this)" style="font-family:var(--cond);font-size:.72rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:5px;padding:3px 5px;cursor:pointer">
       <option value="merma_tolva" ${tipo==='merma_tolva'?'selected':''}>Merma campana</option>
       <option value="merma_suelo" ${tipo==='merma_suelo'?'selected':''}>Merma suelo</option>
       <option value="otro" ${tipo==='otro'?'selected':''}>Otro</option>
     </select>
-    <button class="btn-small" onclick="document.getElementById('saco-${n}').remove()">✕</button>`;
+    <input type="text" class="saco-otro-input" placeholder="Especificar" value="${detalle}" style="display:${tipo==='otro'?'block':'none'};font-family:var(--sans);font-size:.8rem;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:5px 8px;min-width:0">
+    <button class="btn-small" onclick="document.getElementById('saco-${n}').remove()">&times;</button>`;
   sc.appendChild(row);
 }
 
@@ -1327,10 +1578,11 @@ function collectState(){
     seg.querySelectorAll('.lote-block').forEach(lb=>{
       const mangas=[];
       lb.querySelectorAll('.manga-cell').forEach(cell=>{
-        const inp=cell.querySelector('input');
+        const inp=cell.querySelector('.manga-input');
         const isScrap=inp.classList.contains('scrap-input');
         const v=parseFloat(inp.value);
-        mangas.push({scrap:isScrap,peso:isNaN(v)?null:v});
+        const causa=cell.querySelector('.scrap-note-input')?.value?.trim()||'';
+        mangas.push({scrap:isScrap,peso:isNaN(v)?null:v,causa:isScrap?causa:''});
       });
       const kgReal=parseFloat(lb.querySelector('.kg-real-input')?.value)||0; lotes.push({id:lb.querySelector('.lote-id').value,kg:parseFloat(lb.querySelector('.kg-input').value)||0,kg_base:parseFloat(lb.querySelector('.kg-base-input')?.value)||0,kg_resinas:parseFloat(lb.querySelector('.kg-resinas-input')?.value)||16.9,kg_real:kgReal||null,kg_merma_mezclador:kgReal>0?(parseFloat(lb.querySelector('.kg-input').value)||0)-kgReal:null,mangas});
     });
@@ -1348,7 +1600,8 @@ function collectState(){
   document.querySelectorAll('.saco-row').forEach(row=>{
     const v=parseFloat(row.querySelector('input[type="number"]').value);
     const t=row.querySelector('select')?.value||'merma_tolva';
-    if(!isNaN(v)) sacos.push({kg:v,tipo:t});
+    const detalle=row.querySelector('.saco-otro-input')?.value?.trim()||'';
+    if(!isNaN(v)) sacos.push({kg:v,tipo:t,detalle:t==='otro'?detalle:''});
   });
   const pallets=[];
   document.querySelectorAll('.pallet-row').forEach(row=>{
@@ -1364,6 +1617,10 @@ function collectState(){
     tipo_turno:document.getElementById('h-tipo-turno').value,
     inicio:document.getElementById('h-inicio').value,
     termino:document.getElementById('h-termino').value,
+    primer_disparo:document.getElementById('h-primer-disparo').value,
+    productivo_fin:document.getElementById('h-productivo-fin').value,
+    productivo_estado:document.getElementById('h-productivo-estado').value,
+    productivo_log:getProductivoLog(),
     nota:document.getElementById('nota-turno').value,
     segments,sacos,pallets,
     eventos:[...eventosCerrados,...eventosAbiertos],
@@ -1596,6 +1853,11 @@ function loadRecord(id){
   document.getElementById('h-tipo-turno').value=rec.tipo_turno||'AM';
   document.getElementById('h-inicio').value=rec.inicio||'';
   document.getElementById('h-termino').value=rec.termino||'';
+    document.getElementById('h-primer-disparo').value=rec.primer_disparo||'';
+    document.getElementById('h-productivo-fin').value=rec.productivo_fin||'';
+    document.getElementById('h-productivo-estado').value=rec.productivo_estado||((rec.primer_disparo&&!rec.productivo_fin)?'active':(rec.productivo_fin?'stopped':'standby'));
+    setProductivoLog(rec.productivo_log||[]);
+    renderProductivoBtn();
   document.getElementById('nota-turno').value=rec.nota||'';
   document.getElementById('segments-container').innerHTML='';
   segCount=0; loteCounters={}; scrapSegCounters={};
@@ -1707,7 +1969,7 @@ function generateReport(rec){
     return t+sc;
   },0);
   const totalMez=rec.segments.reduce((t,s)=>t+s.lotes.reduce((a,l)=>a+(l.kg||0),0),0);
-  // totalAnu calculado en donutData section
+  // total de arena no util. calculado en donutData section
 
   // Merma mezclador total
   const totalMermaMez=rec.segments.reduce((t,s)=>t+s.lotes.reduce((tt,l)=>{
@@ -1716,18 +1978,21 @@ function generateReport(rec){
     return tt+(real>0&&teo>real?teo-real:0);
   },0),0);
   const totalMezReal=rec.segments.reduce((t,s)=>t+s.lotes.reduce((tt,l)=>tt+(l.kg_real||l.kg||0),0),0);
-  const totalAnu=Math.max(0,totalMezReal-totalFab-totalSc);
+  const totalMermaCampana=(rec.sacos||[]).reduce((a,s)=>a+((s.tipo==='merma_tolva')?(s.kg||0):0),0);
+  const totalArenaNoUtil=Math.max(0,totalMezReal-totalFab-totalSc-totalMermaCampana);
   const donutData=[
     {label:'Fabricado',val:totalFab,color:'#3bbf7a'},
     {label:'Scrap',val:totalSc,color:'#e03b3b'},
-    {label:'Merma campana',val:totalAnu,color:'#e07040'},
+    ...(totalMermaCampana>0?[{label:'Merma campana',val:totalMermaCampana,color:'#e07040'}]:[]),
     ...(totalMermaMez>0?[{label:'Merma mezclador',val:totalMermaMez,color:'#a855f7'}]:[]),
+    ...(totalArenaNoUtil>0?[{label:'Arena no util.',val:totalArenaNoUtil,color:'#f0a500'}]:[]),
   ];
 
   let segHtml='';
   rec.segments.forEach((seg,si)=>{
     const mangas=seg.lotes.flatMap(l=>l.mangas.filter(m=>!m.scrap&&m.peso).map(m=>m.peso));
     const scGrid=seg.lotes.flatMap(l=>l.mangas.filter(m=>m.scrap&&m.peso).map(m=>m.peso));
+    const scrapDetalle=seg.lotes.flatMap(l=>l.mangas.filter(m=>m.scrap&&m.peso).map(m=>({lote:l.id||'-',kg:m.peso||0,causa:m.causa||''})));
     const fab=mangas.reduce((a,b)=>a+b,0);
     const sc=seg.scraps.reduce((a,s)=>a+(s.kg||0),0)+scGrid.reduce((a,b)=>a+b,0);
     const mez=seg.lotes.reduce((a,l)=>a+(l.kg||0),0);
@@ -1746,7 +2011,7 @@ function generateReport(rec){
         <div class="report-kpi"><div class="report-kpi-label">Kg fabricados</div><div class="report-kpi-val ok">${fab.toFixed(3)}</div></div>
         <div class="report-kpi"><div class="report-kpi-label">Kg scrap</div><div class="report-kpi-val danger">${sc.toFixed(3)}</div></div>
         <div class="report-kpi"><div class="report-kpi-label">Mangas</div><div class="report-kpi-val amber">${mangas.length}</div></div>
-        <div class="report-kpi"><div class="report-kpi-label">Merma (no fab.)</div><div class="report-kpi-val">${anu.toFixed(1)}</div></div>
+        <div class="report-kpi"><div class="report-kpi-label">Arena no util.</div><div class="report-kpi-val">${anu.toFixed(1)}</div></div>
         <div class="report-kpi"><div class="report-kpi-label">% Scrap</div><div class="report-kpi-val ${parseFloat(pct)>5?'danger':''}">${pct}%</div></div>
         <div class="report-kpi"><div class="report-kpi-label">Peso prom.</div><div class="report-kpi-val">${prom}</div></div>
         <div class="report-kpi"><div class="report-kpi-label">Rango</div><div class="report-kpi-val" style="font-size:.9rem">${pmin||'?'}–${pmax||'?'}</div></div>
@@ -1768,7 +2033,10 @@ function generateReport(rec){
             <td class="${lx.length?'danger':''}">${lx.length}</td></tr>`;
         }).join('')}
       </table>
-      ${seg.scraps.length?`<div class="report-section-title" style="color:var(--danger)">SCRAP EXPLÍCITO</div>
+            ${scrapDetalle.length?`<div class="report-section-title" style="color:var(--danger)">SCRAP REGISTRADO</div>
+        <table class="report-table"><tr><th>#</th><th>Lote</th><th>Kg</th><th>Causa</th></tr>
+        ${scrapDetalle.map((s,i)=>`<tr><td>${i+1}</td><td>${s.lote||'-'}</td><td class="danger">${(s.kg||0).toFixed(3)}</td><td style="font-size:.75rem;color:var(--text2)">${s.causa||'-'}</td></tr>`).join('')}
+        </table>`:''}${seg.scraps.length?`<div class="report-section-title" style="color:var(--danger)">SCRAP EXPLÍCITO</div>
         <table class="report-table"><tr><th>#</th><th>Kg</th><th>Lote</th></tr>
         ${seg.scraps.map((s,i)=>`<tr><td>${i+1}</td><td class="danger">${(s.kg||0).toFixed(3)}</td><td>${s.lote||'—'}</td></tr>`).join('')}
         </table>`:''}`;
@@ -1796,7 +2064,7 @@ function generateReport(rec){
     const TIPO_LABELS={'merma_tolva':'Merma campana','merma_suelo':'Merma suelo','otro':'Otro'};
     sacHtml=`<div class="report-section-title">MERMA EN SACOS</div>
       <table class="report-table"><tr><th>Saco</th><th>Tipo</th><th>Kg</th></tr>
-      ${rec.sacos.map((s,i)=>`<tr><td>${i+1}</td><td style="color:var(--text2)">${TIPO_LABELS[s.tipo]||s.tipo||'—'}</td><td>${s.kg.toFixed(1)}</td></tr>`).join('')}
+      ${rec.sacos.map((s,i)=>`<tr><td>${i+1}</td><td style="color:var(--text2)">${s.tipo==='otro'&&(s.detalle||'')?s.detalle:(TIPO_LABELS[s.tipo]||s.tipo||'-')}</td><td>${s.kg.toFixed(1)}</td></tr>`).join('')}
       <tr><td colspan="2" style="font-weight:700;color:var(--amber)">TOTAL</td><td style="font-weight:700;color:var(--amber)">${tot.toFixed(1)}</td></tr>
       </table>`;
   }
@@ -1827,11 +2095,14 @@ function generateReport(rec){
     <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:14px">
       ${buildDonut(donutData,80)}
       <div>
-        <div class="report-kpi-grid" style="grid-template-columns:repeat(2,1fr)">
+        <div class="report-kpi-grid" style="grid-template-columns:repeat(3,1fr)">
           <div class="report-kpi"><div class="report-kpi-label">Total mangas</div><div class="report-kpi-val amber">${totalMn}</div></div>
           <div class="report-kpi"><div class="report-kpi-label">Kg fabricados</div><div class="report-kpi-val ok">${totalFab.toFixed(3)}</div></div>
           <div class="report-kpi"><div class="report-kpi-label">Kg mezcla real</div><div class="report-kpi-val">${totalMezReal.toFixed(1)}</div></div>
           <div class="report-kpi"><div class="report-kpi-label">Kg scrap</div><div class="report-kpi-val danger">${totalSc.toFixed(3)}</div></div>
+          <div class="report-kpi"><div class="report-kpi-label">Merma campana</div><div class="report-kpi-val" style="color:var(--warn)">${totalMermaCampana.toFixed(1)}</div></div>
+          <div class="report-kpi"><div class="report-kpi-label">Merma mezclador</div><div class="report-kpi-val" style="color:var(--purple)">${totalMermaMez.toFixed(1)}</div></div>
+          <div class="report-kpi"><div class="report-kpi-label">Arena no util.</div><div class="report-kpi-val amber">${totalArenaNoUtil.toFixed(1)}</div></div>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px;margin-top:8px">
           ${donutData.map(d=>`<div style="display:flex;align-items:center;gap:8px;font-family:var(--cond);font-size:.78rem"><div style="width:12px;height:12px;border-radius:50%;background:${d.color};flex-shrink:0"></div><span style="color:var(--text2)">${d.label}: <strong style="color:var(--text)">${d.val.toFixed(1)} kg</strong></span></div>`).join('')}
@@ -1993,6 +2264,11 @@ function clearForm(){
   document.getElementById('h-tipo-turno').value='AM';
   document.getElementById('h-inicio').value='';
   document.getElementById('h-termino').value='';
+    document.getElementById('h-primer-disparo').value='';
+    document.getElementById('h-productivo-fin').value='';
+    document.getElementById('h-productivo-estado').value='standby';
+    setProductivoLog([]);
+    renderProductivoBtn();
   document.getElementById('nota-turno').value='';
   document.getElementById('segments-container').innerHTML='';
   segCount=0; loteCounters={}; scrapSegCounters={};
@@ -2078,8 +2354,11 @@ function downloadReport(){
     obs: e.obs||'',
     obs_cierre: e.obs_cierre||'',
     abierto: e.abierto||false,
+    sistema: e.sistema||null,
+    ventana_operativa: e.ventana_operativa||null,
   }));
   const tiempoParos = eventos.filter(e=>e.detiene===true).reduce((a,e)=>a+e.duracion_min,0);
+  const ventanaOperativa = eventos.find(e=>e.sistema==='ventana_operativa')?.ventana_operativa || null;
 
   // Objeto completo de datos para el dashboard
   const dashData = {
@@ -2103,6 +2382,10 @@ function downloadReport(){
     pct_eficiencia: +pctEficiencia.toFixed(2),
     pct_scrap: +pctScrap.toFixed(2),
     tiempo_paros_min: tiempoParos,
+    ventana_operativa: ventanaOperativa,
+    tiempo_operativo_neto_min: ventanaOperativa?.neto || 0,
+    tiempo_operativo_bruto_min: ventanaOperativa?.bruto || 0,
+    tiempo_pausas_operativas_min: ventanaOperativa?.pausas || 0,
     // Detalle por tipo manga
     por_tipo: porTipo,
     // Eventos

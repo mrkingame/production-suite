@@ -570,7 +570,7 @@ function extractData(html, filename) {
         total_mangas: 0, kg_fabricado: 0, kg_scrap: 0,
         kg_mezcla: 0, kg_perdida: 0, kg_merma_mezclador: 0,
         pct_eficiencia: 0, pct_scrap: 0,
-        eventos: [], tiempo_paros_min: 0,
+        eventos: [], tiempo_paros_min: 0, ventana_operativa: null, tiempo_operativo_neto_min: 0, tiempo_operativo_bruto_min: 0, tiempo_pausas_operativas_min: 0, sacos: [],
       };
     }
     return null;
@@ -682,6 +682,15 @@ function renderCurrentView() {
 //  HELPERS CÁLCULO
 // ══════════════════════════════════════════════════
 function sum(arr, fn) { return arr.reduce((a,x)=>a+(fn?fn(x):x),0); }
+function getMermaCampana(rec) {
+  return sum(rec.sacos||[], s => s.tipo==='merma_tolva' ? (s.kg||0) : 0);
+}
+function getMermaMezclador(rec) {
+  return rec.kg_merma_mezclador||0;
+}
+function getResidualNoExplicado(rec) {
+  return Math.max(0, (rec.kg_perdida||0) - getMermaCampana(rec) - getMermaMezclador(rec));
+}
 
 function getTipoStats() {
   // Agrupa métricas por tipo de manga en los datos filtrados
@@ -710,6 +719,22 @@ function getEventosAll() {
   });
   return evs;
 }
+
+function getVentanaOperativa(rec) {
+  if(rec.ventana_operativa) return rec.ventana_operativa;
+  const ev = (rec.eventos||[]).find(e => e.sistema==='ventana_operativa' || e.tipo==='VENTANA OPERATIVA');
+  return ev?.ventana_operativa || null;
+}
+
+function getVentanasOperativas() {
+  return filtered.map(r => ({rec:r, ventana:getVentanaOperativa(r)})).filter(x => x.ventana);
+}
+
+function fmtMin(min) {
+  min = Math.round(min||0);
+  return min>=60 ? (min/60).toFixed(1) : min;
+}
+function fmtMinUnit(min) { return (min||0)>=60 ? 'h' : 'min'; }
 
 function tipoColor(tipo) {
   const map = {'280':'#3b8bbf','300':'#3bbfaa','320':'#a855f7','340':'#e07040',
@@ -893,10 +918,15 @@ function renderResumen() {
   const totalSc  = sum(filtered, r=>r.kg_scrap||0);
   const totalMez = sum(filtered, r=>r.kg_mezcla||0);
   const totalPer = sum(filtered, r=>r.kg_perdida||0);
+  const totalMermaCamp = sum(filtered, r=>getMermaCampana(r));
+  const totalMermaMez = sum(filtered, r=>getMermaMezclador(r));
+  const totalResidual = sum(filtered, r=>getResidualNoExplicado(r));
   const pctEfic  = totalMez>0?((totalFab/totalMez)*100):0;
   const pctSc    = totalFab+totalSc>0?((totalSc/(totalFab+totalSc))*100):0;
   const dias     = new Set(filtered.map(r=>r.fecha)).size;
   const totalPar = sum(filtered, r=>r.tiempo_paros_min||0);
+  const ventanas = getVentanasOperativas();
+  const totalOpNeto = sum(ventanas, x=>x.ventana.neto||0);
 
   buildKPIs('kpi-resumen',[
     {label:'Total mangas', value:totalMn.toLocaleString(), color:'amber', variant:''},
@@ -905,6 +935,7 @@ function renderResumen() {
     {label:'% Scrap', value:fmtPct(pctSc), color:pctSc<5?'ok':'danger', variant:pctSc<5?'ok':'danger'},
     {label:'Días producción', value:dias, color:'', sub:`${filtered.length} turnos`},
     {label:'Tiempo paros', value:totalPar>=60?(totalPar/60).toFixed(1):totalPar, unit:totalPar>=60?'h':'min', color:'warn'},
+    {label:'Ventana operativa', value:fmtMin(totalOpNeto), unit:fmtMinUnit(totalOpNeto), color:'ok', variant:'ok', sub:ventanas.length?(ventanas.length+' turno'+(ventanas.length!==1?'s':'')+' con ventana'):'Sin datos'},
   ]);
 
   // Gráfico diario
@@ -915,15 +946,15 @@ function renderResumen() {
     {label:'Kg fabricados', color:'var(--ok)', data:dates.map(d=>({x:d,y:byDate[d].kg}))},
   ]);
 
-  // Donut — 4 componentes balance de masa real
-  const totalMermaMez = sum(filtered, r=>r.kg_merma_mezclador||0);
+  // Donut - balance de masa segun datos disponibles
   const pctFab=fmtPct(pctEfic);
   const donutItems=[
     {label:'Fabricado', val:totalFab, color:'var(--ok)'},
     {label:'Scrap', val:totalSc, color:'var(--danger)'},
-    {label:'Merma campana', val:Math.max(0,totalPer), color:'var(--warn)'},
   ];
+  if(totalMermaCamp>0) donutItems.push({label:'Merma campana', val:totalMermaCamp, color:'var(--warn)'});
   if(totalMermaMez>0) donutItems.push({label:'Merma mezclador', val:totalMermaMez, color:'var(--purple)'});
+  if(totalResidual>0) donutItems.push({label:'Residual no explicado', val:totalResidual, color:'var(--amber)'});
   donutChart('chart-donut-resumen', donutItems, pctFab);
 
   // Tipos bar
@@ -937,7 +968,7 @@ function renderResumen() {
   evEl.innerHTML=evs.map(e=>`
     <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(30,45,69,.5)">
       <span style="font-family:var(--mono);font-size:.7rem;color:var(--muted);flex-shrink:0">${e._fecha}</span>
-      <span class="badge ${(e.detiene_categoria==='detiene'||e.detiene===true)?'badge-danger':(e.detiene_categoria==='proceso')?'badge-info':(e.detiene_categoria==='paralelo'||e.detiene===false)?'badge-ok':'badge-muted'}" style="flex-shrink:0">${e.tipo?.split(' ')[0]||'—'}</span>
+      <span class="badge ${(e.sistema==='ventana_operativa'||e.tipo==='VENTANA OPERATIVA')?'badge-ok':(e.detiene_categoria==='detiene'||e.detiene===true)?'badge-danger':(e.detiene_categoria==='proceso')?'badge-info':(e.detiene_categoria==='paralelo'||e.detiene===false)?'badge-ok':'badge-muted'}" style="flex-shrink:0">${e.tipo?.split(' ')[0]||'—'}</span>
       <span style="font-size:.78rem;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.obs||e.tipo||'—'}</span>
       ${e.duracion_min?`<span style="font-family:var(--mono);font-size:.7rem;color:var(--muted);flex-shrink:0">${e.duracion_min}m</span>`:''}
     </div>`).join('');
@@ -1080,44 +1111,53 @@ function renderEficiencia() {
   const totalSc  = sum(filtered, r=>r.kg_scrap||0);
   const totalMez = sum(filtered, r=>r.kg_mezcla||0);
   const totalPer = sum(filtered, r=>r.kg_perdida||0);
-  const totalMermaMez2 = sum(filtered, r=>r.kg_merma_mezclador||0);
+  const totalMermaCamp = sum(filtered, r=>getMermaCampana(r));
+  const totalMermaMez2 = sum(filtered, r=>getMermaMezclador(r));
+  const totalResidual  = sum(filtered, r=>getResidualNoExplicado(r));
   const pctEfic  = totalMez>0?((totalFab/totalMez)*100):0;
-  const pctPer   = totalMez>0?((totalPer/totalMez)*100):0;
+  const pctCamp  = totalMez>0?((totalMermaCamp/totalMez)*100):0;
+  const pctResidual = totalMez>0?((totalResidual/totalMez)*100):0;
   const pctMermaMez = totalMez>0?((totalMermaMez2/totalMez)*100):0;
 
   buildKPIs('kpi-eficiencia',[
     {label:'Eficiencia global', value:fmtPct(pctEfic), color:pctEfic>=90?'ok':'warn', variant:pctEfic>=90?'ok':'warn', bar:pctEfic, barColor:'var(--ok)'},
     {label:'Kg mezcla total', value:(totalMez/1000).toFixed(2), unit:'t', color:''},
     {label:'Kg fabricados', value:(totalFab/1000).toFixed(2), unit:'t', color:'ok'},
-    {label:'Merma campana', value:totalPer.toFixed(1), unit:'kg', color:'warn', sub:`${fmtPct(pctPer)} del total`},
-    {label:'Merma mezclador', value:totalMermaMez2>0?totalMermaMez2.toFixed(1):'—', unit:totalMermaMez2>0?'kg':'', color:totalMermaMez2>0?'warn':'', sub:totalMermaMez2>0?`${fmtPct(pctMermaMez)} del total`:'Sin datos'},
+    {label:'Merma campana', value:totalMermaCamp.toFixed(1), unit:'kg', color:'warn', sub:`${fmtPct(pctCamp)} del total`},
+    {label:'Merma mezclador', value:totalMermaMez2>0?totalMermaMez2.toFixed(1):'-', unit:totalMermaMez2>0?'kg':'', color:totalMermaMez2>0?'warn':'', sub:totalMermaMez2>0?`${fmtPct(pctMermaMez)} del total`:'Sin datos'},
+    {label:'Residual no explicado', value:totalResidual.toFixed(1), unit:'kg', color:'amber', sub:`${fmtPct(pctResidual)} del total`},
     {label:'Kg scrap', value:totalSc.toFixed(1), unit:'kg', color:'danger'},
-    {label:'Balance neto', value:((totalFab/(totalMez||1))*100).toFixed(1), unit:'%', color:'info', sub:'Mezcla → producto'},
+    {label:'Balance neto', value:((totalFab/(totalMez||1))*100).toFixed(1), unit:'%', color:'info', sub:'Mezcla -> producto'},
   ]);
 
   // Balance de masa: 4 componentes por fecha
   const byDate={};
   filtered.forEach(r=>{
-    if(!byDate[r.fecha]) byDate[r.fecha]={fab:0,sc:0,per:0,mez:0,mmez:0};
+    if(!byDate[r.fecha]) byDate[r.fecha]={fab:0,sc:0,camp:0,res:0,mez:0,mmez:0};
     byDate[r.fecha].fab+=r.kg_fabricado||0;
     byDate[r.fecha].sc+=r.kg_scrap||0;
-    byDate[r.fecha].per+=r.kg_perdida||0;
+    byDate[r.fecha].camp+=getMermaCampana(r);
+    byDate[r.fecha].res+=getResidualNoExplicado(r);
     byDate[r.fecha].mez+=r.kg_mezcla||0;
-    byDate[r.fecha].mmez+=r.kg_merma_mezclador||0;
+    byDate[r.fecha].mmez+=getMermaMezclador(r);
   });
   const dates=Object.keys(byDate).sort();
   const hasMermaMez=dates.some(d=>byDate[d].mmez>0);
+  const hasResidual=dates.some(d=>byDate[d].res>0);
   const balanceSeries=[
     {label:'Mezcla', color:'var(--info)', data:dates.map(d=>({x:d,y:byDate[d].mez}))},
     {label:'Fabricado', color:'var(--ok)', data:dates.map(d=>({x:d,y:byDate[d].fab}))},
     {label:'Scrap', color:'var(--danger)', data:dates.map(d=>({x:d,y:byDate[d].sc}))},
+    {label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].camp}))},
   ];
   if(hasMermaMez) balanceSeries.push({label:'Merma mezclador', color:'var(--purple)', data:dates.map(d=>({x:d,y:byDate[d].mmez}))});
+  if(hasResidual) balanceSeries.push({label:'Residual no explicado', color:'var(--amber)', data:dates.map(d=>({x:d,y:byDate[d].res}))});
   lineChart('chart-balance', balanceSeries, {h:220});
 
-  // Merma campana + mezclador por turno
-  const mermaSeries=[{label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].per}))}];
+  // Perdidas por turno
+  const mermaSeries=[{label:'Merma campana', color:'var(--warn)', data:dates.map(d=>({x:d,y:byDate[d].camp}))}];
   if(hasMermaMez) mermaSeries.push({label:'Merma mezclador', color:'var(--purple)', data:dates.map(d=>({x:d,y:byDate[d].mmez}))});
+  if(hasResidual) mermaSeries.push({label:'Residual no explicado', color:'var(--amber)', data:dates.map(d=>({x:d,y:byDate[d].res}))});
   lineChart('chart-perdida', mermaSeries);
 
   // Eficiencia por tipo
@@ -1134,12 +1174,18 @@ function renderEventos() {
   const evs=getEventosAll();
   const paros=evs.filter(e=>e.detiene===true || e.detiene_categoria==='detiene').filter(e=>e.detiene_categoria!=='proceso');
   const tiempoPar=sum(paros,e=>e.duracion_min||0);
+  const ventanas=getVentanasOperativas();
+  const tiempoOp=sum(ventanas,x=>x.ventana.neto||0);
+  const tiempoOpBruto=sum(ventanas,x=>x.ventana.bruto||0);
+  const pausasOp=sum(ventanas,x=>x.ventana.pausas||0);
   const tiposEv=[...new Set(evs.map(e=>e.tipo).filter(Boolean))].sort();
 
   buildKPIs('kpi-eventos',[
     {label:'Total eventos', value:evs.length, color:'amber'},
     {label:'Eventos que detienen', value:paros.length, color:'danger', variant:'danger'},
     {label:'Tiempo paros total', value:tiempoPar>=60?(tiempoPar/60).toFixed(1):tiempoPar, unit:tiempoPar>=60?'h':'min', color:'warn'},
+    {label:'Ventanas operativas', value:ventanas.length, color:'ok', variant:'ok'},
+    {label:'Tiempo operativo neto', value:fmtMin(tiempoOp), unit:fmtMinUnit(tiempoOp), color:'ok', sub:tiempoOpBruto?('Bruto '+fmtMin(tiempoOpBruto)+' '+fmtMinUnit(tiempoOpBruto)+' - pausas '+fmtMin(pausasOp)+' '+fmtMinUnit(pausasOp)):'Sin datos'},
     {label:'Tipos distintos', value:tiposEv.length, color:'info'},
   ]);
 
@@ -1181,7 +1227,7 @@ function renderEventosTable() {
       <td style="font-weight:600">${e.tipo||'—'}</td>
       <td>${e.inicio||'—'}</td>
       <td>${e.duracion_min?e.duracion_min+' min':'—'}</td>
-      <td><span class="badge ${(e.detiene_categoria==='detiene'||e.detiene===true)?'badge-danger':(e.detiene_categoria==='proceso')?'badge-info':(e.detiene_categoria==='paralelo'||e.detiene===false)?'badge-ok':'badge-muted'}">${(e.detiene_categoria==='detiene'||e.detiene===true)?'DETIENE':(e.detiene_categoria==='proceso')?'DEL PROCESO':(e.detiene_categoria==='paralelo'||e.detiene===false)?'EN PARALELO':'—'}</span></td>
+      <td><span class="badge ${(e.sistema==='ventana_operativa'||e.tipo==='VENTANA OPERATIVA')?'badge-ok':(e.detiene_categoria==='detiene'||e.detiene===true)?'badge-danger':(e.detiene_categoria==='proceso')?'badge-info':(e.detiene_categoria==='paralelo'||e.detiene===false)?'badge-ok':'badge-muted'}">${(e.sistema==='ventana_operativa'||e.tipo==='VENTANA OPERATIVA')?'OPERATIVO':(e.detiene_categoria==='detiene'||e.detiene===true)?'DETIENE':(e.detiene_categoria==='proceso')?'DEL PROCESO':(e.detiene_categoria==='paralelo'||e.detiene===false)?'EN PARALELO':'-'}</span></td>
       <td style="color:var(--text2);font-size:.75rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.obs||'—'}</td>
     </tr>`).join('')}
     ${shown.length>100?`<tr><td colspan="6" style="text-align:center;color:var(--muted);font-size:.75rem">Mostrando 100 de ${shown.length} eventos</td></tr>`:''}`;
