@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>OPERATION SUITE v4.1 Â· ZH780L-40 Â· QUIPASUR</title>
+<title>OPERATION SUITE v4.1 · ZH780L-40 · QUIPASUR</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -106,7 +106,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 .resumen-value.warn{color:var(--warn)}
 .resumen-unit{font-size:.7rem;color:var(--muted);margin-left:2px}
 
-/* â”€â”€ EVENTOS FAB â”€â”€ */
+/* ── EVENTOS FAB ── */
 #fab-evento{
   position:fixed;bottom:92px;right:16px;z-index:300;
   width:56px;height:56px;border-radius:50%;
@@ -237,6 +237,20 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 /* PRINT */
 .print-overlay{display:none;position:fixed;inset:0;z-index:500;background:var(--bg);overflow-y:auto;padding:20px}
 .print-overlay.show{display:block}
+
+@media(max-width:640px){
+  body{padding-bottom:138px}
+  .bottom-nav{flex-wrap:wrap;gap:7px;padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+  .productivo-group{order:-1;flex:0 0 100%;min-width:100%}
+  .productivo-group .btn-productive{min-height:44px}
+  .btn-productive .prod-main{font-size:.82rem;white-space:nowrap}
+  .btn-productive .prod-sub{font-size:.58rem}
+  .bottom-nav>button{min-height:44px}
+  .bottom-nav>button:first-child{flex:0 0 48px}
+  .bottom-nav>button:nth-child(2){flex:1.25}
+  .bottom-nav>button:last-child{flex:1}
+}
+
 @media print{body{display:none!important}.print-overlay{display:block!important;position:static;background:#fff;color:#000}.print-actions{display:none!important}}
 .report{max-width:900px;margin:0 auto;font-family:var(--sans)}
 .report-header{border-bottom:3px solid var(--amber);padding-bottom:14px;margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
@@ -333,7 +347,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
     <rect width="60" height="60" rx="10" fill="#1a2030"/>
     <!-- engranaje: cuerpo exterior -->
     <circle cx="30" cy="28" r="13" fill="none" stroke="#f0a500" stroke-width="3"/>
-    <!-- cÃ­rculo interior -->
+    <!-- círculo interior -->
     <circle cx="30" cy="28" r="6" fill="none" stroke="#f0a500" stroke-width="2.5"/>
     <!-- dientes del engranaje (8 dientes uniformes) -->
     <rect x="27.5" y="12" width="5" height="5" rx="1" fill="#f0a500"/>
@@ -348,8 +362,8 @@ input[type="time"],input[type="date"]{color-scheme:dark}
     <text x="30" y="52" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="7" font-weight="800" fill="#f0a500" letter-spacing="1">ZALINEL</text>
   </svg>
   <div class="topbar-titles">
-    <div class="topbar-title">PRODUCCIÃ“N Â· ZH780L-40</div>
-    <div class="topbar-sub">QUIPASUR LTDA Â· <span id="topbar-date">--</span></div>
+    <div class="topbar-title">PRODUCCIÓN · ZH780L-40</div>
+    <div class="topbar-sub">QUIPASUR LTDA · <span id="topbar-date">--</span></div>
   </div>
   <div class="topbar-actions">
     <button class="btn-icon" onclick="newRecord()">+ NUEVO</button>
@@ -363,7 +377,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
   <div class="tab active" onclick="switchTab('tab-registro')">REGISTRO</div>
   <div class="tab" onclick="switchTab('tab-eventos')" id="tab-eventos-btn">EVENTOS</div>
   <div class="tab" onclick="switchTab('tab-historial')">HISTORIAL</div>
-  <div class="tab" onclick="switchTab('tab-filtros')">ANÃLISIS</div>
+  <div class="tab" onclick="switchTab('tab-filtros')">ANÁLISIS</div>
 </div>
 
 <div id="toast"></div>
@@ -371,16 +385,16 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 <!-- PASTILLAS EVENTOS ACTIVOS -->
 <div id="eventos-activos"></div>
 
-<!-- â•â• REGISTRO â•â• -->
+<!-- ══ REGISTRO ══ -->
 <div class="panel active" id="tab-registro">
 
   <div class="card">
     <div class="card-head">
-      <span class="card-title">âŠ¡ ENCABEZADO DEL TURNO</span>
+      <span class="card-title">⊡ ENCABEZADO DEL TURNO</span>
       <div style="display:flex;gap:6px;align-items:center">
         <span style="font-family:var(--mono);font-size:.7rem;color:var(--muted)">TURNO</span>
         <select id="turno-num" style="width:60px;padding:4px 6px;font-size:.8rem">
-          <option value="1">1Â°</option><option value="2">2Â°</option>
+          <option value="1">1°</option><option value="2">2°</option>
         </select>
       </div>
     </div>
@@ -396,49 +410,49 @@ input[type="time"],input[type="date"]{color-scheme:dark}
       </div>
       <div class="field-row">
         <div class="field"><label>Hora inicio</label><input type="time" id="h-inicio" onchange="updateProgress()"></div>
-        <div class="field"><label>Hora tÃ©rmino</label><input type="time" id="h-termino" onchange="updateProgress()"></div>
+        <div class="field"><label>Hora término</label><input type="time" id="h-termino" onchange="updateProgress()"></div>
       </div>
 
     </div>
   </div>
 
   <div id="segments-container"></div>
-  <button class="btn-add" onclick="addSegment()" style="margin-bottom:14px">ï¼‹ AGREGAR TIPO DE MANGA</button>
+  <button class="btn-add" onclick="addSegment()" style="margin-bottom:14px">＋ AGREGAR TIPO DE MANGA</button>
 
   <!-- MERMA SACOS -->
   <div class="card">
     <div class="card-head">
-      <span class="card-title">âš– MERMA EN SACOS</span>
+      <span class="card-title">⚖ MERMA EN SACOS</span>
       <button class="toggle" id="toggle-sacos" onclick="toggleSacos()"></button>
     </div>
     <div class="card-body" id="sacos-body" style="display:none">
       <div id="sacos-container"></div>
-      <button class="btn-add" onclick="addSaco()">ï¼‹ AGREGAR SACO</button>
+      <button class="btn-add" onclick="addSaco()">＋ AGREGAR SACO</button>
     </div>
   </div>
 
   <!-- REGISTRO PALLET -->
   <div class="card">
     <div class="card-head">
-      <span class="card-title">ðŸ— REGISTRO DE PALLET</span>
+      <span class="card-title">🏗 REGISTRO DE PALLET</span>
       <button class="toggle" id="toggle-pallet" onclick="togglePallet()"></button>
     </div>
     <div class="card-body" id="pallet-body" style="display:none">
       <div id="pallet-container"></div>
-      <button class="btn-add" onclick="addPallet()">ï¼‹ AGREGAR PALLET</button>
+      <button class="btn-add" onclick="addPallet()">＋ AGREGAR PALLET</button>
     </div>
   </div>
 
   <!-- NOTA -->
   <div class="card">
-    <div class="card-head"><span class="card-title">ðŸ“ NOTA DEL TURNO</span></div>
+    <div class="card-head"><span class="card-title">📝 NOTA DEL TURNO</span></div>
     <div class="card-body">
-      <textarea id="nota-turno" placeholder="Observaciones generales del turnoâ€¦" rows="3"></textarea>
+      <textarea id="nota-turno" placeholder="Observaciones generales del turno…" rows="3"></textarea>
     </div>
   </div>
 </div>
 
-<!-- â•â• EVENTOS â•â• -->
+<!-- ══ EVENTOS ══ -->
 <div class="panel" id="tab-eventos">
   <div class="info-tip">
     Presiona el boton de evento para registrar un evento. El cronometro arranca de inmediato al abrir el panel. Puedes dejar eventos abiertos mientras continua la produccion y cerrarlos cuando corresponda. Los eventos cerrados pueden editarse en cualquier momento.
@@ -467,35 +481,35 @@ input[type="time"],input[type="date"]{color-scheme:dark}
   </div>
 </div>
 
-<!-- Ã¢â?¢ÂÃ¢â?¢Â HISTORIAL Ã¢â?¢ÂÃ¢â?¢Â -->
+<!-- HISTORIAL -->
 <div class="panel" id="tab-historial">
-  <div class="info-tip">ðŸ’¾ El historial se guarda al presionar <strong>GUARDAR TURNO</strong>. Los datos se almacenan localmente en este navegador â€” no se envÃ­an a ningÃºn servidor.</div>
+  <div class="info-tip">💾 El historial se guarda al presionar <strong>GUARDAR TURNO</strong>. Los datos se almacenan localmente en este navegador — no se envían a ningún servidor.</div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <span style="font-family:var(--cond);font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase">Almacenamiento local</span>
-      <span id="ls-pct-text" style="font-family:var(--mono);font-size:.7rem;color:var(--text2)">â€”</span>
+      <span id="ls-pct-text" style="font-family:var(--mono);font-size:.7rem;color:var(--text2)">—</span>
     </div>
     <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:8px">
       <div id="ls-bar-fill" style="height:100%;background:var(--ok);border-radius:2px;width:0%;transition:width .4s"></div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <span id="ls-count-label" style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">0 turnos Â· ~0 KB usados</span>
+      <span id="ls-count-label" style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">0 turnos · ~0 KB usados</span>
       <div style="display:flex;gap:6px">
-        <button class="btn btn-secondary btn-xs" onclick="importarInforme()" title="Cargar un informe HTML exportado al historial">ðŸ“¥ IMPORTAR HTML</button>
-        <button class="btn btn-danger btn-xs" onclick="clearAllRecords()">ðŸ—‘ BORRAR TODO</button>
+        <button class="btn btn-secondary btn-xs" onclick="importarInforme()" title="Cargar un informe HTML exportado al historial">📥 IMPORTAR HTML</button>
+        <button class="btn btn-danger btn-xs" onclick="clearAllRecords()">🗑 BORRAR TODO</button>
       </div>
     </div>
   </div>
   <input type="file" id="import-input" accept=".html" style="display:none" onchange="handleImportFile(this)">
   <div id="hist-list">
-    <div class="empty"><div class="empty-icon">ðŸ“‹</div><div class="empty-text">Sin registros guardados</div></div>
+    <div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Sin registros guardados</div></div>
   </div>
 </div>
 
-<!-- â•â• ANÃLISIS â•â• -->
+<!-- ══ ANÁLISIS ══ -->
 <div class="panel" id="tab-filtros">
   <div class="card">
-    <div class="card-head"><span class="card-title">ðŸ” FILTRAR</span></div>
+    <div class="card-head"><span class="card-title">🔍 FILTRAR</span></div>
     <div class="card-body">
       <div class="filter-bar">
         <div class="field"><label>Desde</label><input type="date" id="f-desde" onchange="renderFiltros()"></div>
@@ -514,28 +528,28 @@ input[type="time"],input[type="date"]{color-scheme:dark}
     </div>
   </div>
   <div class="card">
-    <div class="card-head"><span class="card-title">ðŸ“Š KPIs FILTRADOS</span></div>
+    <div class="card-head"><span class="card-title">📊 KPIs FILTRADOS</span></div>
     <div class="card-body">
       <div class="resumen-grid">
-        <div class="resumen-item"><div class="resumen-label">DÃ­as</div><div class="resumen-value" id="kf-dias">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Mangas</div><div class="resumen-value highlight" id="kf-mangas">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Kg fabricados</div><div class="resumen-value ok" id="kf-fabricado">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Kg scrap</div><div class="resumen-value danger" id="kf-scrap">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">% Scrap</div><div class="resumen-value warn" id="kf-pct-scrap">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Arena no util.</div><div class="resumen-value" id="kf-arena">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Eventos total</div><div class="resumen-value" id="kf-eventos">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Paros proceso</div><div class="resumen-value danger" id="kf-paros">â€”</div></div>
+        <div class="resumen-item"><div class="resumen-label">Días</div><div class="resumen-value" id="kf-dias">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Mangas</div><div class="resumen-value highlight" id="kf-mangas">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Kg fabricados</div><div class="resumen-value ok" id="kf-fabricado">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Kg scrap</div><div class="resumen-value danger" id="kf-scrap">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">% Scrap</div><div class="resumen-value warn" id="kf-pct-scrap">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Arena no util.</div><div class="resumen-value" id="kf-arena">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Eventos total</div><div class="resumen-value" id="kf-eventos">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Paros proceso</div><div class="resumen-value danger" id="kf-paros">—</div></div>
       </div>
     </div>
   </div>
   <div id="tabla-filtrada"></div>
 </div>
 
-<!-- â•â• PANEL EVENTO â•â• -->
+<!-- ══ PANEL EVENTO ══ -->
 <div id="evento-panel">
   <div class="ep-header">
-    <span class="ep-title" id="ep-panel-title">âš¡ EVENTO</span>
-    <button class="btn-icon" onclick="closeEventoPanel()">âœ•</button>
+    <span class="ep-title" id="ep-panel-title">⚡ EVENTO</span>
+    <button class="btn-icon" onclick="closeEventoPanel()">✕</button>
   </div>
   <div class="ep-body" id="ep-body"></div>
   <div class="ep-footer" id="ep-footer"></div>
@@ -543,13 +557,13 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 <div id="ep-backdrop" onclick="closeEventoPanel()" style="display:none;position:fixed;inset:0;z-index:390;background:rgba(0,0,0,.45)"></div>
 
 <!-- FAB -->
-<button id="fab-evento" onclick="abrirNuevoEvento()" title="Nuevo evento">âš¡</button>
+<button id="fab-evento" onclick="abrirNuevoEvento()" title="Nuevo evento">⚡</button>
 
 <!-- PRINT -->
 <div class="print-overlay" id="print-overlay">
   <div class="print-actions flex-row" style="margin-bottom:16px">
-    <button class="btn btn-primary" onclick="downloadReport()">â¬‡ DESCARGAR HTML</button>
-    <button class="btn btn-secondary" onclick="closePrint()">âœ• CERRAR</button>
+    <button class="btn btn-primary" onclick="downloadReport()">⬇ DESCARGAR HTML</button>
+    <button class="btn btn-secondary" onclick="closePrint()">✕ CERRAR</button>
   </div>
   <div class="report" id="report-content">
     <div class="empty"><div class="empty-text">Guarda un registro primero.</div></div>
@@ -559,7 +573,7 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 <!-- CONFIRM MODAL -->
 <div id="confirm-modal">
   <div class="confirm-box">
-    <div class="confirm-msg" id="confirm-msg">Â¿Confirmar acciÃ³n?</div>
+    <div class="confirm-msg" id="confirm-msg">¿Confirmar acción?</div>
     <div class="confirm-btns">
       <button class="btn btn-secondary btn-sm" onclick="modalResolve(false)">Cancelar</button>
       <button class="btn btn-sm" id="confirm-ok-btn" onclick="modalResolve(true)">Confirmar</button>
@@ -583,9 +597,9 @@ input[type="time"],input[type="date"]{color-scheme:dark}
 <datalist id="tipos-evento-list"></datalist>
 
 <script>
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  DATOS BASE
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 const TIPOS_MANGA={
   '220':{codigo:'CFQTPND220',nom:4.8,min:4.5,max:5.0},
   '240':{codigo:'CFQTPND240',nom:7.0,min:6.7,max:7.7},
@@ -607,9 +621,9 @@ const EVENT_TYPES_DEFAULT=[
   'MANGA PEGADA','BOQUILLAS TAPADAS','COLACION','ENTREGA MANGAS','ASEO SALA','OBSERVACION'
 ];
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  ESTADO
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 let segCount=0, loteCounters={}, scrapSegCounters={}, sacoCount=0, sacos_visible=false;
 let eventosAbiertos=[], eventosCerrados=[];
 let timerIntervals={};
@@ -618,9 +632,9 @@ let panelEvId=null;
 let detieneValue=null;
 let eventTypes=[];
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  INIT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('h-fecha').value=new Date().toISOString().slice(0,10);
   eventTypes=getEventTypes();
@@ -669,9 +683,9 @@ function updateTopbar(){
     ?new Date(d+'T12:00:00').toLocaleDateString('es-CL',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase():'--';
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  TABS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
   function getCurrentTimeHHMM(){
     const now=new Date();
     const hh=String(now.getHours()).padStart(2,'0');
@@ -828,9 +842,9 @@ function updateTopbar(){
   if(id==='tab-eventos') renderEventosLista();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  SEGMENTOS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function addSegment(data=null){
   const idx=segCount++; const id=`seg-${idx}`;
   const tipo=data?data.tipo:'380'; const info=TIPOS_MANGA[tipo]||{};
@@ -838,8 +852,8 @@ function addSegment(data=null){
   div.className='segment card'; div.id=id;
   div.innerHTML=`
     <div class="segment-head card-head">
-      <span class="segment-label card-title">ðŸ“¦ MANGA â€” <span class="seg-tipo-label">${tipo}</span></span>
-      <button class="btn-icon" style="color:var(--danger);border-color:var(--danger)" onclick="removeSegment('${id}')">âœ• QUITAR</button>
+      <span class="segment-label card-title">📦 MANGA — <span class="seg-tipo-label">${tipo}</span></span>
+      <button class="btn-icon" style="color:var(--danger);border-color:var(--danger)" onclick="removeSegment('${id}')">✕ QUITAR</button>
     </div>
     <div class="segment-body card-body">
       <div class="field-row triple">
@@ -848,26 +862,26 @@ function addSegment(data=null){
             ${Object.keys(TIPOS_MANGA).map(t=>`<option${t===tipo?' selected':''}>${t}</option>`).join('')}
           </select>
         </div>
-        <div class="field"><label>CÃ³digo</label><input type="text" class="seg-codigo" value="${data?.codigo||info.codigo||''}" placeholder="CFQTPND380"></div>
+        <div class="field"><label>Código</label><input type="text" class="seg-codigo" value="${data?.codigo||info.codigo||''}" placeholder="CFQTPND380"></div>
         <div class="field"><label>Nominal (kg)</label><input type="number" class="seg-nom" value="${data?.p1_nom||info.nom||''}" step="0.01" oninput="recalcResumen('${id}')"></div>
       </div>
       <div class="field-row">
-        <div class="field"><label>MÃ­nimo (kg)</label><input type="number" class="seg-min" value="${data?.p1_min||info.min||''}" step="0.01" oninput="recalcResumen('${id}')"></div>
-        <div class="field"><label>MÃ¡ximo (kg)</label><input type="number" class="seg-max" value="${data?.p1_max||info.max||''}" step="0.01" oninput="recalcResumen('${id}')"></div>
+        <div class="field"><label>Mínimo (kg)</label><input type="number" class="seg-min" value="${data?.p1_min||info.min||''}" step="0.01" oninput="recalcResumen('${id}')"></div>
+        <div class="field"><label>Máximo (kg)</label><input type="number" class="seg-max" value="${data?.p1_max||info.max||''}" step="0.01" oninput="recalcResumen('${id}')"></div>
       </div>
       <div class="divider"></div>
       <div class="lotes-container-${id}"></div>
-      <button class="btn-add" onclick="addLote('${id}')">ï¼‹ AGREGAR LOTE</button>
+      <button class="btn-add" onclick="addLote('${id}')">＋ AGREGAR LOTE</button>
       <div class="divider"></div>
       <div class="resumen-grid">
-        <div class="resumen-item"><div class="resumen-label">Total mezcla</div><div class="resumen-value" id="r-mezcla-${id}">â€”<span class="resumen-unit">kg</span></div></div>
-        <div class="resumen-item"><div class="resumen-label">Kg fabricados</div><div class="resumen-value ok" id="r-fab-${id}">â€”<span class="resumen-unit">kg</span></div></div>
-        <div class="resumen-item"><div class="resumen-label">Kg scrap</div><div class="resumen-value danger" id="r-scrap-${id}">â€”<span class="resumen-unit">kg</span></div></div>
-        <div class="resumen-item"><div class="resumen-label">Arena no util.</div><div class="resumen-value warn" id="r-noutil-${id}">â€”<span class="resumen-unit">kg</span></div></div>
-        <div class="resumen-item"><div class="resumen-label">Total arena</div><div class="resumen-value" id="r-arena-${id}">â€”<span class="resumen-unit">kg</span></div></div>
-        <div class="resumen-item"><div class="resumen-label">Mangas</div><div class="resumen-value highlight" id="r-count-${id}">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">% Scrap</div><div class="resumen-value warn" id="r-pct-${id}">â€”</div></div>
-        <div class="resumen-item"><div class="resumen-label">Peso prom.</div><div class="resumen-value" id="r-prom-${id}">â€”<span class="resumen-unit">kg</span></div></div>
+        <div class="resumen-item"><div class="resumen-label">Total mezcla</div><div class="resumen-value" id="r-mezcla-${id}">—<span class="resumen-unit">kg</span></div></div>
+        <div class="resumen-item"><div class="resumen-label">Kg fabricados</div><div class="resumen-value ok" id="r-fab-${id}">—<span class="resumen-unit">kg</span></div></div>
+        <div class="resumen-item"><div class="resumen-label">Kg scrap</div><div class="resumen-value danger" id="r-scrap-${id}">—<span class="resumen-unit">kg</span></div></div>
+        <div class="resumen-item"><div class="resumen-label">Arena no util.</div><div class="resumen-value warn" id="r-noutil-${id}">—<span class="resumen-unit">kg</span></div></div>
+        <div class="resumen-item"><div class="resumen-label">Total arena</div><div class="resumen-value" id="r-arena-${id}">—<span class="resumen-unit">kg</span></div></div>
+        <div class="resumen-item"><div class="resumen-label">Mangas</div><div class="resumen-value highlight" id="r-count-${id}">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">% Scrap</div><div class="resumen-value warn" id="r-pct-${id}">—</div></div>
+        <div class="resumen-item"><div class="resumen-label">Peso prom.</div><div class="resumen-value" id="r-prom-${id}">—<span class="resumen-unit">kg</span></div></div>
       </div>
     </div>`;
   document.getElementById('segments-container').appendChild(div);
@@ -892,9 +906,9 @@ function onTipoChange(sel,segId){
   recalcResumen(segId);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  LOTES
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function addLote(segId,data=null){
   if(!loteCounters[segId]) loteCounters[segId]=0;
   const li=loteCounters[segId]++; const lid=`lote-${segId}-${li}`;
@@ -910,8 +924,8 @@ function addLote(segId,data=null){
     <div class="lote-head">
       <div class="lote-row1">
         <span class="lote-num">LOTE ${num}</span>
-        <input type="text" class="lote-id" placeholder="NÂ° Lote / ID" value="${data?.id||''}">
-        <button class="btn-small" onclick="removeLote('${lid}','${segId}')">âœ•</button>
+        <input type="text" class="lote-id" placeholder="N° Lote / ID" value="${data?.id||''}">
+        <button class="btn-small" onclick="removeLote('${lid}','${segId}')">✕</button>
       </div>
       <div class="lote-row2">
         <div>
@@ -925,22 +939,22 @@ function addLote(segId,data=null){
             oninput="recalcLoteMezcla('${lid}','${segId}')">
         </div>
         <div>
-          <div class="lote-sub-label">= TeÃ³rico</div>
-          <div class="kg-mezcla-display" id="kg-disp-${lid}">â€”</div>
+          <div class="lote-sub-label">= Teórico</div>
+          <div class="kg-mezcla-display" id="kg-disp-${lid}">—</div>
           <input type="hidden" class="kg-input" value="">
         </div>
         <div>
-          <div class="lote-sub-label">KG mezcla real âš–</div>
+          <div class="lote-sub-label">KG mezcla real ⚖</div>
           <input type="number" class="kg-mini kg-real-input" placeholder="post-mezclador" step="0.1" value="${data?.kg_real||''}"
             oninput="recalcLoteMezcla('${lid}','${segId}')">
-          <div class="kg-merma-display" id="kg-merma-${lid}">â€”</div>
+          <div class="kg-merma-display" id="kg-merma-${lid}">—</div>
         </div>
       </div>
     </div>
     <div class="mangas-grid" id="mg-${lid}"></div>
     <div class="lote-add-row">
-      <button class="btn-add" style="font-size:.75rem;padding:5px 10px" onclick="addManga('${lid}','${segId}')">ï¼‹ MANGA</button>
-      <button class="btn-add" style="font-size:.75rem;padding:5px 10px;border-color:var(--danger);color:var(--danger);background:rgba(224,59,59,.06)" onclick="addMangaScrap('${lid}','${segId}')">âœ• SCRAP</button>
+      <button class="btn-add" style="font-size:.75rem;padding:5px 10px" onclick="addManga('${lid}','${segId}')">＋ MANGA</button>
+      <button class="btn-add" style="font-size:.75rem;padding:5px 10px;border-color:var(--danger);color:var(--danger);background:rgba(224,59,59,.06)" onclick="addMangaScrap('${lid}','${segId}')">✕ SCRAP</button>
     </div>`;
   container.appendChild(block);
   setTimeout(()=>recalcLoteMezcla(lid,segId),0);
@@ -1005,9 +1019,9 @@ function recalcLoteMezcla(lid,segId){
   const disp=document.getElementById(`kg-disp-${lid}`);
   const hidden=block.querySelector('.kg-input');
   const mermaEl=document.getElementById(`kg-merma-${lid}`);
-  if(disp){ disp.textContent=tot>0?tot.toFixed(1)+' kg':'â€”'; disp.style.color=tot>0?'var(--teal)':'var(--muted)'; }
+  if(disp){ disp.textContent=tot>0?tot.toFixed(1)+' kg':'—'; disp.style.color=tot>0?'var(--teal)':'var(--muted)'; }
   if(hidden) hidden.value=tot>0?tot:'';
-  // Merma mezclador = teÃ³rico - real
+  // Merma mezclador = teórico - real
   if(mermaEl){
     if(real>0 && tot>0){
       const delta=tot-real;
@@ -1015,7 +1029,7 @@ function recalcLoteMezcla(lid,segId){
       mermaEl.className='kg-merma-display'+(delta>15?' danger':delta>5?' warn':' ok');
       mermaEl.title='Merma mezclador: '+(delta>=0?delta.toFixed(1):0)+' kg adherido';
     } else {
-      mermaEl.textContent='â€”'; mermaEl.className='kg-merma-display';
+      mermaEl.textContent='—'; mermaEl.className='kg-merma-display';
     }
   }
   recalcResumen(segId);
@@ -1041,9 +1055,9 @@ function removeLote(lid,segId){ document.getElementById(lid)?.remove(); renumber
 function renumberLotes(segId){ document.querySelectorAll(`#${segId} .lote-block`).forEach((b,i)=>b.querySelector('.lote-num').textContent=`LOTE ${i+1}`); }
 
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  RECALC
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function recalcResumen(segId){
   const seg=document.getElementById(segId); if(!seg) return;
   let mezcla=0,mezclaReal=0,fab=0,sc=0,cnt=0; const pesos=[];
@@ -1061,9 +1075,9 @@ function recalcResumen(segId){
   const noUtil=Math.max(0,mezclaReal-fab-sc);
   const mermaMez=Math.max(0,mezcla-mezclaReal);
   const arena=fab+sc;
-  const pct=fab+sc>0?((sc/(fab+sc))*100).toFixed(1):'â€”';
-  const prom=pesos.length?(fab/pesos.length).toFixed(3):'â€”';
-  const f=(v,d=3)=>isNaN(v)?'â€”':v.toFixed(d);
+  const pct=fab+sc>0?((sc/(fab+sc))*100).toFixed(1):'—';
+  const prom=pesos.length?(fab/pesos.length).toFixed(3):'—';
+  const f=(v,d=3)=>isNaN(v)?'—':v.toFixed(d);
   const mezclaDisp=mezclaReal!==mezcla&&mezclaReal>0?mezclaReal:mezcla;
   const mermaMezTxt=mermaMez>0?` <span style='font-size:.62rem;color:var(--warn)'>(-${mermaMez.toFixed(1)} mez.)</span>`:'';
   document.getElementById(`r-mezcla-${segId}`).innerHTML=`${f(mezclaDisp,1)}<span class='resumen-unit'>kg</span>${mermaMezTxt}`;
@@ -1071,15 +1085,15 @@ function recalcResumen(segId){
   document.getElementById(`r-scrap-${segId}`).innerHTML=`${f(sc)}<span class="resumen-unit">kg</span>`;
   document.getElementById(`r-noutil-${segId}`).innerHTML=`${f(noUtil,1)}<span class="resumen-unit">kg</span>`;
   document.getElementById(`r-arena-${segId}`).innerHTML=`${f(arena)}<span class="resumen-unit">kg</span>`;
-  document.getElementById(`r-count-${segId}`).textContent=cnt||'â€”';
-  document.getElementById(`r-pct-${segId}`).textContent=pct==='â€”'?'â€”':`${pct}%`;
+  document.getElementById(`r-count-${segId}`).textContent=cnt||'—';
+  document.getElementById(`r-pct-${segId}`).textContent=pct==='—'?'—':`${pct}%`;
   document.getElementById(`r-prom-${segId}`).innerHTML=`${prom}<span class="resumen-unit">kg</span>`;
   updateProgress();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  EVENTOS - SISTEMA COMPLETO
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function nowStr(){
   const n=new Date();
   return `${n.getHours().toString().padStart(2,'0')}:${n.getMinutes().toString().padStart(2,'0')}`;
@@ -1089,7 +1103,7 @@ function tsToStr(ts){
   return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
 }
 
-// FAB â†’ abre panel inmediatamente y arranca contador
+// FAB → abre panel inmediatamente y arranca contador
 function abrirNuevoEvento(){
   // Crear evento provisional con timestamp de ahora mismo
   const ev={
@@ -1119,47 +1133,47 @@ function openEventoPanel(mode, evId=null){
 
   if(mode==='nuevo'){
     const ev=eventosAbiertos.find(e=>e.id===evId);
-    ep.textContent='âš¡ NUEVO EVENTO Â· CORRIENDO';
+    ep.textContent='⚡ NUEVO EVENTO · CORRIENDO';
     body.innerHTML=`
       <div style="background:rgba(224,112,64,.1);border:1px solid var(--warn);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-family:var(--mono);font-size:.85rem;color:var(--amber)">
-        â–¶ Iniciado a las ${ev.inicio_str} Â· cronÃ³metro activo
+        ▶ Iniciado a las ${ev.inicio_str} · cronómetro activo
       </div>
       <div class="field" style="margin-bottom:12px">
         <label>Tipo de evento</label>
-        <input type="text" id="ev-tipo" list="tipos-evento-list" placeholder="ej. FALLA MECÃNICA, LIMPIEZAâ€¦" value="${ev.tipo||''}">
+        <input type="text" id="ev-tipo" list="tipos-evento-list" placeholder="ej. FALLA MECÁNICA, LIMPIEZA…" value="${ev.tipo||''}">
       </div>
       <div class="field" style="margin-bottom:12px">
-        <label>DescripciÃ³n / observaciÃ³n</label>
-        <textarea id="ev-obs" rows="3" placeholder="Â¿QuÃ© ocurriÃ³? Â¿QuÃ© se observa?">${ev.obs||''}</textarea>
+        <label>Descripción / observación</label>
+        <textarea id="ev-obs" rows="3" placeholder="¿Qué ocurrió? ¿Qué se observa?">${ev.obs||''}</textarea>
       </div>
       <div style="margin-bottom:12px">
-        <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">Â¿IMPACTO EN PRODUCCIÃ“N?</div>
+        <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">¿IMPACTO EN PRODUCCIÓN?</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px">
-          <button class="btn btn-danger btn-sm" id="det-si" onclick="selectDetiene('detiene')" style="flex:1">âœ• DETIENE</button>
-          <button class="btn btn-secondary btn-sm" id="det-no" onclick="selectDetiene('paralelo')" style="flex:1">â†” EN PARALELO</button>
-          <button class="btn btn-secondary btn-sm" id="det-proc" onclick="selectDetiene('proceso')" style="flex:1;color:var(--teal);border-color:rgba(59,191,170,.4)">â¬¡ DEL PROCESO</button>
+          <button class="btn btn-danger btn-sm" id="det-si" onclick="selectDetiene('detiene')" style="flex:1">✕ DETIENE</button>
+          <button class="btn btn-secondary btn-sm" id="det-no" onclick="selectDetiene('paralelo')" style="flex:1">↔ EN PARALELO</button>
+          <button class="btn btn-secondary btn-sm" id="det-proc" onclick="selectDetiene('proceso')" style="flex:1;color:var(--teal);border-color:rgba(59,191,170,.4)">⬡ DEL PROCESO</button>
         </div>
         <div style="font-family:var(--cond);font-size:.62rem;color:var(--muted);line-height:1.5">
-          <strong style="color:var(--danger)">DETIENE</strong>: paro no planificado Â· 
-          <strong style="color:var(--ok)">EN PARALELO</strong>: ocurre sin detener mÃ¡quina Â· 
-          <strong style="color:var(--teal)">DEL PROCESO</strong>: actividad propia sin producciÃ³n (inicio turno, mezcla, limpieza, colaciÃ³n)
+          <strong style="color:var(--danger)">DETIENE</strong>: paro no planificado · 
+          <strong style="color:var(--ok)">EN PARALELO</strong>: ocurre sin detener máquina · 
+          <strong style="color:var(--teal)">DEL PROCESO</strong>: actividad propia sin producción (inicio turno, mezcla, limpieza, colación)
         </div>
       </div>
       <div style="margin-bottom:12px">
         <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">ETIQUETAS</div>
         <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center" id="ev-etiquetas">
-          ${['URGENTE','MECÃNICO','ELÃ‰CTRICO','NEUMÃTICO','CALIDAD','SEGURIDAD','PROCESO'].map(e=>`<button class="btn btn-secondary btn-xs" data-selected="0" onclick="toggleEtiqueta(this)">${e}</button>`).join('')}
-          <button class="btn btn-secondary btn-xs etiqueta-add-btn" style="border-style:dashed;color:var(--amber);border-color:rgba(240,165,0,.4)" onclick="addEtiquetaPersonalizada()">ï¼‹ ETIQUETA</button>
+          ${['URGENTE','MECÁNICO','ELÉCTRICO','NEUMÁTICO','CALIDAD','SEGURIDAD','PROCESO'].map(e=>`<button class="btn btn-secondary btn-xs" data-selected="0" onclick="toggleEtiqueta(this)">${e}</button>`).join('')}
+          <button class="btn btn-secondary btn-xs etiqueta-add-btn" style="border-style:dashed;color:var(--amber);border-color:rgba(240,165,0,.4)" onclick="addEtiquetaPersonalizada()">＋ ETIQUETA</button>
         </div>
       </div>`;
     footer.innerHTML=`
-      <button class="btn btn-warn" onclick="confirmarEvento('${evId}')">âœ“ CONFIRMAR EVENTO (sigue corriendo)</button>
-      <button class="btn btn-secondary btn-sm" onclick="cancelarProvisional('${evId}')">âœ• CANCELAR (no era evento)</button>`;
+      <button class="btn btn-warn" onclick="confirmarEvento('${evId}')">✓ CONFIRMAR EVENTO (sigue corriendo)</button>
+      <button class="btn btn-secondary btn-sm" onclick="cancelarProvisional('${evId}')">✕ CANCELAR (no era evento)</button>`;
   }
   else if(mode==='cerrar'){
     const ev=eventosAbiertos.find(e=>e.id===evId);
     const mins=Math.floor((Date.now()-ev.inicio_ts)/60000);
-    ep.textContent='â¹ CERRAR EVENTO';
+    ep.textContent='⏹ CERRAR EVENTO';
     body.innerHTML=`
       <div style="margin-bottom:12px">
         <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);margin-bottom:4px">EVENTO</div>
@@ -1167,22 +1181,22 @@ function openEventoPanel(mode, evId=null){
         ${ev.obs?`<div style="font-size:.82rem;color:var(--text2);margin-top:3px">${ev.obs}</div>`:''}
       </div>
       <div style="margin-bottom:12px;font-family:var(--mono);font-size:.85rem">
-        Iniciado: <span style="color:var(--amber)">${ev.inicio_str}</span> Â· <span style="color:var(--warn)">${mins} min transcurridos</span>
+        Iniciado: <span style="color:var(--amber)">${ev.inicio_str}</span> · <span style="color:var(--warn)">${mins} min transcurridos</span>
       </div>
       <div class="field" style="margin-bottom:12px">
         <label>Hora de cierre</label>
         <input type="time" id="ev-fin-hora" value="${nowStr()}">
       </div>
       <div class="field" style="margin-bottom:12px">
-        <label>ObservaciÃ³n de cierre</label>
-        <textarea id="ev-fin-obs" rows="3" placeholder="Â¿CÃ³mo se resolviÃ³? Â¿QuÃ© se encontrÃ³?">${ev.obs_cierre||''}</textarea>
+        <label>Observación de cierre</label>
+        <textarea id="ev-fin-obs" rows="3" placeholder="¿Cómo se resolvió? ¿Qué se encontró?">${ev.obs_cierre||''}</textarea>
       </div>`;
-    footer.innerHTML=`<button class="btn btn-ok" onclick="cerrarEvento('${evId}')">âœ“ CERRAR EVENTO</button>`;
+    footer.innerHTML=`<button class="btn btn-ok" onclick="cerrarEvento('${evId}')">✓ CERRAR EVENTO</button>`;
   }
   else if(mode==='editar'){
     const ev = eventosAbiertos.find(e=>e.id===evId) || eventosCerrados.find(e=>e.id===evId);
     const isClosed = !ev.abierto;
-    ep.textContent='âœ EDITAR EVENTO';
+    ep.textContent='✏ EDITAR EVENTO';
     const detSiStyle=ev.detiene==='detiene'?'background:var(--danger);color:#fff':'';
     const detNoStyle=ev.detiene==='paralelo'?'background:var(--ok);color:#000':'';
     const detPrStyle=ev.detiene==='proceso'?'background:var(--teal);color:#000':'';
@@ -1196,43 +1210,43 @@ function openEventoPanel(mode, evId=null){
         ${isClosed?`<div class="field"><label>Hora fin</label><input type="time" id="ev-edit-fin" value="${ev.fin_str||''}"></div>`:'<div></div>'}
       </div>
       <div class="field" style="margin-bottom:12px">
-        <label>DescripciÃ³n / observaciÃ³n inicial</label>
+        <label>Descripción / observación inicial</label>
         <textarea id="ev-edit-obs" rows="2">${ev.obs||''}</textarea>
       </div>
       ${isClosed?`<div class="field" style="margin-bottom:12px">
-        <label>ObservaciÃ³n de cierre</label>
+        <label>Observación de cierre</label>
         <textarea id="ev-edit-obs-cierre" rows="2">${ev.obs_cierre||''}</textarea>
       </div>`:''}
       <div style="margin-bottom:12px">
-        <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">Â¿IMPACTO EN PRODUCCIÃ“N?</div>
+        <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">¿IMPACTO EN PRODUCCIÓN?</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn btn-danger btn-sm" id="det-si" onclick="selectDetiene('detiene')" style="flex:1;${detSiStyle}">âœ• DETIENE</button>
-          <button class="btn btn-secondary btn-sm" id="det-no" onclick="selectDetiene('paralelo')" style="flex:1;${detNoStyle}">â†” EN PARALELO</button>
-          <button class="btn btn-secondary btn-sm" id="det-proc" onclick="selectDetiene('proceso')" style="flex:1;color:var(--teal);border-color:rgba(59,191,170,.4);${detPrStyle}">â¬¡ DEL PROCESO</button>
+          <button class="btn btn-danger btn-sm" id="det-si" onclick="selectDetiene('detiene')" style="flex:1;${detSiStyle}">✕ DETIENE</button>
+          <button class="btn btn-secondary btn-sm" id="det-no" onclick="selectDetiene('paralelo')" style="flex:1;${detNoStyle}">↔ EN PARALELO</button>
+          <button class="btn btn-secondary btn-sm" id="det-proc" onclick="selectDetiene('proceso')" style="flex:1;color:var(--teal);border-color:rgba(59,191,170,.4);${detPrStyle}">⬡ DEL PROCESO</button>
         </div>
       </div>
       <div style="margin-bottom:12px">
         <div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">ETIQUETAS</div>
         <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center" id="ev-etiquetas">
-          ${['URGENTE','MECÃNICO','ELÃ‰CTRICO','NEUMÃTICO','CALIDAD','SEGURIDAD','PROCESO'].map(e=>{
+          ${['URGENTE','MECÁNICO','ELÉCTRICO','NEUMÁTICO','CALIDAD','SEGURIDAD','PROCESO'].map(e=>{
             const sel=ev.etiquetas?.includes(e);
             return `<button class="btn btn-secondary btn-xs" data-selected="${sel?'1':'0'}"
               style="${sel?'background:var(--amber);color:#000;border-color:var(--amber)':''}"
               onclick="toggleEtiqueta(this)">${e}</button>`;
           }).join('')}
-          ${(ev.etiquetas||[]).filter(e=>!['URGENTE','MECÃNICO','ELÃ‰CTRICO','NEUMÃTICO','CALIDAD','SEGURIDAD','PROCESO'].includes(e)).map(e=>`<button class="btn btn-secondary btn-xs" data-selected="1" style="background:var(--amber);color:#000;border-color:var(--amber)" onclick="toggleEtiqueta(this)">${e}</button>`).join('')}
-          <button class="btn btn-secondary btn-xs etiqueta-add-btn" style="border-style:dashed;color:var(--amber);border-color:rgba(240,165,0,.4)" onclick="addEtiquetaPersonalizada()">ï¼‹ ETIQUETA</button>
+          ${(ev.etiquetas||[]).filter(e=>!['URGENTE','MECÁNICO','ELÉCTRICO','NEUMÁTICO','CALIDAD','SEGURIDAD','PROCESO'].includes(e)).map(e=>`<button class="btn btn-secondary btn-xs" data-selected="1" style="background:var(--amber);color:#000;border-color:var(--amber)" onclick="toggleEtiqueta(this)">${e}</button>`).join('')}
+          <button class="btn btn-secondary btn-xs etiqueta-add-btn" style="border-style:dashed;color:var(--amber);border-color:rgba(240,165,0,.4)" onclick="addEtiquetaPersonalizada()">＋ ETIQUETA</button>
         </div>
       </div>
       <div class="field" style="margin-bottom:12px">
         <label>Nota adicional (con timestamp)</label>
-        <textarea id="ev-edit-nota-extra" rows="2" placeholder="Agregar nueva informaciÃ³n descubiertaâ€¦"></textarea>
+        <textarea id="ev-edit-nota-extra" rows="2" placeholder="Agregar nueva información descubierta…"></textarea>
       </div>
-      ${ev.editLog?.length?`<div style="margin-top:10px"><div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">HISTORIAL DE NOTAS</div>${ev.editLog.map(l=>`<div style="font-size:.75rem;color:var(--muted);border-left:2px solid var(--border);padding:4px 8px;margin-bottom:4px"><span style="color:var(--info)">${l.ts}</span> â€” ${l.texto}</div>`).join('')}</div>`:''}`;
+      ${ev.editLog?.length?`<div style="margin-top:10px"><div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">HISTORIAL DE NOTAS</div>${ev.editLog.map(l=>`<div style="font-size:.75rem;color:var(--muted);border-left:2px solid var(--border);padding:4px 8px;margin-bottom:4px"><span style="color:var(--info)">${l.ts}</span> — ${l.texto}</div>`).join('')}</div>`:''}`;
     detieneValue=ev.detiene;
     footer.innerHTML=`
-      <button class="btn btn-primary" onclick="guardarEdicionEvento('${evId}')">ðŸ’¾ GUARDAR CAMBIOS</button>
-      <button class="btn btn-danger btn-sm" onclick="eliminarEvento('${evId}')">ðŸ—‘ ELIMINAR EVENTO</button>`;
+      <button class="btn btn-primary" onclick="guardarEdicionEvento('${evId}')">💾 GUARDAR CAMBIOS</button>
+      <button class="btn btn-danger btn-sm" onclick="eliminarEvento('${evId}')">🗑 ELIMINAR EVENTO</button>`;
   }
 
   panel.classList.add('open');
@@ -1266,14 +1280,14 @@ function addEtiquetaPersonalizada(){
   const wrap=document.createElement('div');
   wrap.className='etiqueta-inline-wrap';
   wrap.style.cssText='display:flex;gap:4px;align-items:center;margin-top:2px';
-  wrap.innerHTML=`<input type="text" id="etiqueta-custom-input" placeholder="Nombre etiquetaâ€¦"
+  wrap.innerHTML=`<input type="text" id="etiqueta-custom-input" placeholder="Nombre etiqueta…"
     maxlength="20" autocomplete="off"
     style="background:var(--bg);border:1px solid var(--amber);border-radius:5px;color:var(--text);
            font-family:var(--mono);font-size:.75rem;padding:3px 7px;outline:none;width:130px">
     <button class="btn btn-xs" style="background:var(--amber);color:#000;border:none;padding:3px 8px"
-      onclick="confirmEtiquetaPersonalizada()">âœ“</button>
+      onclick="confirmEtiquetaPersonalizada()">✓</button>
     <button class="btn btn-xs btn-secondary" style="padding:3px 8px"
-      onclick="this.closest('.etiqueta-inline-wrap').remove()">âœ•</button>`;
+      onclick="this.closest('.etiqueta-inline-wrap').remove()">✕</button>`;
   container.insertBefore(wrap, addBtn);
   const inp=wrap.querySelector('input');
   inp.focus();
@@ -1322,7 +1336,7 @@ function confirmarEvento(evId){
   ev.tipo=tipo; ev.obs=obs; ev.detiene=detieneValue;
   ev.etiquetas=getEtiquetasSeleccionadas(); ev.provisional=false;
   closeEventoPanel(); renderPastillas(); renderEventosLista(); updateEventosBadge();
-  toast(`âš¡ "${tipo}" en cursoâ€¦`,'ok');
+  toast(`⚡ "${tipo}" en curso…`,'ok');
 }
 
 function cancelarProvisional(evId){
@@ -1347,7 +1361,7 @@ function cerrarEvento(evId){
   eventosCerrados.push(cerrado); eventosAbiertos.splice(idx,1);
   if(timerIntervals[evId]){ clearInterval(timerIntervals[evId]); delete timerIntervals[evId]; }
   closeEventoPanel(); renderPastillas(); renderEventosLista(); updateEventosBadge();
-  toast(`â¹ Cerrado â€” ${dur} min`,'ok');
+  toast(`⏹ Cerrado — ${dur} min`,'ok');
 }
 
 function guardarEdicionEvento(evId){
@@ -1376,11 +1390,11 @@ function guardarEdicionEvento(evId){
   if(notaExtra) ev.editLog.push({ts:new Date().toLocaleString('es-CL'),texto:notaExtra});
 
   closeEventoPanel(); renderPastillas(); renderEventosLista(); updateEventosBadge();
-  toast('Evento actualizado âœ“','ok');
+  toast('Evento actualizado ✓','ok');
 }
 
 async function eliminarEvento(evId){
-  const ok = await modalConfirm('Â¿Eliminar este evento permanentemente?','ðŸ—‘ Eliminar','btn-danger');
+  const ok = await modalConfirm('¿Eliminar este evento permanentemente?','🗑 Eliminar','btn-danger');
   if(!ok) return;
   eventosAbiertos=eventosAbiertos.filter(e=>e.id!==evId);
   eventosCerrados=eventosCerrados.filter(e=>e.id!==evId);
@@ -1410,15 +1424,15 @@ function renderPastillas(){
     return `<div class="evento-pill${critico?' critico':''}" data-ev-id="${ev.id}">
       <div class="ep-pill-left">
         <div class="ep-pill-tipo${critico?' critico':''}">
-          ${provisional?'âš  SIN TIPO â€” ':'âš¡ '}${ev.tipo||'PENDIENTE COMPLETAR'}
-          ${ev.detiene==='detiene'?' Â· âœ• DETIENE':ev.detiene==='paralelo'?' Â· â†” PARALELO':ev.detiene==='proceso'?' Â· â¬¡ PROCESO':ev.detiene===true?' Â· âœ• DETIENE':ev.detiene===false?' Â· â†” PARALELO':''}
+          ${provisional?'⚠ SIN TIPO — ':'⚡ '}${ev.tipo||'PENDIENTE COMPLETAR'}
+          ${ev.detiene==='detiene'?' · ✕ DETIENE':ev.detiene==='paralelo'?' · ↔ PARALELO':ev.detiene==='proceso'?' · ⬡ PROCESO':ev.detiene===true?' · ✕ DETIENE':ev.detiene===false?' · ↔ PARALELO':''}
         </div>
         ${ev.obs?`<div class="ep-pill-obs">${ev.obs}</div>`:''}
       </div>
       <span class="ep-pill-timer" style="font-family:var(--mono);font-size:.9rem;color:var(--amber)">00:00</span>
       <div class="ep-pill-actions">
         ${provisional?`<button class="ep-pill-btn" onclick="openEventoPanel('nuevo','${ev.id}')">COMPLETAR</button>`:`<button class="ep-pill-btn" onclick="openEventoPanel('editar','${ev.id}')">EDITAR</button>`}
-        <button class="ep-pill-btn close-btn" onclick="openEventoPanel('cerrar','${ev.id}')">â¹ CERRAR</button>
+        <button class="ep-pill-btn close-btn" onclick="openEventoPanel('cerrar','${ev.id}')">⏹ CERRAR</button>
       </div>
     </div>`;
   }).join('');
@@ -1445,40 +1459,40 @@ function renderEventosLista(){
   const all=[...eventosAbiertos,...eventosCerrados].sort((a,b)=>(a.inicio_ts||0)-(b.inicio_ts||0));
   document.getElementById('ev-count-label').textContent=`${all.length} evento${all.length!==1?'s':''}`;
   if(!all.length){
-    document.getElementById('eventos-lista').innerHTML='<div class="empty"><div class="empty-icon">âš¡</div><div class="empty-text">Sin eventos registrados</div></div>';
+    document.getElementById('eventos-lista').innerHTML='<div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Sin eventos registrados</div></div>';
     return;
   }
   document.getElementById('eventos-lista').innerHTML=all.map(ev=>{
     const durTxt=ev.abierto
-      ?`<span style="color:var(--warn);font-size:.72rem">EN CURSO â–¶</span>`
+      ?`<span style="color:var(--warn);font-size:.72rem">EN CURSO ▶</span>`
       :`<span style="color:var(--ok);font-size:.72rem">${ev.duracion_min||0} min</span>`;
-    const tiempoTxt=ev.abierto?`${ev.inicio_str} â†’ â€¦`:`${ev.inicio_str} â†’ ${ev.fin_str||'â€”'}`;
+    const tiempoTxt=ev.abierto?`${ev.inicio_str} → …`:`${ev.inicio_str} → ${ev.fin_str||'—'}`;
     const tipoKey=ev.tipo?.split(' ')[0]||'OTRO';
     return `<div class="evento-item ${tipoKey}${ev.abierto?' abierto':''}">
       <div class="ei-head">
         <div class="ei-left">
-          <div class="ei-tipo tipo-${tipoKey}">${ev.abierto?'â–¶ ':''}${ev.tipo||'Sin tipo'}</div>
-          <div class="ei-tiempo">${tiempoTxt} Â· ${durTxt}</div>
+          <div class="ei-tipo tipo-${tipoKey}">${ev.abierto?'▶ ':''}${ev.tipo||'Sin tipo'}</div>
+          <div class="ei-tiempo">${tiempoTxt} · ${durTxt}</div>
         </div>
       </div>
       ${ev.obs?`<div class="ei-obs">${ev.obs}</div>`:''}
-      ${ev.obs_cierre?`<div class="ei-cierre">â†³ Cierre: ${ev.obs_cierre}</div>`:''}
+      ${ev.obs_cierre?`<div class="ei-cierre">↳ Cierre: ${ev.obs_cierre}</div>`:''}
       <div class="ei-badges">
-        ${ev.detiene==='detiene'?'<span class="detiene-badge detiene-si">âœ• DETIENE</span>':ev.detiene==='paralelo'?'<span class="detiene-badge detiene-no">â†” EN PARALELO</span>':ev.detiene==='proceso'?'<span class="detiene-badge detiene-proc">â¬¡ DEL PROCESO</span>':ev.detiene===true?'<span class="detiene-badge detiene-si">âœ• DETIENE</span>':ev.detiene===false?'<span class="detiene-badge detiene-no">â†” EN PARALELO</span>':''}
+        ${ev.detiene==='detiene'?'<span class="detiene-badge detiene-si">✕ DETIENE</span>':ev.detiene==='paralelo'?'<span class="detiene-badge detiene-no">↔ EN PARALELO</span>':ev.detiene==='proceso'?'<span class="detiene-badge detiene-proc">⬡ DEL PROCESO</span>':ev.detiene===true?'<span class="detiene-badge detiene-si">✕ DETIENE</span>':ev.detiene===false?'<span class="detiene-badge detiene-no">↔ EN PARALELO</span>':''}
         ${(ev.etiquetas||[]).map(e=>`<span class="badge">${e}</span>`).join('')}
       </div>
-      ${ev.editLog?.length?`<div class="ei-edit-log">Editado ${ev.editLog.length}x â€” Ãºltima: ${ev.editLog[ev.editLog.length-1].ts}</div>`:''}
+      ${ev.editLog?.length?`<div class="ei-edit-log">Editado ${ev.editLog.length}x — última: ${ev.editLog[ev.editLog.length-1].ts}</div>`:''}
       <div class="ei-actions">
-        <button class="btn btn-secondary btn-xs" onclick="openEventoPanel('editar','${ev.id}')">âœ EDITAR</button>
-        ${ev.abierto?`<button class="btn btn-ok btn-xs" onclick="openEventoPanel('cerrar','${ev.id}')">â¹ CERRAR</button>`:''}
+        <button class="btn btn-secondary btn-xs" onclick="openEventoPanel('editar','${ev.id}')">✏ EDITAR</button>
+        ${ev.abierto?`<button class="btn btn-ok btn-xs" onclick="openEventoPanel('cerrar','${ev.id}')">⏹ CERRAR</button>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  SACOS / TOGGLE
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function toggleSacos(){
   sacos_visible=!sacos_visible;
   document.getElementById('sacos-body').style.display=sacos_visible?'block':'none';
@@ -1510,9 +1524,9 @@ function addSaco(data=null){
   sc.appendChild(row);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  PALLETS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 let palletCount=0; let pallet_visible=false;
 const MANGAS_X_PALLET={'260':12,'280':15,'300':15,'320':15,'340':12,'360':12,'380':15,'400':12,'430':12,'460':12};
 
@@ -1536,9 +1550,9 @@ function addPallet(data=null){
     <select style="font-family:var(--cond);font-size:.78rem;background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:5px;padding:4px 6px" onchange="updatePalletRef(this,${n})">
       ${Object.keys(MANGAS_X_PALLET).map(t=>`<option value="${t}" ${t===tipo?'selected':''}>${t} mm</option>`).join('')}
     </select>
-    <input type="number" placeholder="NÂ° mangas" step="1" min="1" value="${data?.mangas||''}" style="font-size:.85rem;text-align:center" title="Mangas en este pallet">
+    <input type="number" placeholder="N° mangas" step="1" min="1" value="${data?.mangas||''}" style="font-size:.85rem;text-align:center" title="Mangas en este pallet">
     <input type="text" placeholder="Lotes" value="${data?.lotes||''}" style="font-size:.78rem" title="Ej: 23700, 23701">
-    <button class="btn-small" onclick="document.getElementById('pallet-${n}').remove()">âœ•</button>`;
+    <button class="btn-small" onclick="document.getElementById('pallet-${n}').remove()">✕</button>`;
   // Small ref label
   const ref=document.createElement('div');
   ref.id=`pallet-ref-${n}`;
@@ -1554,9 +1568,9 @@ function updatePalletRef(sel,n){
   if(ref) ref.textContent=`Referencia: ${mxp} mangas/pallet para ${tipo}mm`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  PROGRESS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function updateProgress(){
   let s=0;
   if(document.getElementById('h-fecha').value) s+=20;
@@ -1570,9 +1584,9 @@ function updateProgress(){
   document.getElementById('progress-fill').style.width=`${s}%`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  COLLECT / SAVE / LOAD
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function collectState(){
   const segments=[];
   document.querySelectorAll('.segment').forEach(seg=>{
@@ -1638,10 +1652,10 @@ function saveRecord(){
   if(idx>=0) records[idx]=rec; else records.push(rec);
   try{
     localStorage.setItem('prod_records',JSON.stringify(records));
-    toast('Turno guardado âœ“','ok');
+    toast('Turno guardado ✓','ok');
     renderHistory(); renderFiltros();
     document.getElementById('progress-fill').style.width='100%';
-  }catch(e){ toast('Error al guardar â€” localStorage lleno','error'); }
+  }catch(e){ toast('Error al guardar — localStorage lleno','error'); }
 }
 
 function getAllRecords(){ try{ return JSON.parse(localStorage.getItem('prod_records')||'[]'); }catch{ return []; } }
@@ -1649,7 +1663,7 @@ function getAllRecords(){ try{ return JSON.parse(localStorage.getItem('prod_reco
 async function clearAllRecords(){
   const records=getAllRecords();
   if(!records.length){ toast('No hay registros que eliminar'); return; }
-  const ok2 = await modalConfirm(`Eliminar TODOS los ${records.length} registros. Esta acciÃ³n no se puede deshacer.`,'ðŸ—‘ Borrar todo','btn-danger'); if(!ok2) return;
+  const ok2 = await modalConfirm(`Eliminar TODOS los ${records.length} registros. Esta acción no se puede deshacer.`,'🗑 Borrar todo','btn-danger'); if(!ok2) return;
   localStorage.removeItem('prod_records');
   renderHistory(); renderFiltros();
   toast(`${records.length} registros eliminados`,'ok');
@@ -1666,7 +1680,7 @@ function updateLsIndicator(){
     const txt=document.getElementById('ls-count-label');
     const pctTxt=document.getElementById('ls-pct-text');
     if(fill){ fill.style.width=pct+'%'; fill.style.background=pct>80?'var(--danger)':pct>60?'var(--warn)':'var(--ok)'; }
-    if(txt) txt.textContent=`${records.length} turno${records.length!==1?'s':''} Â· ${kb} KB usados de ~5 MB`;
+    if(txt) txt.textContent=`${records.length} turno${records.length!==1?'s':''} · ${kb} KB usados de ~5 MB`;
     if(pctTxt) pctTxt.textContent=`${pct.toFixed(1)}%`;
   }catch(e){}
 }
@@ -1675,18 +1689,18 @@ function renderHistory(){
   updateLsIndicator();
   const records=getAllRecords().sort((a,b)=>b.ts-a.ts);
   const container=document.getElementById('hist-list');
-  if(!records.length){ container.innerHTML='<div class="empty"><div class="empty-icon">ðŸ“‹</div><div class="empty-text">Sin registros guardados</div></div>'; return; }
+  if(!records.length){ container.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Sin registros guardados</div></div>'; return; }
   container.innerHTML=records.map(r=>{
     const mn=countMangas(r); const fab=calcFabricado(r).toFixed(1);
     const sc=calcScrap(r).toFixed(1);
     const pct=parseFloat(fab)+parseFloat(sc)>0?((calcScrap(r)/(calcFabricado(r)+calcScrap(r)))*100).toFixed(1):0;
-    const tipos=[...new Set(r.segments.map(s=>s.tipo))].join(' Â· ');
+    const tipos=[...new Set(r.segments.map(s=>s.tipo))].join(' · ');
     const evs=r.eventos?.length||0;
     const abiertos=r.eventos?.filter(e=>e.abierto).length||0;
     return `<div class="hist-item" onclick="loadRecord('${r.id}')">
       <div style="flex:1;min-width:0">
-        <div class="hist-date">${r.fecha} Â· T${r.turno} <span style="font-size:.7rem;color:var(--muted)">${r.tipo_turno||''}</span></div>
-        <div class="hist-meta">${tipos||'â€”'} Â· ${r.inicio||'?'}â€”${r.termino||'?'}${r._source?'<span style="font-family:var(--mono);font-size:.62rem;color:var(--info);margin-left:6px">ðŸ“¥ importado</span>':''}</div>
+        <div class="hist-date">${r.fecha} · T${r.turno} <span style="font-size:.7rem;color:var(--muted)">${r.tipo_turno||''}</span></div>
+        <div class="hist-meta">${tipos||'—'} · ${r.inicio||'?'}—${r.termino||'?'}${r._source?'<span style="font-family:var(--mono);font-size:.62rem;color:var(--info);margin-left:6px">📥 importado</span>':''}</div>
         <div class="hist-tip">Toca para cargar y continuar editando</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
@@ -1696,7 +1710,7 @@ function renderHistory(){
           ${parseFloat(pct)>0?`<span class="badge danger">Scrap ${pct}%</span>`:''}
           ${evs>0?`<span class="badge${abiertos>0?' amber':''}">${evs} eventos</span>`:''}
         </div>
-        <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();deleteRecord('${r.id}')">ðŸ—‘</button>
+        <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();deleteRecord('${r.id}')">🗑</button>
       </div>
     </div>`;
   }).join('');
@@ -1704,16 +1718,16 @@ function renderHistory(){
 
 async function deleteRecord(id){
   const rec=getAllRecords().find(r=>r.id===id); if(!rec) return;
-  const ok3 = await modalConfirm(`Eliminar registro ${rec.fecha} T${rec.turno}?`,'ðŸ—‘ Eliminar','btn-danger'); if(!ok3) return;
+  const ok3 = await modalConfirm(`Eliminar registro ${rec.fecha} T${rec.turno}?`,'🗑 Eliminar','btn-danger'); if(!ok3) return;
   const updated=getAllRecords().filter(r=>r.id!==id);
   localStorage.setItem('prod_records',JSON.stringify(updated));
   renderHistory(); renderFiltros();
   toast('Registro eliminado');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  IMPORTAR INFORME HTML
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function importarInforme(){
   document.getElementById('import-input').value='';
   document.getElementById('import-input').click();
@@ -1732,14 +1746,14 @@ function handleImportFile(input){
     // Extraer JSON embebido (mismo formato que usa el dashboard)
     const match=html.match(/<script[^>]*id="prod-data"[^>]*type="application\/json"[^>]*>([\s\S]*?)<\/script>/i);
     if(!match){
-      toast('El archivo no contiene datos de producciÃ³n vÃ¡lidos','error');
+      toast('El archivo no contiene datos de producción válidos','error');
       return;
     }
     let imported;
     try{ imported=JSON.parse(match[1].trim()); }
     catch(err){ toast('Error al leer los datos del archivo','error'); return; }
 
-    // Convertir formato dashboard â†’ formato Suite si es necesario
+    // Convertir formato dashboard → formato Suite si es necesario
     const rec=convertImportedRecord(imported, file.name);
     if(!rec){ toast('No se pudo interpretar el formato del archivo','error'); return; }
 
@@ -1748,8 +1762,8 @@ function handleImportFile(input){
     const existing=records.find(r=>r.id===rec.id);
     if(existing){
       const ok=await modalConfirm(
-        `Ya existe un registro para ${rec.fecha} T${rec.turno}. Â¿Reemplazar con el archivo importado?`,
-        'â†º Reemplazar','btn-warn'
+        `Ya existe un registro para ${rec.fecha} T${rec.turno}. ¿Reemplazar con el archivo importado?`,
+        '↺ Reemplazar','btn-warn'
       );
       if(!ok) return;
       const idx=records.findIndex(r=>r.id===rec.id);
@@ -1761,16 +1775,16 @@ function handleImportFile(input){
     try{
       localStorage.setItem('prod_records',JSON.stringify(records));
       renderHistory(); renderFiltros();
-      toast(`âœ“ Importado: ${rec.fecha} T${rec.turno} Â· ${rec._tiposManga||''}`, 'ok');
+      toast(`✓ Importado: ${rec.fecha} T${rec.turno} · ${rec._tiposManga||''}`, 'ok');
     }catch(err){
-      toast('Error al guardar â€” localStorage lleno','error');
+      toast('Error al guardar — localStorage lleno','error');
     }
   };
   reader.readAsText(file);
 }
 
 function convertImportedRecord(data, filename){
-  // Si ya tiene el formato Suite (tiene segments) â†’ usar directamente
+  // Si ya tiene el formato Suite (tiene segments) → usar directamente
   if(data.segments && Array.isArray(data.segments)){
     if(!data.id) data.id=`${data.fecha}_T${data.turno||1}`;
     if(!data.ts) data.ts=Date.now();
@@ -1779,7 +1793,7 @@ function convertImportedRecord(data, filename){
     return data;
   }
 
-  // Formato dashboard (tiene por_tipo, kg_fabricado, etc.) â†’ convertir
+  // Formato dashboard (tiene por_tipo, kg_fabricado, etc.) → convertir
   if(data.por_tipo || data.kg_fabricado !== undefined){
     const fecha=data.fecha||filename.split('_')[1]||'';
     const turno=data.turno||'1';
@@ -1836,7 +1850,7 @@ function convertImportedRecord(data, filename){
       _source: 'imported-dashboard',
       _filename: filename,
       _tiposManga: tipos,
-      // Datos calculados del dashboard para anÃ¡lisis
+      // Datos calculados del dashboard para análisis
       _kg_fabricado: data.kg_fabricado||0,
       _kg_scrap: data.kg_scrap||0,
       _kg_mezcla: data.kg_mezcla||0,
@@ -1878,9 +1892,9 @@ function loadRecord(id){
   updateTopbar(); switchTab('tab-registro'); toast('Turno cargado','ok');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  CALC HELPERS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function countMangas(r){ const fromSegs=r.segments?.reduce((t,s)=>t+s.lotes?.reduce((tt,l)=>tt+l.mangas?.filter(m=>!m.scrap&&m.peso).length,0),0)||0; return fromSegs||r._total_mangas||0; }
 function calcFabricado(r){ const fromSegs=r.segments?.reduce((t,s)=>t+s.lotes?.reduce((tt,l)=>tt+l.mangas?.filter(m=>!m.scrap&&m.peso).reduce((a,m)=>a+m.peso,0),0),0)||0; return fromSegs||r._kg_fabricado||0; }
 function calcScrap(r){
@@ -1893,9 +1907,9 @@ function calcScrap(r){
 }
 function timeToMin(t){ const [h,m]=t.split(':').map(Number); return h*60+m; }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-//  FILTROS / ANÃLISIS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
+//  FILTROS / ANÁLISIS
+// ══════════════════════════════════════════
 function renderFiltros(){
   const desde=document.getElementById('f-desde').value;
   const hasta=document.getElementById('f-hasta').value;
@@ -1911,7 +1925,7 @@ function renderFiltros(){
   const totalMn=recs.reduce((s,r)=>s+countMangas(r),0);
   const totalFab=recs.reduce((s,r)=>s+calcFabricado(r),0);
   const totalSc=recs.reduce((s,r)=>s+calcScrap(r),0);
-  const pctSc=totalFab+totalSc>0?((totalSc/(totalFab+totalSc))*100).toFixed(1):'â€”';
+  const pctSc=totalFab+totalSc>0?((totalSc/(totalFab+totalSc))*100).toFixed(1):'—';
   const totalAnu=recs.reduce((s,r)=>s+r.segments.reduce((ss,seg)=>{
     const m=seg.lotes.reduce((a,l)=>a+(l.kg||0),0);
     const f=seg.lotes.reduce((a,l)=>a+l.mangas.filter(mm=>!mm.scrap&&mm.peso).reduce((b,mm)=>b+mm.peso,0),0);
@@ -1923,23 +1937,23 @@ function renderFiltros(){
   const totalPar=recs.reduce((s,r)=>s+(r.eventos?.filter(e=>e.detiene===true).length||0),0);
 
   document.getElementById('kf-dias').textContent=recs.length;
-  document.getElementById('kf-mangas').textContent=totalMn||'â€”';
+  document.getElementById('kf-mangas').textContent=totalMn||'—';
   document.getElementById('kf-fabricado').textContent=totalFab.toFixed(1);
   document.getElementById('kf-scrap').textContent=totalSc.toFixed(1);
-  document.getElementById('kf-pct-scrap').textContent=pctSc==='â€”'?'â€”':`${pctSc}%`;
+  document.getElementById('kf-pct-scrap').textContent=pctSc==='—'?'—':`${pctSc}%`;
   document.getElementById('kf-arena').textContent=totalAnu.toFixed(1);
-  document.getElementById('kf-eventos').textContent=totalEvs||'â€”';
-  document.getElementById('kf-paros').textContent=totalPar||'â€”';
+  document.getElementById('kf-eventos').textContent=totalEvs||'—';
+  document.getElementById('kf-paros').textContent=totalPar||'—';
 
   const tabla=document.getElementById('tabla-filtrada');
-  if(!recs.length){ tabla.innerHTML='<div class="empty"><div class="empty-icon">ðŸ”</div><div class="empty-text">Sin resultados</div></div>'; return; }
-  tabla.innerHTML=`<div class="card"><div class="card-head"><span class="card-title">ðŸ“‹ REGISTROS (${recs.length})</span></div>
+  if(!recs.length){ tabla.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Sin resultados</div></div>'; return; }
+  tabla.innerHTML=`<div class="card"><div class="card-head"><span class="card-title">📋 REGISTROS (${recs.length})</span></div>
     <div style="overflow-x:auto"><table class="report-table" style="min-width:600px">
       <tr><th>Fecha</th><th>T</th><th>Tipo</th><th>Mangas</th><th>Kg Fab.</th><th>Scrap</th><th>% Scrap</th><th>Eventos</th></tr>
       ${recs.map(r=>{
         const tipos=[...new Set(r.segments.map(s=>s.tipo))].join(', ');
         const mn=countMangas(r); const fab=calcFabricado(r).toFixed(1); const sc=calcScrap(r).toFixed(1);
-        const pct=parseFloat(fab)+parseFloat(sc)>0?((calcScrap(r)/(calcFabricado(r)+calcScrap(r)))*100).toFixed(1):'â€”';
+        const pct=parseFloat(fab)+parseFloat(sc)>0?((calcScrap(r)/(calcFabricado(r)+calcScrap(r)))*100).toFixed(1):'—';
         return `<tr><td>${r.fecha}</td><td>${r.turno}</td><td>${tipos}</td><td>${mn}</td>
           <td>${fab}</td><td class="${parseFloat(sc)>0?'danger':''}">${sc}</td>
           <td class="${parseFloat(pct)>5?'danger':'ok'}">${pct}%</td><td>${r.eventos?.length||0}</td></tr>`;
@@ -1953,9 +1967,9 @@ function clearFiltros(){
   renderFiltros();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  INFORME / PRINT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function showPrint(){ const rec=collectState(); document.getElementById('print-overlay').classList.add('show'); generateReport(rec); }
 function closePrint(){ document.getElementById('print-overlay').classList.remove('show'); }
 
@@ -1999,15 +2013,15 @@ function generateReport(rec){
     const sc=seg.scraps.reduce((a,s)=>a+(s.kg||0),0)+scGrid.reduce((a,b)=>a+b,0);
     const mez=seg.lotes.reduce((a,l)=>a+(l.kg||0),0);
     const anu=Math.max(0,mez-fab-sc);
-    const pct=fab+sc>0?((sc/(fab+sc))*100).toFixed(1):'â€”';
-    const prom=mangas.length?(fab/mangas.length).toFixed(3):'â€”';
+    const pct=fab+sc>0?((sc/(fab+sc))*100).toFixed(1):'—';
+    const prom=mangas.length?(fab/mangas.length).toFixed(3):'—';
     const pmin=seg.p1_min; const pmax=seg.p1_max; const pnom=seg.p1_nom;
 
     // SCATTER CHART SVG
     const scatterSvg=buildScatterChart(mangas,pmin,pmax,pnom,seg.tipo);
 
     segHtml+=`
-      <div class="report-section-title">SEGMENTO ${si+1}: MANGA ${seg.tipo} â€” ${seg.codigo}</div>
+      <div class="report-section-title">SEGMENTO ${si+1}: MANGA ${seg.tipo} — ${seg.codigo}</div>
       <div class="report-kpi-grid">
         <div class="report-kpi"><div class="report-kpi-label">Kg mezcla</div><div class="report-kpi-val">${mez.toFixed(1)}</div></div>
         <div class="report-kpi"><div class="report-kpi-label">Kg fabricados</div><div class="report-kpi-val ok">${fab.toFixed(3)}</div></div>
@@ -2016,20 +2030,20 @@ function generateReport(rec){
         <div class="report-kpi"><div class="report-kpi-label">Arena no util.</div><div class="report-kpi-val">${anu.toFixed(1)}</div></div>
         <div class="report-kpi"><div class="report-kpi-label">% Scrap</div><div class="report-kpi-val ${parseFloat(pct)>5?'danger':''}">${pct}%</div></div>
         <div class="report-kpi"><div class="report-kpi-label">Peso prom.</div><div class="report-kpi-val">${prom}</div></div>
-        <div class="report-kpi"><div class="report-kpi-label">Rango</div><div class="report-kpi-val" style="font-size:.9rem">${pmin||'?'}â€“${pmax||'?'}</div></div>
+        <div class="report-kpi"><div class="report-kpi-label">Rango</div><div class="report-kpi-val" style="font-size:.9rem">${pmin||'?'}–${pmax||'?'}</div></div>
       </div>
-      ${mangas.length>0?`<div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">DISTRIBUCIÃ“N DE PESOS POR MANGA</div>${scatterSvg}`:''}
+      ${mangas.length>0?`<div style="font-family:var(--cond);font-size:.72rem;color:var(--muted);letter-spacing:.07em;margin-bottom:6px">DISTRIBUCIÓN DE PESOS POR MANGA</div>${scatterSvg}`:''}
       <table class="report-table">
-        <tr><th>Lote</th><th>Kg teÃ³rico</th><th>Kg real</th><th>Merma mez.</th><th>Mangas</th><th>Kg fab.</th><th>âœ• Scraps</th></tr>
+        <tr><th>Lote</th><th>Kg teórico</th><th>Kg real</th><th>Merma mez.</th><th>Mangas</th><th>Kg fab.</th><th>✕ Scraps</th></tr>
         ${seg.lotes.map(l=>{
           const lm=l.mangas.filter(m=>!m.scrap&&m.peso).map(m=>m.peso);
           const lx=l.mangas.filter(m=>m.scrap&&m.peso);
           const lxKg=lx.reduce((a,m)=>a+m.peso,0);
           const teo=l.kg||0; const real=l.kg_real||0;
           const mmez=real>0&&teo>real?teo-real:0;
-          return `<tr><td>${l.id||'â€”'}</td><td>${teo.toFixed(1)}</td>
-            <td style="color:${real>0?'var(--teal)':'var(--muted)'}">${real>0?real.toFixed(1):'â€”'}</td>
-            <td style="color:${mmez>10?'var(--danger)':mmez>5?'var(--warn)':'var(--ok)'}">${mmez>0?mmez.toFixed(1)+' kg':'â€”'}</td>
+          return `<tr><td>${l.id||'—'}</td><td>${teo.toFixed(1)}</td>
+            <td style="color:${real>0?'var(--teal)':'var(--muted)'}">${real>0?real.toFixed(1):'—'}</td>
+            <td style="color:${mmez>10?'var(--danger)':mmez>5?'var(--warn)':'var(--ok)'}">${mmez>0?mmez.toFixed(1)+' kg':'—'}</td>
             <td>${lm.length}</td>
             <td>${lm.reduce((a,b)=>a+b,0).toFixed(3)}</td>
             <td class="${lx.length?'danger':''}">${lx.length}</td></tr>`;
@@ -2038,9 +2052,9 @@ function generateReport(rec){
             ${scrapDetalle.length?`<div class="report-section-title" style="color:var(--danger)">SCRAP REGISTRADO</div>
         <table class="report-table"><tr><th>#</th><th>Lote</th><th>Kg</th><th>Causa</th></tr>
         ${scrapDetalle.map((s,i)=>`<tr><td>${i+1}</td><td>${s.lote||'-'}</td><td class="danger">${(s.kg||0).toFixed(3)}</td><td style="font-size:.75rem;color:var(--text2)">${s.causa||'-'}</td></tr>`).join('')}
-        </table>`:''}${seg.scraps.length?`<div class="report-section-title" style="color:var(--danger)">SCRAP EXPLÃCITO</div>
+        </table>`:''}${seg.scraps.length?`<div class="report-section-title" style="color:var(--danger)">SCRAP EXPLÍCITO</div>
         <table class="report-table"><tr><th>#</th><th>Kg</th><th>Lote</th></tr>
-        ${seg.scraps.map((s,i)=>`<tr><td>${i+1}</td><td class="danger">${(s.kg||0).toFixed(3)}</td><td>${s.lote||'â€”'}</td></tr>`).join('')}
+        ${seg.scraps.map((s,i)=>`<tr><td>${i+1}</td><td class="danger">${(s.kg||0).toFixed(3)}</td><td>${s.lote||'—'}</td></tr>`).join('')}
         </table>`:''}`;
   });
 
@@ -2049,13 +2063,13 @@ function generateReport(rec){
     const evs=rec.eventos.sort((a,b)=>(a.inicio_ts||0)-(b.inicio_ts||0));
     evHtml=`<div class="report-section-title">EVENTOS DEL TURNO (${evs.length})</div>
       <table class="report-table">
-        <tr><th>Tipo</th><th>Inicio</th><th>Fin</th><th>DuraciÃ³n</th><th>Detiene</th><th>DescripciÃ³n</th></tr>
+        <tr><th>Tipo</th><th>Inicio</th><th>Fin</th><th>Duración</th><th>Detiene</th><th>Descripción</th></tr>
         ${evs.map(e=>`<tr>
-          <td style="font-weight:700">${e.tipo||'â€”'}</td>
-          <td>${e.inicio_str||'â€”'}</td><td>${e.fin_str||'EN CURSO'}</td>
+          <td style="font-weight:700">${e.tipo||'—'}</td>
+          <td>${e.inicio_str||'—'}</td><td>${e.fin_str||'EN CURSO'}</td>
           <td>${e.abierto?'En curso':(e.duracion_min||0)+' min'}</td>
-          <td class="${e.detiene==='detiene'||e.detiene===true?'danger':e.detiene==='proceso'?'info':e.detiene==='paralelo'||e.detiene===false?'ok':''}">${e.detiene==='detiene'||e.detiene===true?'DETIENE':e.detiene==='paralelo'||e.detiene===false?'PARALELO':e.detiene==='proceso'?'PROCESO':'â€”'}</td>
-          <td style="font-size:.75rem">${[e.obs,e.obs_cierre].filter(Boolean).join(' â†’ ')||'â€”'}</td>
+          <td class="${e.detiene==='detiene'||e.detiene===true?'danger':e.detiene==='proceso'?'info':e.detiene==='paralelo'||e.detiene===false?'ok':''}">${e.detiene==='detiene'||e.detiene===true?'DETIENE':e.detiene==='paralelo'||e.detiene===false?'PARALELO':e.detiene==='proceso'?'PROCESO':'—'}</td>
+          <td style="font-size:.75rem">${[e.obs,e.obs_cierre].filter(Boolean).join(' → ')||'—'}</td>
         </tr>`).join('')}
       </table>`;
   }
@@ -2088,9 +2102,9 @@ function generateReport(rec){
           <rect x="17.2" y="36.8" width="5" height="5" rx="1" fill="#f0a500" transform="rotate(-45 19.7 39.3)"/>
           <text x="30" y="52" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-size="7" font-weight="800" fill="#f0a500" letter-spacing="1">ZALINEL</text>
         </svg>
-        <div><div class="report-co">ZALINEL SpA</div><div class="report-doc-title">INFORME PRODUCCIÃ“N DIARIA Â· ZH780L-40</div></div>
+        <div><div class="report-co">ZALINEL SpA</div><div class="report-doc-title">INFORME PRODUCCIÓN DIARIA · ZH780L-40</div></div>
       </div>
-      <div class="report-meta">FECHA: ${rec.fecha||'â€”'}<br>TURNO: ${rec.turno}Â° Â· ${rec.tipo_turno||''}<br>${rec.inicio?`${rec.inicio} â€” ${rec.termino||'?'}`:''}<br>Emitido: ${now}</div>
+      <div class="report-meta">FECHA: ${rec.fecha||'—'}<br>TURNO: ${rec.turno}° · ${rec.tipo_turno||''}<br>${rec.inicio?`${rec.inicio} — ${rec.termino||'?'}`:''}<br>Emitido: ${now}</div>
     </div>
 
     <div class="report-section-title">RESUMEN GENERAL DEL TURNO</div>
@@ -2121,7 +2135,7 @@ function generateReport(rec){
           <td>${p.tipo} mm</td>
           <td style="color:var(--ok)">${p.mangas}</td>
           <td style="color:var(--muted);font-size:.8rem">${MANGAS_X_PALLET[p.tipo]||12} max.</td>
-          <td style="font-size:.8rem">${p.lotes||'â€”'}</td>
+          <td style="font-size:.8rem">${p.lotes||'—'}</td>
         </tr>`).join('')}
         <tr><td colspan="2" style="font-weight:700;color:var(--amber)">TOTAL</td>
           <td style="font-weight:700;color:var(--ok)">${rec.pallets.reduce((a,p)=>a+p.mangas,0)}</td>
@@ -2135,9 +2149,9 @@ function generateReport(rec){
     </div>`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-//  SCATTER CHART SVG (grÃ¡fico analÃ³gico)
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
+//  SCATTER CHART SVG (gráfico analógico)
+// ══════════════════════════════════════════
 function buildScatterChart(pesos, pmin, pmax, pnom, tipo){
   if(!pesos.length) return '';
   const W=700, H=160, PAD={top:20,right:20,bottom:30,left:45};
@@ -2182,9 +2196,9 @@ function buildScatterChart(pesos, pmin, pmax, pnom, tipo){
   // Reference lines
   let refHtml='';
   if(pmax) refHtml+=`<line x1="${PAD.left}" y1="${yScale(pmax)}" x2="${W-PAD.right}" y2="${yScale(pmax)}" stroke="#e03b3b" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <text x="${W-PAD.right+3}" y="${yScale(pmax)+4}" font-family="'Barlow Condensed'" font-size="9" fill="#e03b3b">MÃX</text>`;
+    <text x="${W-PAD.right+3}" y="${yScale(pmax)+4}" font-family="'Barlow Condensed'" font-size="9" fill="#e03b3b">MÁX</text>`;
   if(pmin) refHtml+=`<line x1="${PAD.left}" y1="${yScale(pmin)}" x2="${W-PAD.right}" y2="${yScale(pmin)}" stroke="#e03b3b" stroke-width="1.2" stroke-dasharray="5,3"/>
-    <text x="${W-PAD.right+3}" y="${yScale(pmin)+4}" font-family="'Barlow Condensed'" font-size="9" fill="#e03b3b">MÃN</text>`;
+    <text x="${W-PAD.right+3}" y="${yScale(pmin)+4}" font-family="'Barlow Condensed'" font-size="9" fill="#e03b3b">MÍN</text>`;
   if(pnom) refHtml+=`<line x1="${PAD.left}" y1="${yScale(pnom)}" x2="${W-PAD.right}" y2="${yScale(pnom)}" stroke="#f0a500" stroke-width="1" stroke-dasharray="3,3"/>
     <text x="${W-PAD.right+3}" y="${yScale(pnom)+4}" font-family="'Barlow Condensed'" font-size="9" fill="#f0a500">NOM</text>`;
 
@@ -2229,14 +2243,14 @@ function buildScatterChart(pesos, pmin, pmax, pnom, tipo){
       ${pointsHtml}
       <!-- Labels -->
       <text x="${PAD.left-30}" y="${PAD.top+plotH/2}" text-anchor="middle" font-family="'Barlow Condensed'" font-size="10" fill="#5a6a80" transform="rotate(-90,${PAD.left-30},${PAD.top+plotH/2})">PESO (kg)</text>
-      <text x="${PAD.left+plotW/2}" y="${H}" text-anchor="middle" font-family="'Barlow Condensed'" font-size="10" fill="#5a6a80">NÂ° MANGA</text>
+      <text x="${PAD.left+plotW/2}" y="${H}" text-anchor="middle" font-family="'Barlow Condensed'" font-size="10" fill="#5a6a80">N° MANGA</text>
     </svg>
   </div>`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  DONUT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 function buildDonut(data,r=80){
   const total=data.reduce((a,d)=>a+d.val,0); if(!total) return '';
   const cx=80,cy=80,stroke=28; const circ=2*Math.PI*(r-stroke/2);
@@ -2244,7 +2258,7 @@ function buildDonut(data,r=80){
   data.forEach(d=>{ const pct=d.val/total; const dash=circ*pct; const gap=circ*(1-pct); const rot=360*offset-90;
     paths+=`<circle cx="${cx}" cy="${cy}" r="${r-stroke/2}" fill="none" stroke="${d.color}" stroke-width="${stroke}" stroke-dasharray="${dash} ${gap}" transform="rotate(${rot} ${cx} ${cy})" stroke-linecap="butt"/>`;
     offset+=pct; });
-  const pctFab=total>0?((data[0].val/total)*100).toFixed(1):'â€”';
+  const pctFab=total>0?((data[0].val/total)*100).toFixed(1):'—';
   return `<svg width="160" height="160" viewBox="0 0 160 160" style="flex-shrink:0">
     <circle cx="${cx}" cy="${cy}" r="${r-stroke/2}" fill="none" stroke="var(--surface2)" stroke-width="${stroke}"/>
     ${paths}
@@ -2253,11 +2267,11 @@ function buildDonut(data,r=80){
   </svg>`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  UTILS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 async function newRecord(){
-  const ok4 = await modalConfirm('Â¿Iniciar nuevo registro? Los datos no guardados se perderÃ¡n.','Continuar','btn-warn'); if(!ok4) return;
+  const ok4 = await modalConfirm('¿Iniciar nuevo registro? Los datos no guardados se perderán.','Continuar','btn-warn'); if(!ok4) return;
   clearForm();
 }
 function clearForm(){
@@ -2300,8 +2314,8 @@ function downloadReport(){
   const tipo = [...new Set(rec.segments.map(s=>s.tipo))].join('-') || 'SIN-TIPO';
   const filename = `PROD_${fecha}_T${turno}_${tipo}.html`;
 
-  // â”€â”€ Bloque de datos JSON embebido para el dashboard gerencial â”€â”€
-  // Calcular mÃ©tricas derivadas para facilitar lectura del dashboard
+  // ── Bloque de datos JSON embebido para el dashboard gerencial ──
+  // Calcular métricas derivadas para facilitar lectura del dashboard
   const totalMangas = rec.segments.reduce((t,s)=>t+s.lotes.flatMap(l=>l.mangas).filter(m=>!m.scrap&&m.peso).length,0);
   const totalFab    = rec.segments.reduce((t,s)=>t+s.lotes.flatMap(l=>l.mangas).filter(m=>!m.scrap&&m.peso).reduce((a,m)=>a+m.peso,0),0);
   const totalScrap  = rec.segments.reduce((t,s)=>{
@@ -2344,7 +2358,7 @@ function downloadReport(){
     };
   });
 
-  // Resumen de eventos â€” backward compat: map string detiene to bool for dashboard
+  // Resumen de eventos — backward compat: map string detiene to bool for dashboard
   const eventos = (rec.eventos||[]).map(e=>({
     tipo: e.tipo,
     inicio: e.inicio_str,
@@ -2368,7 +2382,7 @@ function downloadReport(){
     _version: '3.5',
     _generated: new Date().toISOString(),
     _filename: filename,
-    // IdentificaciÃ³n del turno
+    // Identificación del turno
     fecha,
     turno: rec.turno,
     tipo_turno: rec.tipo_turno,
@@ -2404,7 +2418,7 @@ function downloadReport(){
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Informe ProducciÃ³n ${fecha} T${turno} Â· ${tipo}</title>
+<title>Informe Producción ${fecha} T${turno} · ${tipo}</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0e1117;--surface:#161b24;--surface2:#1e2533;--border:#2a3345;--amber:#f0a500;--danger:#e03b3b;--ok:#3bbf7a;--warn:#e07040;--muted:#5a6a80;--text:#d0dbe8;--text2:#8899aa;--mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--cond:'Barlow Condensed',sans-serif}
@@ -2443,12 +2457,12 @@ ${jsonBlock}
   document.body.appendChild(a); a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  toast('Informe descargado âœ“', 'ok');
+  toast('Informe descargado ✓', 'ok');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 //  MODAL CONFIRM (reemplaza confirm() bloqueado en iframe)
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ══════════════════════════════════════════
 let _modalResolve = null;
 function modalConfirm(msg, okLabel='Confirmar', okClass='btn-danger'){
   return new Promise(resolve=>{
